@@ -5,6 +5,8 @@ CREATE TABLE user(
     email TEXT,
     password TEXT,
     role_id INTEGER
+    name TEXT,
+    age INTEGER,
 );
 
 DROP TABLE IF EXISTS role;
