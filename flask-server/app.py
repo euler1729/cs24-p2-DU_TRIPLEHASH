@@ -3,14 +3,17 @@ from flask_cors import CORS
 from flask_restful import Api
 from datetime import timedelta
 from flask_jwt_extended import JWTManager
+import json
 
 # auth
 from auth.Login import Login, Logout
 from auth.ChangePassword import ChangePassword
 from auth.ResetPassword import ResetPasswordInit, ResetPasswordConfirm
 
+with open('config.json', 'r') as f:
+    config = json.load(f)
+    key = config['KEY']
 
-key = 'AHJKDAHKFHADKBVBCUJBKJBCDKJB'
 app = Flask(__name__)
 app.secret_key = key
 
@@ -30,10 +33,6 @@ cors = CORS(app,
         )
 api = Api(app)
 JWT = JWTManager(app)
-
-@app.route('/', methods=['GET'])
-def Users():
-    return jsonify({'abc': 'abc'})
 
 
 
