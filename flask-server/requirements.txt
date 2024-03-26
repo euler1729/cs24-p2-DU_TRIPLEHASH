@@ -9,3 +9,4 @@ Werkzeug==3.0.1
 flask-restful
 flask-cors
 flask-jwt-extended
+Flask-Mail

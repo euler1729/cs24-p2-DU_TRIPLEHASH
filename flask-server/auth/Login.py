@@ -21,12 +21,12 @@ class Login(Resource):
                 hash = user[3]
                 if not check_password_hash(hash, password):
                     return make_response(jsonify({'msg':'invalid credentials'}), 401)
-                access_token = create_access_token(identity={'id': user[0], 'role': user[4]})
+                access_token = create_access_token(identity={'user_id': user[0], 'role_id': user[4]})
                 user = {
-                    'id': user[0],
+                    'user_id': user[0],
                     'user_name': user[1],
                     'email': user[2],
-                    'role': user[4]
+                    'role_id': user[4]
                 }
                 return make_response(jsonify({'user':user, 'access_token':access_token}), 200)
             else:
