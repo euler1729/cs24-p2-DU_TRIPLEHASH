@@ -1,8 +1,10 @@
 from flask_restful import Resource
 from flask import request, jsonify, make_response, Response
+from sendmail import send_otp
 
 class ResetPasswordInit(Resource):
     def post(self):
+        send_otp(1, 'mahmudul.hhh@gmail.com')
         return make_response(jsonify({'msg':'Reset Password init- post'}), 200)
     
 class ResetPasswordConfirm(Resource):
