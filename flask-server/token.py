@@ -1,7 +1,7 @@
 import jwt
 import json
 
-def check_token(token):
+def decode_token(token):
     try:
         with open('config.json', 'r') as f:
             config = json.load(f)

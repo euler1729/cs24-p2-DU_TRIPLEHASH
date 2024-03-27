@@ -2,16 +2,14 @@ from flask_restful import Resource
 from flask import request, jsonify, make_response, Response
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
-import jwt
-import json
-from check_token import check_token
+from token import decode_token
 
 class ChangePassword(Resource):
 
     def post(self):
         try:
             token = request.headers['Authorization'].split(' ')[1]
-            info = check_token(token)
+            info = decode_token(token)
             if info:
                 user_id = info['sub']['user_id']
                 data = request.get_json()
