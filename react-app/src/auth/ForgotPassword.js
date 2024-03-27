@@ -1,13 +1,16 @@
-// ForgotPasswordPage.js
 import React, { useState } from 'react';
-import { Grid, Typography, TextField, Button } from '@material-ui/core';
+import { Grid, Typography, TextField, Button, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../API';
+// Brand
+import LogoGif from '../EcoSyncBrand/logogif.gif'
+import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: EcoBrand.Colors.greenWhite,
   },
   container: {
     display: 'flex',
@@ -24,20 +27,65 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginBottom: theme.spacing(3),
     fontWeight: 'bold',
+    color: EcoBrand.Colors.green,
   },
   textField: {
     marginBottom: theme.spacing(2),
+    color: EcoBrand.Colors.green,
+    backgroundColor: EcoBrand.Colors.greenWhite,
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: EcoBrand.Colors.green, // Green color
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#4caf50', // Green color
+    },
   },
+  button: {
+    fontWeight: 'bold',
+    color: EcoBrand.Colors.greenWhite,
+    backgroundColor: EcoBrand.Colors.green,
+    '&:hover': {
+      backgroundColor: EcoBrand.Colors.greenDark,
+    },
+  },
+  errorText: {
+    color: 'red',
+    marginTop: theme.spacing(2),
+  },
+
 }));
 
-function ForgotPasswordPage() {
+function ForgotPassword() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [emailOrUsername, setEmailOrUsername] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement logic to send reset password link to the provided email or username
-    console.log('Reset password link sent to:', emailOrUsername);
+    setLoading(true);
+    try {
+      // Send request to server to send OTP
+      api.post('/auth/reset-password/init', { user_name: emailOrUsername })
+        .then((response) => {
+          console.log(response.data);
+          setLoading(false);
+          navigate('/reset-password', {
+            state: {
+              user_name: emailOrUsername,
+            },
+          });
+        }).catch((error) => {
+          setLoading(false);
+          setError(error.response.data.msg);
+          console.log(error);
+        });
+
+    } catch (error) {
+      setLoading(false);
+      setError(error.response.data.msg);
+    }
   };
 
   return (
@@ -45,6 +93,7 @@ function ForgotPasswordPage() {
       <Grid container className={classes.container}>
         <Grid item xs={10} sm={6} md={4}>
           <div className={classes.formContainer}>
+            <img src={LogoGif} alt="EcoSync Logo" style={{ width: '30%' }} />
             <Typography variant="h4" align="center" className={classes.title}>
               Forgot Password
             </Typography>
@@ -58,18 +107,21 @@ function ForgotPasswordPage() {
                 className={classes.textField}
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
+                error={!!error}
+                helperText={error}
               />
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
+                className={classes.button}
                 fullWidth
+                disabled={loading}
               >
-                Submit
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Send OTP'}
               </Button>
             </form>
             <Typography variant="body2" align="center" style={{ marginTop: '10px' }}>
-              Remember your password? <Link to="/login">Login</Link>
+              Remember your password? <Link to="/login" style={{ color: EcoBrand.Colors.greenDark }}>Login</Link>
             </Typography>
           </div>
         </Grid>
@@ -78,4 +130,4 @@ function ForgotPasswordPage() {
   );
 }
 
-export default ForgotPasswordPage;
+export default ForgotPassword;

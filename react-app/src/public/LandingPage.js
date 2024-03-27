@@ -10,6 +10,11 @@ import 'slick-carousel/slick/slick-theme.css';
 import carousel_image1 from './res/carousel_image1.png';
 import carousel_image2 from './res/carousel_image2.png';
 
+// Brand
+import LogGif from '../EcoSyncBrand/logogif.gif'
+import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -18,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     title: {
         fontSize: '2.5rem',
         fontWeight: 'bold',
-        color: theme.palette.primary.main,
+        color: EcoBrand.Colors.green,
         marginBottom: theme.spacing(2),
     },
     description: {
@@ -49,9 +54,14 @@ function LandingPage() {
         autoplaySpeed: 3000,
     };
 
+
+
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
+                <Grid item xs={12} align="center">
+                    <img src={LogGif} alt="EcoSync Logo" style={{ width: '200px' }} />
+                </Grid>
                 <Grid item xs={12}>
                     <Typography variant="h2" align="center" className={classes.title}>
                         EcoSync: Revolutionizing Waste Management
