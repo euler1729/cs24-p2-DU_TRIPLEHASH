@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import request, jsonify, make_response, Response
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
-from token import decode_token
+from TokenManager import decode_token
 
 class ChangePassword(Resource):
 
