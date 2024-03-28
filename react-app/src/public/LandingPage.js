@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(4),
     },
     title: {
-        fontSize: '2.5rem',
+        fontSize: '2rem',
         fontWeight: 'bold',
         color: EcoBrand.Colors.green,
         marginBottom: theme.spacing(2),
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     slider: {
-        width: '60%',
+        width: '70%',
     },
 }));
 
@@ -76,7 +76,7 @@ function LandingPage() {
                     <Button variant="contained" color="primary" href="/about">
                         Learn More
                     </Button>
-                    <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10 }}>
+                    <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10, fontWeight:'bold' }}>
                         Login
                     </Button>
                 </Grid>
