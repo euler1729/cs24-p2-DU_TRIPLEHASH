@@ -14,6 +14,11 @@ from manageUser.UserDetails import UserDetails
 from manageUser.Roles import Roles
 from manageUser.UpdateRole import UpdateRole
 
+
+# Data entry
+from data_entry.data_entry import Vehicle
+
+
 with open('config.json', 'r') as f:
     config = json.load(f)
     key = config['KEY']
@@ -52,6 +57,11 @@ api.add_resource(Users, '/users')
 api.add_resource(UserDetails, '/users/<int:userId>')
 api.add_resource(Roles, '/users/roles')
 api.add_resource(UpdateRole, '/user/<int:userId>/roles')
+
+
+# Data Entry
+api.add_resource(Vehicle, '/data-entry/add-vehicle')
+
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, use_reloader=True, host='0.0.0.0', port=8000)
