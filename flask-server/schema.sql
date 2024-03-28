@@ -7,6 +7,7 @@ CREATE TABLE user(
     role_id INTEGER
     name TEXT,
     age INTEGER,
+    phone_number TEXT,
 );
 
 
