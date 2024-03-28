@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Paper, Typography, Avatar, makeStyles, TextField, Button } from '@material-ui/core';
+
+import avatar from './res/avatar.png';
 
 // Sample user data
 const user = {
@@ -14,11 +16,7 @@ const user = {
 // Styles for the component
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     height: '100vh',
-    
   },
   paper: {
     padding: theme.spacing(3),
@@ -38,6 +36,27 @@ const useStyles = makeStyles((theme) => ({
 const ProfileView = () => {
   const classes = useStyles();
   const [editMode, setEditMode] = useState(false);
+  const [user, setUser] = useState({});
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [age, setAge] = useState('');
+  const [user_name, setUser_name] = useState('');
+  const [role, setRole] = useState('');
+  const roles = ['Admin', 'STS Manager', 'Landfill Manager', 'Unassigned'];
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    setUser(user);
+    if(user){
+      setName(user.name?.toUpperCase());
+      setEmail(user.email);
+      setAge(user.age);
+      setUser_name(user.user_name);
+      if(user.role_id){
+        setRole(roles[user.role_id - 1].toLowerCase());
+      }
+    }
+  }, []);
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -52,11 +71,24 @@ const ProfileView = () => {
     <Grid container spacing={3} justify="center" className={classes.root}>
       <Grid item xs={12} sm={8} md={6}>
         <Paper elevation={3} className={classes.paper}>
-          <Avatar alt={user.name} src={user.profileImage} className={classes.avatar} />
-          <Typography variant="h5" gutterBottom>{user.name}</Typography>
-          <Typography variant="subtitle1" color="textSecondary">@{user.username}</Typography>
+          <Avatar alt={user.name} src={avatar} className={classes.avatar} />
+          <Typography variant="h5" gutterBottom >
+            <span style={{ fontWeight: 'bold', fontFamily: 'sans-serif' }}>{name} </span>
+            <span style={{ color: 'gray', fontSize:'15px' }}>{age}</span>
+          </Typography>
+          <Typography variant="body1" color="textSecondary">{user.email}</Typography>
+          <Typography variant="subtitle1" color="textSecondary">User Name: {role}</Typography>
+          <Typography variant="subtitle1" color="textSecondary">Role: {role}</Typography>
+
           {editMode ? (
             <>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="Name"
+                defaultValue={user.name}
+              />
               <TextField
                 variant="outlined"
                 margin="normal"
