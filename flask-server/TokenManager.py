@@ -10,3 +10,6 @@ def decode_token(token):
             return info
     except Exception as e:
         return None
+
+def isTokenValid(token):
+    return True
