@@ -10,15 +10,20 @@ import 'slick-carousel/slick/slick-theme.css';
 import carousel_image1 from './res/carousel_image1.png';
 import carousel_image2 from './res/carousel_image2.png';
 
+// Brand
+import LogGif from '../EcoSyncBrand/logogif.gif'
+import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(4),
     },
     title: {
-        fontSize: '2.5rem',
+        fontSize: '2rem',
         fontWeight: 'bold',
-        color: theme.palette.primary.main,
+        color: EcoBrand.Colors.green,
         marginBottom: theme.spacing(2),
     },
     description: {
@@ -31,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     slider: {
-        width: '60%',
+        width: '70%',
     },
 }));
 
@@ -49,9 +54,14 @@ function LandingPage() {
         autoplaySpeed: 3000,
     };
 
+
+
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
+                <Grid item xs={12} align="center">
+                    <img src={LogGif} alt="EcoSync Logo" style={{ width: '200px' }} />
+                </Grid>
                 <Grid item xs={12}>
                     <Typography variant="h2" align="center" className={classes.title}>
                         EcoSync: Revolutionizing Waste Management
@@ -66,7 +76,7 @@ function LandingPage() {
                     <Button variant="contained" color="primary" href="/about">
                         Learn More
                     </Button>
-                    <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10 }}>
+                    <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10, fontWeight:'bold' }}>
                         Login
                     </Button>
                 </Grid>

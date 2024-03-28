@@ -1,0 +1,26 @@
+{
+    "Palette": [
+        "#1f2d3d",
+        "#4f5b6b",
+        "#d8dbe2",
+        "#e6e9ed",
+        "#f4f6f9"
+    ],
+    "Colors":{
+        "greenLight": "#3ec581",
+        "greenDark": "#05352e",
+        "green": "#147d5a",
+        "greenAsh": "#5c7c74",
+        "greenAshLight": "#8caca4",
+        "greenAshDark": "#7e9c94",
+        "greenTea": "#236054",
+        "greenTeaDark": "#2c5444",
+        "greenWhite": "#ddebe7"
+    },
+    "Fonts": {
+        "HeadingFont": "Fredericka the Great",
+        "SubheadingFont": "Perpetua",
+        "BodyFont": "Charcuterie Engraved"
+    },
+    "BrandVoice": "Confident, clean - the future of waste management is here"
+}
