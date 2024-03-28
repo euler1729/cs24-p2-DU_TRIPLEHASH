@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Menu, Dashboard, People, BarChart, ExitToApp, PersonAdd, Edit, Settings, PlaylistAdd } from '@material-ui/icons';
+import { Menu, Dashboard, People, BarChart, ExitToApp, PersonAdd, Edit, Settings, PlaylistAddm, AccountBox } from '@material-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
@@ -12,7 +12,7 @@ import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 // Component for Admin Dashboard
 import UserManagement from './UserManagement';
 import CreateUser from './CreateUser';
-
+import ProfileView from '../general/ProfileView';
 
 
 const drawerWidth = 240;
@@ -68,8 +68,10 @@ function AdminDashboard() {
         return <Typography variant="h4">
           <CreateUser />
         </Typography>;
-      case 'updateUser':
-        return <Typography variant="h4">Update User Information Component</Typography>;
+      case 'profile':
+        return <Typography variant="h4">
+          <ProfileView />
+        </Typography>;
       // Add cases for other options
       default:
         return null;
@@ -112,14 +114,17 @@ function AdminDashboard() {
             <ListItemIcon><PersonAdd /></ListItemIcon>
             <ListItemText primary="Create New User" />
           </ListItem>
-          <ListItem button onClick={() => handleOptionClick('updateUser')}>
-            <ListItemIcon><Edit /></ListItemIcon>
-            <ListItemText primary="Update User Information" />
-          </ListItem>
+
           {/* Add other menu items with onClick handlers */}
         </List>
+
+
         <div style={{ flexGrow: 1 }} />
         <List>
+          <ListItem button onClick={() => handleOptionClick('profile')}>
+            <ListItemIcon><AccountBox /></ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
           <ListItem button onClick={() => handleLogout()}>
             <ListItemIcon><ExitToApp /></ListItemIcon>
             <ListItemText primary="Logout" />
