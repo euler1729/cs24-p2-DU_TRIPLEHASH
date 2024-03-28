@@ -2,10 +2,6 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE user(
     user_id INTEGER PRIMARY KEY,
     user_name TEXT,
-<<<<<<< HEAD
-    name TEXT,
-=======
->>>>>>> b20cbe28abb7f80c43e0479be478a5530b050f3f
     email TEXT,
     password TEXT,
     role_id INTEGER,
