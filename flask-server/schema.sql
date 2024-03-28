@@ -4,10 +4,10 @@ CREATE TABLE user(
     user_name TEXT,
     email TEXT,
     password TEXT,
-    role_id INTEGER
+    role_id INTEGER,
     name TEXT,
     age INTEGER,
-    phone_number TEXT,
+    phone_number TEXT
 );
 
 
