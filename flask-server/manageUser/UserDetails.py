@@ -1,67 +1,113 @@
-from flask_restful import Resource
-from flask import request, jsonify, make_response, Response
-import sqlite3
-from werkzeug.security import generate_password_hash, check_password_hash
-from TokenManager import decode_token
+DROP TABLE IF EXISTS user;
+CREATE TABLE user(
+    user_id INTEGER PRIMARY KEY,
+    user_name TEXT,
+    email TEXT,
+    password TEXT,
+    role_id INTEGER,
+    name TEXT,
+    age INTEGER,
+    phone_number TEXT
+);
 
-class UserDetails(Resource):
 
-    #get method for retrieving a user details
-    def get(self, userId):
-        try:
-            token = request.headers['Authorization'].split(' ')[1]
-            info = decode_token(token)
-            roleIdHead = info['sub']['role_id']
-            print(userId)
-            if info:
-                if roleIdHead != 1:
-                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
-                conn = sqlite3.connect('sqlite.db')
-                cursor = conn.cursor()
-                cursor.execute('SELECT * FROM user WHERE user_id = ?', (userId,))
-                user = cursor.fetchone()
-                if user:
-                    return make_response(jsonify({'user': user}), 200)
-                else:
-                    return make_response(jsonify({'msg':'No Users Found!'}), 404)
-        except Exception as e:
-            return make_response(jsonify({'msg': e}), 401)
-            
-    #put method for updating a user details
-    def post(self, userId): 
-        try:
-            token = request.headers['Authorization'].split(' ')[1]
-            info = decode_token(token)
-            if info:
-                user_id = info['sub']['user_id']
-                data = request.get_json()
-                key = info['key']
-                if(key != 1):
-                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
-                conn = sqlite3.connect('sqlite.db')
-                cursor = conn.cursor()
-                cursor.execute('UPDATE user SET user_name = ?, password = ?, email = ?, role_id = ?, name = ?, age = ?, phoneNumber = ? WHERE id = ?', (data['user_name'], generate_password_hash(data['password']), data['email'], data['role_id'], data['name'], data['age'], data['phoneNumber'], userId))
-                conn.commit()
-                return make_response(jsonify({'msg':'User Updated!'}), 201)
-            return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)
-        except Exception as e:
-            return make_response(jsonify({'msg': e}), 401)
-    
-    #delete method for deleting a user
-    def delete(self, userId):
-        try:
-            token = request.headers['Authorization'].split(' ')[1]
-            info = decode_token(token)
-            if info:
-                key = info['key']
-                if(key != 1):
-                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
-                conn = sqlite3.connect('sqlite.db')
-                cursor = conn.cursor()
-                cursor.execute('DELETE FROM user WHERE id = ?', (userId,))
-                conn.commit()
-                return make_response(jsonify({'msg':'User Deleted!'}), 201)
-            return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)
-        except Exception as e:
-            return make_response(jsonify({'msg': e}), 401)
+DROP TABLE IF EXISTS role;
+CREATE TABLE role(
+    role_id INTEGER PRIMARY KEY,
+    role_name TEXT
+);
 
+
+DROP TABLE IF EXISTS otp;
+CREATE TABLE otp(
+    user_id INTEGER,
+    otp TEXT,
+    exp INTEGER
+);
+
+
+
+DROP TABLE IF EXISTS vehicle;
+CREATE TABLE vehicle (
+    vehicle_id INTEGER PRIMARY KEY,
+    vehicle_reg_number TEXT,
+    vehicle_type TEXT,
+    vehicle_capacity_in_ton INTEGER,
+    fuel_cost_per_km_loaded INTEGER,
+    fuel_cost_per_km_unloaded INTEGER,
+    sts_id INTEGER,  
+    FOREIGN KEY (sts_id) REFERENCES STS(STS_ID) -- id of the Station of the Vehicle
+);
+
+
+
+DROP TABLE IF EXISTS sts;
+CREATE TABLE sts (
+    sts_id INTEGER PRIMARY KEY,
+    ward_number INTEGER,
+    capacity_tonnes INTEGER,
+    gps_longitude REAL,
+    gps_latitude REAL
+);
+
+
+
+DROP TABLE IF EXISTS sts_managers;
+CREATE TABLE sts_managers (
+    manager_id INTEGER PRIMARY KEY,
+    user_id INTEGER UNIQUE,  -- Link STS manager to user
+    sts_id INTEGER,  -- Link manager to sts
+
+    FOREIGN KEY (user_id) REFERENCES user(user_id),  
+    FOREIGN KEY (sts_id) REFERENCES sts(sts_id)  -- id for station of the manager
+);
+
+
+
+DROP TABLE IF EXISTS vehicle_entries;
+CREATE TABLE vehicle_entries (
+    entry_id INTEGER PRIMARY KEY,
+    sts_id INTEGER,
+    vehicle_number TEXT,
+    weight_of_waste INTEGER,
+    time_of_arrival TEXT,
+    time_of_departure TEXT,
+    FOREIGN KEY (sts_id) REFERENCES sts(sts_id)
+);
+
+
+
+DROP TABLE IF EXISTS landfill_sites;
+CREATE TABLE landfill_sites (
+    landfill_id INTEGER PRIMARY KEY,
+    site_name TEXT,
+    capacity INTEGER,
+    operational_timespan TEXT,
+    gps_longitude REAL,
+    gps_latitude REAL
+);
+
+
+
+DROP TABLE IF EXISTS landfill_managers;
+CREATE TABLE landfill_managers (
+    manager_id INTEGER PRIMARY KEY,
+    user_id INTEGER UNIQUE,  -- Link Landfill manager to user
+    landfill_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (landfill_id) REFERENCES landfill_sites(landfill_id)
+);
+
+
+
+DROP TABLE IF EXISTS dump_entries;
+CREATE TABLE dump_entries (
+    entry_id INTEGER PRIMARY KEY,
+    landfill_id INTEGER,
+    manager_id INTEGER,  -- Id of landfill manager
+    weight_of_waste INTEGER,
+    time_of_arrival TEXT,
+    time_of_departure TEXT,
+    FOREIGN KEY (landfill_id) REFERENCES landfill_sites(landfill_id),
+    FOREIGN KEY (manager_id) REFERENCES sts_managers(manager_id)
+);

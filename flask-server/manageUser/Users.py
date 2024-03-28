@@ -26,17 +26,16 @@ class Users(Resource):
                     # make every user as json and then send another json
                     data = []
                     for u in user:
-
+                        print(u)
                         u = {
                             'user_id': u[0],
                             'user_name': u[1],
-                            'password': u[2],
-                            'email': u[3],
+                            'email': u[2],
+                            'password': u[3],
                             'role_id': u[4],
-                            'first_name': u[5],
-                            'last_name': u[6],
-                            'age': u[7],
-                            'phone_number': u[8]
+                            'name': u[5],
+                            'age': u[6],
+                            'phone_number': u[7]
                         }
                         data.append(u)
                     return make_response(jsonify({'users': data}), 200)
@@ -64,7 +63,7 @@ class Users(Resource):
                 if exist_user:
                     return make_response(jsonify({'msg':'User Already Exists!'}), 409)
                 else:
-                    cursor.execute('INSERT INTO user (user_name, password, email, role_id, first_name, last_name, age, phone_number) VALUES (?,?,?,?,?,?, ?, ?)', (data['user_name'], generate_password_hash(data['password']), data['email'], data['role_id'], data['first_name'], data['last_name'], data['age'], data['phone_number']))
+                    cursor.execute('INSERT INTO user (user_name, password, email, role_id, name, age, phone_number) VALUES (?,?,?,?,?,?,?)', (data['user_name'], generate_password_hash(data['password']), data['email'], data['role_id'], data['name'], data['age'], data['phone_number']))
                     conn.commit()
                 return make_response(jsonify({'msg':'User Created!'}), 201)
             return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)

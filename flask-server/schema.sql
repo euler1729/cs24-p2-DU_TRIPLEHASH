@@ -2,11 +2,10 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE user(
     user_id INTEGER PRIMARY KEY,
     user_name TEXT,
-    first_name TEXT,
-    last_name TEXT,
     email TEXT,
     password TEXT,
     role_id INTEGER,
+    name TEXT,
     age INTEGER,
     phone_number TEXT
 );
