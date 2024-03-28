@@ -11,12 +11,14 @@ class UserDetails(Resource):
         try:
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
-
-            key = info['key']
+            roleIdHead = info['sub']['role_id']
+            print(userId)
             if info:
+                if roleIdHead != 1:
+                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
-                cursor.execute('SELECT * FROM user WHERE id = ?', (id,))
+                cursor.execute('SELECT * FROM user WHERE user_id = ?', (userId,))
                 user = cursor.fetchone()
                 if user:
                     return make_response(jsonify({'user': user}), 200)
