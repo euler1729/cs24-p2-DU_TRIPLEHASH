@@ -7,19 +7,19 @@ from TokenManager import decode_token
 class UpdateRole(Resource):
 
     # put method for updating user's roles only admin
-    def put(self):
+    def put(self, userId):
         try:
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
             if info:
-                key = info.sub.user_id
+                role_id = info['sub']['role_id']
                 
-                if(key != 1):
+                if(role_id != 1):
                     return make_response(jsonify({'msg':'Unauthorized'}), 401)
                 data = request.get_json()
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
-                cursor.execute('UPDATE user SET role_id = ? WHERE id = ?', (data['role_id'], data['id']))
+                cursor.execute('UPDATE user SET role_id = ? WHERE user_id = ?', (data['new_role'], userId))
                 conn.commit()
                 return make_response(jsonify({'msg':'Role Updated!'}), 201)
             return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)
