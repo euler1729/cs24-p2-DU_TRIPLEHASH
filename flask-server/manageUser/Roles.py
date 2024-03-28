@@ -15,7 +15,7 @@ class Roles(Resource):
             if info:
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
-                cursor.execute('SELECT * FROM roles ')
+                cursor.execute('SELECT * FROM role')
                 roles = cursor.fetchall()
                 all_roles = []
                 for role in roles:
