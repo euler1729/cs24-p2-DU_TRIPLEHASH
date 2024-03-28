@@ -9,6 +9,10 @@ import json
 from auth.Login import Login, Logout
 from auth.ChangePassword import ChangePassword
 from auth.ResetPassword import ResetPasswordInit, ResetPasswordConfirm
+from manageUser.Users import Users
+from manageUser.UserDetails import UserDetails
+from manageUser.Roles import Roles
+from manageUser.UpdateRole import UpdateRole
 
 
 # Data entry
@@ -47,6 +51,12 @@ api.add_resource(Logout, '/auth/logout')
 api.add_resource(ChangePassword, '/auth/change-password')
 api.add_resource(ResetPasswordInit, '/auth/reset-password/init')
 api.add_resource(ResetPasswordConfirm, '/auth/reset-password/confirm')
+
+
+api.add_resource(Users, '/users')
+api.add_resource(UserDetails, '/users/<int:userId>')
+api.add_resource(Roles, '/users/roles')
+api.add_resource(UpdateRole, '/user/<int:userId>/roles')
 
 
 # Data Entry

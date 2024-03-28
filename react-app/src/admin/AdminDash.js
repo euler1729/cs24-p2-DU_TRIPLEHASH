@@ -5,11 +5,22 @@ import { Menu, Dashboard, People, BarChart, ExitToApp, PersonAdd, Edit, Settings
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
+// Brand
+import LogGif from '../EcoSyncBrand/logogif.gif'
+import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
+
+// Component for Admin Dashboard
+import UserManagement from './UserManagement';
+import CreateUser from './CreateUser';
+
+
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    backgroundColor: EcoBrand.Colors.greenWhite,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -50,9 +61,13 @@ function AdminDashboard() {
       case 'dashboard':
         return <Typography variant="h4">Welcome to Admin Dashboard</Typography>;
       case 'users':
-        return <Typography variant="h4">Users Component</Typography>;
+        return <Typography variant="h4">
+          <UserManagement />
+        </Typography>;
       case 'createUser':
-        return <Typography variant="h4">Create New User Component</Typography>;
+        return <Typography variant="h4">
+          <CreateUser />
+        </Typography>;
       case 'updateUser':
         return <Typography variant="h4">Update User Information Component</Typography>;
       // Add cases for other options
@@ -63,15 +78,15 @@ function AdminDashboard() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      {/* <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
             <Menu />
           </IconButton>
           <Typography variant="h6">Admin Dashboard</Typography>
         </Toolbar>
-      </AppBar>
-      
+      </AppBar> */}
+
       <Drawer
         className={classes.drawer}
         variant="permanent"
@@ -80,7 +95,9 @@ function AdminDashboard() {
         }}
       >
         <div className={classes.toolbar}>
-          <Typography variant="h6">Your Logo</Typography>
+          <Typography variant="h6">
+            <img src={LogGif} alt="EcoSync Logo" style={{ width: '80%' }} />
+          </Typography>
         </div>
         <List>
           <ListItem button onClick={() => handleOptionClick('dashboard')}>
@@ -109,7 +126,7 @@ function AdminDashboard() {
           </ListItem>
         </List>
       </Drawer>
-      
+
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {/* Render selected component */}

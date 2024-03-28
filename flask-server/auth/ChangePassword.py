@@ -10,6 +10,7 @@ class ChangePassword(Resource):
         try:
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
+            print(info)
             if info:
                 user_id = info['sub']['user_id']
                 data = request.get_json()
