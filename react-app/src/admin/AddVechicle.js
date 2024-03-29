@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 import Cookies from 'universal-cookie';
+
 // API
 import api from '../API';
 

@@ -3,6 +3,9 @@ import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, List
 import { makeStyles } from '@material-ui/core/styles';
 import { Menu, Dashboard, People, BarChart, ExitToApp, PersonAdd, Edit, Settings, PlaylistAddm, AccountBox } from '@material-ui/icons';
 import FireTruckIcon from '@mui/icons-material/FireTruck';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+
+
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
@@ -10,11 +13,15 @@ import Cookies from 'universal-cookie';
 import LogGif from '../EcoSyncBrand/logogif.gif'
 import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 
+// PNG ICONS
+import stsicon from './res/sts.png'
+
 // Component for Admin Dashboard
 import UserManagement from './UserManagement';
 import CreateUser from './CreateUser';
 import ProfileView from '../general/ProfileView';
 import VehiclePage from './AddVechicle';
+import CreateSTSPage from './CreateSTS';
 
 const drawerWidth = 240;
 
@@ -80,6 +87,10 @@ function AdminDashboard() {
         return <Typography variant="h4">
           <VehiclePage />
         </Typography>;
+      case 'createSTS':
+        return <Typography variant="h4">
+          <CreateSTSPage />
+        </Typography>;
       // Add cases for other options
       default:
         return null;
@@ -125,6 +136,12 @@ function AdminDashboard() {
           <ListItem button onClick={() => handleOptionClick('addVehicle')}>
             <ListItemIcon><FireTruckIcon/></ListItemIcon>
             <ListItemText primary="Add Vehicle" />
+          </ListItem>
+          <ListItem button onClick={() => handleOptionClick('createSTS')}>
+            <ListItemIcon>
+              <img src={stsicon} alt="STS Icon" style={{ width: '20px' }} />
+            </ListItemIcon>
+            <ListItemText primary="Create STS" />
           </ListItem>
           {/* Add other menu items with onClick handlers */}
         </List>
