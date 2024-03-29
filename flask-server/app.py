@@ -56,7 +56,7 @@ api.add_resource(ResetPasswordConfirm, '/auth/reset-password/confirm')
 api.add_resource(Users, '/users')
 api.add_resource(UserDetails, '/users/<int:userId>')
 api.add_resource(Roles, '/users/roles')
-api.add_resource(UpdateRole, '/user/<int:userId>/roles')
+api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 
 
 # Data Entry

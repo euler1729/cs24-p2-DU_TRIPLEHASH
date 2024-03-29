@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, InputAdornment, IconButton, CircularProgress } from '@material-ui/core';
+import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, InputAdornment, IconButton, CircularProgress, InputLabel } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 
@@ -136,7 +136,7 @@ const CreateUser = () => {
     };
     return (
         <div className={classes.root}>
-            <Grid container spacing={2} justify="center">
+            <Grid container spacing={2} justifyContent="center">
                 <Grid item xs={12} sm={8} md={6}>
                     <Paper elevation={3} className={classes.paper}>
                         <Typography className={classes.title} variant="h5" align="center" gutterBottom>Create New User</Typography>
@@ -173,11 +173,13 @@ const CreateUser = () => {
                             />
                             {/* Add similar TextField components for other fields */}
                             <Select
+                                labelId='role'
                                 name="role"
                                 variant="outlined"
                                 value={newUser.role}
                                 onChange={handleInputChange}
                                 className={classes.outlinedSelect}
+                                label="Role"
                             >
                                 <MenuItem value="admin">Admin</MenuItem>
                                 <MenuItem value="STS Manager">STS Manager</MenuItem>

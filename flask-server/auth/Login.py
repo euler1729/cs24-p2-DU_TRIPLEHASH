@@ -25,6 +25,7 @@ class Login(Resource):
                 user = {
                     'user_id': user[0],
                     'user_name': user[1],
+                    'name': user[5],
                     'email': user[2],
                     'role_id': user[4]
                 }

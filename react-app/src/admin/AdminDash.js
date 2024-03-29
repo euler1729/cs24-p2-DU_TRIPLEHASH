@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Menu, Dashboard, People, BarChart, ExitToApp, PersonAdd, Edit, Settings, PlaylistAddm, AccountBox } from '@material-ui/icons';
+import FireTruckIcon from '@mui/icons-material/FireTruck';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
@@ -13,7 +14,7 @@ import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 import UserManagement from './UserManagement';
 import CreateUser from './CreateUser';
 import ProfileView from '../general/ProfileView';
-
+import VehiclePage from './AddVechicle';
 
 const drawerWidth = 240;
 
@@ -72,6 +73,10 @@ function AdminDashboard() {
         return <Typography variant="h4">
           <ProfileView />
         </Typography>;
+      case 'addVehicle':
+        return <Typography variant="h4">
+          <VehiclePage />
+        </Typography>;
       // Add cases for other options
       default:
         return null;
@@ -114,7 +119,10 @@ function AdminDashboard() {
             <ListItemIcon><PersonAdd /></ListItemIcon>
             <ListItemText primary="Create New User" />
           </ListItem>
-
+          <ListItem button onClick={() => handleOptionClick('addVehicle')}>
+            <ListItemIcon><FireTruckIcon/></ListItemIcon>
+            <ListItemText primary="Add Vehicle" />
+          </ListItem>
           {/* Add other menu items with onClick handlers */}
         </List>
 
