@@ -31,7 +31,6 @@ class Users(Resource):
                             'user_id': u[0],
                             'user_name': u[1],
                             'email': u[2],
-                            'password': u[3],
                             'role_id': u[4],
                             'name': u[5],
                             'age': u[6],

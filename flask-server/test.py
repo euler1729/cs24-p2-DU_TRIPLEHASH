@@ -25,4 +25,4 @@ def print_database_table(table_name):
         print("Database error:", e)
 
 # Call the function to print the contents of the "vehicle" table
-print_database_table("dump_entries")
+print_database_table("vehicle")

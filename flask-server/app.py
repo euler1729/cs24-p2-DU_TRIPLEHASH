@@ -16,7 +16,15 @@ from manageUser.UpdateRole import UpdateRole
 
 
 # Data entry
-from data_entry.data_entry import Vehicle
+from data_entry.AddDumpEntry import AddDumpEntry
+from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
+from data_entry.AddVehicle import AddVehicle
+from data_entry.AssignLandfillManagers import AssignLandfillManagers
+from data_entry.AssignSTSManagers import AssignSTSManagers
+from data_entry.AssignSTSVehicles import AssignSTSVehicles
+from data_entry.CreateLandfillSite import CreateLandfillSite
+from data_entry.CreateSTS import CreateSTS
+
 
 
 with open('config.json', 'r') as f:
@@ -60,7 +68,15 @@ api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 
 
 # Data Entry
-api.add_resource(Vehicle, '/data-entry/add-vehicle')
+api.add_resource(AddVehicle, '/data-entry/add-vehicle')
+api.add_resource(CreateSTS, '/data-entry/create-sts')
+api.add_resource(AssignSTSManagers, '/data-entry/assign-sts-managers')
+api.add_resource(AssignSTSVehicles, '/data-entry/assign-sts-vehicles')
+api.add_resource(AddSTSVehicleEntry, '/data-entry/add-sts-vehicle-entry')
+api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
+api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
+api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
+
 
 
 if __name__ == "__main__":

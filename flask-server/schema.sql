@@ -105,9 +105,11 @@ CREATE TABLE dump_entries (
     entry_id INTEGER PRIMARY KEY,
     landfill_id INTEGER,
     manager_id INTEGER,  -- Id of landfill manager
+    vehicle_id INTEGER,
     weight_of_waste INTEGER,
     time_of_arrival TEXT,
     time_of_departure TEXT,
+    
     FOREIGN KEY (landfill_id) REFERENCES landfill_sites(landfill_id),
     FOREIGN KEY (manager_id) REFERENCES sts_managers(manager_id)
 );
