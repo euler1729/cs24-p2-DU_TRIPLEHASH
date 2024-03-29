@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, InputAdornment, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-
+import Cookies from 'universal-cookie';
 // API
 import api from '../API';
 
@@ -64,10 +64,10 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateUser = () => {
     const classes = useStyles();
+    const cookies = new Cookies();
     const [newUser, setNewUser] = useState({ user_name: '', email: '', role: 4, password: '', name: '', age: '', phone_number: '' });
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
-    const [validInput, setValidInput] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
@@ -141,6 +141,7 @@ const CreateUser = () => {
             console.log(errors)
             return;
         }
+        console.log(newUser)
         try {
             setLoading(true);
             api.post('/users', {
@@ -151,12 +152,17 @@ const CreateUser = () => {
                 "age": newUser.age,
                 "email": newUser.email,
                 "phone_number": newUser.phone_number
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${cookies.get('access_token')}`,
+                },
+                withCredentials: true
             }).then((response) => {
                 console.log(response);
                 setLoading(false);
                 if (response.status < 300) {
                     setLoading(false);
-                    setNewUser({ user_name: '', email: '', role: 'Unassigned', password: '', name: '', age: '' });
+                    setNewUser({ user_name: '', email: '', role: 4, password: '', name: '', age: '', phone_number:'' });
                     setDialogType('success');
                     setDialogMessage('User created successfully');
                     setDialogOpen(true);
@@ -223,18 +229,16 @@ const CreateUser = () => {
                             />
                             {/* Add similar TextField components for other fields */}
                             <Select
-                                labelId='role'
                                 name="role"
                                 variant="outlined"
                                 value={newUser.role}
                                 onChange={handleInputChange}
                                 className={classes.outlinedSelect}
-                                label="Role"
                             >
-                                <MenuItem value="1">Admin</MenuItem>
-                                <MenuItem value="2">STS Manager</MenuItem>
-                                <MenuItem value="3">Landfill Manager</MenuItem>
-                                <MenuItem value="4">Unassigned</MenuItem>
+                                <MenuItem value={1}>Admin</MenuItem>
+                                <MenuItem value={2}>STS Manager</MenuItem>
+                                <MenuItem value={3}>Landfill Manager</MenuItem>
+                                <MenuItem value={4}>Unassigned</MenuItem>
                             </Select>
 
                             <TextField
@@ -284,12 +288,12 @@ const CreateUser = () => {
                 </Grid>
             </Grid>
             <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-                <DialogTitle color={dialogType==='success'?EcoSyncBrand.Colors.green:'secondary'}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
-                <DialogContent color={dialogType==='success'?EcoSyncBrand.Colors.green:'secondary'}>
+                <DialogTitle color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
+                <DialogContent color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
                     <Typography>{dialogMessage}</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog} color={dialogType==='success'?EcoSyncBrand.Colors.green:'secondary'}>
+                    <Button onClick={handleCloseDialog} color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
                         Close
                     </Button>
                 </DialogActions>
