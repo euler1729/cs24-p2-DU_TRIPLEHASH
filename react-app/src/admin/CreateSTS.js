@@ -171,27 +171,19 @@ const CreateSTSPage = () => {
         const newErrors = {};
         if (!sts.ward_number) {
             newErrors.ward_number = 'Ward Number is required';
-            return;
         }
         if (!sts.capacity_tonnes) {
             newErrors.capacity_tonnes = 'capacity_tonnes is required';
-            return;
         } else if (isNaN(sts.capacity_tonnes) || sts.capacity_tonnes <= 0) {
             newErrors.capacity_tonnes = 'capacity_tonnes must be a positive number';
-            return;
         }
         if (!sts.gps_longitude) {
             newErrors.gps_longitude = 'GPS Coordinates are required';
-            return;
         }
         if (!sts.gps_latitude) {
             newErrors.gps_latitude = 'GPS Coordinates are required';
-            return;
         }
-
-
         setErrors(newErrors);
-
         if (Object.keys(newErrors).length > 0) {
             return;
         }
