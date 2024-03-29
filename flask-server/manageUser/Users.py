@@ -56,6 +56,21 @@ class Users(Resource):
                 if(role_id != 1):
                     return make_response(jsonify({'msg':'Unauthorized'}), 401)
 
+                if 'name' not in data:
+                    data['name'] = ''
+                if 'age' not in data:
+                    data['age'] = ''
+                if 'phone_number' not in data:
+                    data['phone_number'] = ''
+
+                if 'role_id' not in data:
+                    return make_response(jsonify({'msg':'Role Id is required!'}), 400)
+                if 'user_name' not in data:
+                    return make_response(jsonify({'msg':'User Name is required!'}), 400)
+                if 'password' not in data:
+                    return make_response(jsonify({'msg':'Password is required!'}), 400)    
+
+
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
                 exist_user = cursor.execute('SELECT * FROM user WHERE user_name = ? or email = ?', (data['user_name'], data['email'])).fetchone()

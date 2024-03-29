@@ -26,7 +26,6 @@ class UserDetails(Resource):
                         'user_id': user[0],
                         'user_name': user[1],
                         'email': user[2],
-                        'password': user[3],
                         'role_id': user[4],
                         'name': user[5],
                         'age': user[6],
