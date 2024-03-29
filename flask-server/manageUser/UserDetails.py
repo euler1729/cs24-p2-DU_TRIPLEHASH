@@ -42,17 +42,44 @@ class UserDetails(Resource):
         try:
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
+        
             if info:
                 user_id = info['sub']['user_id']
                 data = request.get_json()
                 role_id = info['sub']['role_id']
-                if(role_id != 1):
+                
+                if(role_id != 1 and userId != user_id):
                     return make_response(jsonify({'msg':'Unauthorized'}), 401)
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
                 exist_user = cursor.execute('SELECT * FROM user WHERE user_id = ?', (userId,)).fetchone()
+            
                 if not exist_user:
                     return make_response(jsonify({'msg':'User not found!'}), 404)
+                if 'name' not in data:
+                    data['name'] = exist_user[5]
+                if 'age' not in data:
+                    data['age'] = exist_user[6]
+                if 'phone_number' not in data:
+                    data['phone_number'] = exist_user[7]
+                if 'email' not in data:
+                    data['email'] = exist_user[2]
+                if 'user_name' not in data:
+                    data['user_name'] = exist_user[1]
+                if 'password' not in data:
+                    data['password'] = exist_user[3]
+                if 'role_id' not in data:
+                    data['role_id'] = exist_user[4]
+                
+                if exist_user[2] != data['email'] and role_id != 1:
+                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
+                if exist_user[1] != data['user_name'] and role_id != 1:
+                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
+                if exist_user[4] != data['role_id'] and role_id != 1:
+                    return make_response(jsonify({'msg':'Unauthorized'}), 401)
+                
+                    
+                
                 email = cursor.execute('SELECT email FROM user WHERE user_id = ?', (userId,)).fetchone()
                 if email[0] != data['email']:
                     exist_email = cursor.execute('SELECT email FROM user WHERE email = ?', (data['email'],)).fetchone()

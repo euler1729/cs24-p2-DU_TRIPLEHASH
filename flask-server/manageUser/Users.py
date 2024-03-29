@@ -70,7 +70,7 @@ class Users(Resource):
                 if 'password' not in data:
                     return make_response(jsonify({'msg':'Password is required!'}), 400)    
 
-
+                
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
                 exist_user = cursor.execute('SELECT * FROM user WHERE user_name = ? or email = ?', (data['user_name'], data['email'])).fetchone()
