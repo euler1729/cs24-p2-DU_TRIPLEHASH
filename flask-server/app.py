@@ -16,7 +16,7 @@ from manageUser.UpdateRole import UpdateRole
 
 
 # Data entry
-from data_entry.data_entry import Vehicle
+from data_entry.data_entry import *
 
 
 with open('config.json', 'r') as f:
@@ -60,7 +60,14 @@ api.add_resource(UpdateRole, '/user/<int:userId>/roles')
 
 
 # Data Entry
-api.add_resource(Vehicle, '/data-entry/add-vehicle')
+api.add_resource(AddVehicle, '/data-entry/add-vehicle')
+api.add_resource(CreateSTS, '/data-entry/create-sts')
+api.add_resource(AssignSTSManagers, '/data-entry/assign-sts-managers')
+api.add_resource(AssignSTSVehicles, '/data-entry/assign-sts-vehicles')
+api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
+api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
+api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
+
 
 
 if __name__ == "__main__":
