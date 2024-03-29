@@ -259,7 +259,7 @@ const ProfileView = () => {
                 }}
               />
               <Button
-                style={{ marginRight: '10px', width: '14vw' }}
+                style={{ marginRight: '10px', width: '12vw' }}
                 variant="contained"
                 color="primary"
                 className={classes.button}
@@ -353,7 +353,7 @@ const ProfileView = () => {
           {(!editMode && !editPasswordMode) && (
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
               <Button
-                style={{ marginRight: '10px', width: '12vw' }}
+                style={{ marginRight: '10px', width: '15vw' }}
                 variant="outlined"
                 color="primary"
                 className={classes.editButton}
@@ -362,7 +362,7 @@ const ProfileView = () => {
                 Change Password
               </Button>
               <Button
-                style={{ marginLeft: '10px', width: '12vw' }}
+                style={{ marginLeft: '10px', width: '15vw' }}
                 variant="outlined"
                 color="primary"
                 className={classes.editButton}

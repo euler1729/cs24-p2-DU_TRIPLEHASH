@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, CircularProgress } from '@material-ui/core';
+import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
+import Cookies from 'universal-cookie';
+// API
+import api from '../API';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,27 +61,97 @@ const useStyles = makeStyles((theme) => ({
 
 const VehiclePage = () => {
     const classes = useStyles();
+    const cookies = new Cookies();
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [dialogType, setDialogType] = useState(''); // success or error
     const [vehicle, setVehicle] = useState({
-        registrationNumber: '',
-        type: 'openTruck',
-        capacity: '3',
-        fuelCostLoaded: '',
-        fuelCostUnloaded: '',
+        vehicle_reg_number: '',
+        vehicle_type: 'openTruck',
+        vehicle_capacity_in_ton: '3',
+        fuel_cost_per_km_loaded: '',
+        fuel_cost_per_km_unloaded: '',
     });
+    const [initVehicle, setInitVehicle] = useState(vehicle);
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setVehicle({ ...vehicle, [name]: value });
+    const validateInputs = () => {
+        // Clear previous errors
+        setErrors({});
+
+        // Validate inputs
+        const newErrors = {};
+        if (!vehicle.vehicle_reg_number) {
+            newErrors.vehicle_reg_number = 'Registration Number is required';
+        }
+        if (!vehicle.fuel_cost_per_km_loaded) {
+            newErrors.fuel_cost_per_km_loaded = 'Fuel Cost (Fully Loaded) is required';
+        } else if (isNaN(vehicle.fuel_cost_per_km_loaded) || vehicle.fuel_cost_per_km_loaded <= 0) {
+            newErrors.fuel_cost_per_km_loaded = 'Fuel Cost (Fully Loaded) must be a positive number';
+        }
+        if (!vehicle.fuel_cost_per_km_unloaded) {
+            newErrors.fuel_cost_per_km_unloaded = 'Fuel Cost (Unloaded) is required';
+        } else if (isNaN(vehicle.fuel_cost_per_km_unloaded) || vehicle.fuel_cost_per_km_unloaded <= 0) {
+            newErrors.fuel_cost_per_km_unloaded = 'Fuel Cost (Unloaded) must be a positive number';
+        }
+
+        // Set errors if any
+        setErrors(newErrors);
+
+        // If there are errors, prevent form submission
+        if (Object.keys(newErrors).length > 0) {
+            return false;
+        }
+        return true;
     };
 
     const handleSubmit = () => {
+        // Validate inputs
+        if (!validateInputs()) {
+            return;
+        }
+        // Proceed with form submission
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
+
+        try {
+            api.post('/data-entry/add-vehicle', vehicle, {
+                headers: {
+                    "Authorization": `Bearer ${cookies.get('access_token')}`,
+                },
+                withCredentials: true
+            }).then((response) => {
+                setDialogType('success');
+                setDialogMessage('Vehicle added successfully');
+                setDialogOpen(true);
+                setLoading(false);
+                setVehicle(initVehicle);
+            }).catch((error) => {
+                setDialogType('error');
+                setDialogMessage('Failed to add vehicle');
+                setDialogOpen(true);
+                setLoading(false);
+            });
+        } catch (error) {
+            setDialogType('error');
+            setDialogMessage('Failed to add vehicle');
+            setDialogOpen(true);
             setLoading(false);
-            // Handle success or error
-        }, 2000);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if(name === 'fuel_cost_per_km_loaded' || name === 'fuel_cost_per_km_unloaded') {
+            if (isNaN(value) || value < 0) {
+                return;
+            }
+        }
+        setVehicle({ ...vehicle, [name]: value });
+    };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
     };
 
     return (
@@ -90,11 +163,22 @@ const VehiclePage = () => {
                             Add New Vehicle
                         </Typography>
                         <form className={classes.form}>
-                            <TextField name="registrationNumber" className={classes.textField} label="Registration Number" variant="outlined" value={vehicle.registrationNumber} onChange={handleInputChange} />
-                            <Select 
-                                name="type" 
-                                variant="outlined" 
-                                value={vehicle.type} 
+                            <TextField
+                                name="vehicle_reg_number"
+                                className={classes.textField}
+                                label="Registration Number"
+                                variant="outlined"
+                                error={!!errors.vehicle_reg_number}
+                                helperText={errors.vehicle_reg_number}
+                                value={vehicle.vehicle_reg_number}
+                                onChange={handleInputChange}
+                            />
+                            <Select
+                                name="type"
+                                variant="outlined"
+                                error={!!errors.vehicle_type}
+                                helperText={errors.vehicle_type}
+                                value={vehicle.vehicle_type}
                                 onChange={handleInputChange}
                             >
                                 <MenuItem value="openTruck">Open Truck</MenuItem>
@@ -102,13 +186,38 @@ const VehiclePage = () => {
                                 <MenuItem value="compactor">Compactor</MenuItem>
                                 <MenuItem value="containerCarrier">Container Carrier</MenuItem>
                             </Select>
-                            <Select name="capacity" variant="outlined" value={vehicle.capacity} onChange={handleInputChange}>
-                                <MenuItem value="3">3 ton</MenuItem>
-                                <MenuItem value="5">5 ton</MenuItem>
-                                <MenuItem value="7">7 ton</MenuItem>
+                            <Select
+                                name="vehicle_capacity_in_ton"
+                                variant="outlined"
+                                error={!!errors.vehicle_capacity_in_ton}
+                                helperText={errors.vehicle_capacity_in_ton}
+                                value={vehicle.vehicle_capacity_in_ton}
+                                onChange={handleInputChange}
+                            >
+                                <MenuItem value={3}>3 ton</MenuItem>
+                                <MenuItem value={5}>5 ton</MenuItem>
+                                <MenuItem value={7}>7 ton</MenuItem>
+                                <MenuItem value={15}>15 ton</MenuItem>
                             </Select>
-                            <TextField name="fuelCostLoaded" className={classes.textField} label="Fuel Cost per Kilometer (Fully Loaded)" variant="outlined" type="number" value={vehicle.fuelCostLoaded} onChange={handleInputChange} />
-                            <TextField name="fuelCostUnloaded" className={classes.textField} label="Fuel Cost per Kilometer (Unloaded)" variant="outlined" type="number" value={vehicle.fuelCostUnloaded} onChange={handleInputChange} />
+                            <TextField
+                                name="fuel_cost_per_km_loaded"
+                                className={classes.textField}
+                                label="Fuel Cost per Kilometer (Fully Loaded)"
+                                variant="outlined"
+                                type="number"
+                                error={!!errors.fuel_cost_per_km_loaded}
+                                helperText={errors.fuel_cost_per_km_loaded}
+                                value={vehicle.fuel_cost_per_km_loaded} onChange={handleInputChange} />
+                            <TextField
+                                name="fuel_cost_per_km_unloaded"
+                                className={classes.textField}
+                                label="Fuel Cost per Kilometer (Unloaded)"
+                                variant="outlined"
+                                type="number"
+                                error={!!errors.fuel_cost_per_km_unloaded}
+                                helperText={errors.fuel_cost_per_km_unloaded}
+                                value={vehicle.fuel_cost_per_km_unloaded}
+                                onChange={handleInputChange} />
                             <Button className={classes.button} variant="contained" color="primary" fullWidth onClick={handleSubmit}>
                                 {loading ? 'Creating...' : 'Add Vehicle'}
                                 {loading && <CircularProgress size={20} className={classes.circularProgress} />}
@@ -117,6 +226,17 @@ const VehiclePage = () => {
                     </Paper>
                 </Grid>
             </Grid>
+            <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+                <DialogTitle color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
+                <DialogContent color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
+                    <Typography>{dialogMessage}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
