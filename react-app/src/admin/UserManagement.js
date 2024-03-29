@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Button, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, TableSortLabel, MenuItem, Select, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper, makeStyles, TextField, InputAdornment } from '@material-ui/core';
-import { Delete, Eco } from '@material-ui/icons';
+import { Delete } from '@material-ui/icons';
+import Cookies from 'universal-cookie';
+
+// API
 import api from '../API';
 
 // Brand
@@ -45,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
       color: '#4caf50', // Green color
     },
   },
-  button : {
+  button: {
     color: EcoSyncBrand.Colors.green,
     backgroundColor: EcoSyncBrand.Colors.greenWhite,
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -55,13 +58,14 @@ const useStyles = makeStyles((theme) => ({
       color: '#4caf50', // Green color
     },
   },
-  table_head:{
+  table_head: {
     fontWeight: 'bold'
   },
 }));
 
 const UserComponent = () => {
   const classes = useStyles();
+  const cookies = new Cookies();
   const [newUser, setNewUser] = useState({ user_name: '', email: '', role: 'Unassigned', name: '', age: '' });
   const [users, setUsers] = useState(initialUsers);
   const [sortBy, setSortBy] = useState('');
@@ -74,11 +78,36 @@ const UserComponent = () => {
   const [filterEmail, setFilterEmail] = useState('');
   const [filterUsername, setFilterUsername] = useState('');
   const [filterAge, setFilterAge] = useState('');
+  const roleOptions = ['admin', 'STS Manager', 'Landfill Manager', 'Unassigned'];
 
 
   useEffect(() => {
-    // Fetch users from API
-    // setUsers(response.data);
+    try {
+      api.get('/users', {
+        headers: {
+          "Authorization": `Bearer ${cookies.get('access_token')}`,
+        },
+        withCredentials: true
+      })
+        .then(response => {
+          setUsers([])
+          response.data.users.forEach(user => {
+            setUsers(users => [...users, {
+              user_id: user.user_id,
+              user_name: user.user_name? user.user_name : 'N/A',
+              email: user.email? user.email : 'N/A',
+              role: user.role_id? roleOptions[user.role_id-1] : 'N/A',
+              name: user.name? user.name : 'N/A',
+              age: user.age? user.age : 'N/A'
+            }]);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error);
+        });
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
   }, []);
 
   const handleSort = (column) => {
@@ -98,7 +127,7 @@ const UserComponent = () => {
     console.log('Saving user:', editingUser);
     setUsers(users.map(user => user.user_id === editingUser.user_id ? editingUser : user));
     // Update user to API
-    
+
     setEditingUser(null);
   };
 
@@ -144,7 +173,7 @@ const UserComponent = () => {
   const filteredUsers = users.filter(user =>
     user.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.role.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.age.toString().toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -166,7 +195,7 @@ const UserComponent = () => {
       </Grid>
 
       {/* Filter */}
-      <Grid container spacing={2} alignItems="center" style={{justifyContent:'space-around'}}>
+      <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-around' }}>
         <Grid item>
           <TextField
             label="Filter Role"
@@ -313,15 +342,15 @@ const UserComponent = () => {
                     {
                       editingUser && editingUser.user_id === user.user_id ? (
                         <TableCell>
-                          <Button style={{color:'white', backgroundColor: EcoSyncBrand.Colors.greenDark, fontWeight: 'bold'}} variant="contained"  onClick={handleSaveUser}>Save</Button>
+                          <Button style={{ color: 'white', backgroundColor: EcoSyncBrand.Colors.greenDark, fontWeight: 'bold' }} variant="contained" onClick={handleSaveUser}>Save</Button>
                         </TableCell>
                       ) : (
                         <React.Fragment>
                           <TableCell>
-                            <Button className={classes.button} variant="outlined"  onClick={() => handleEditUser(user)}>Edit</Button>
+                            <Button className={classes.button} variant="outlined" onClick={() => handleEditUser(user)}>Edit</Button>
                           </TableCell>
                           <TableCell>
-                            <IconButton  color="secondary" onClick={() => handleDeleteUser(user.user_id)}><Delete /></IconButton>
+                            <IconButton color="secondary" onClick={() => handleDeleteUser(user.user_id)}><Delete /></IconButton>
                           </TableCell>
                         </React.Fragment>
                       )

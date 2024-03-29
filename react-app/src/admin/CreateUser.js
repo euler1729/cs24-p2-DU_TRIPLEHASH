@@ -141,6 +141,11 @@ const CreateUser = () => {
             console.log(errors)
             return;
         }
+        if(!cookies.get('access_token')){
+            localStorage.removeItem('user');
+            cookies.remove('access_token');
+            window.location.href = '/';
+        }
         console.log(newUser)
         try {
             setLoading(true);
