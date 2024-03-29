@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, InputAdornment, IconButton, CircularProgress, InputLabel } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Typography, TextField, Button, Select, MenuItem, Grid, Paper, makeStyles, InputAdornment, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
+// API
+import api from '../API';
 
 //Brand
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
@@ -9,6 +11,7 @@ import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
+        width: '100vw',
     },
     title: {
         fontWeight: 'bold',
@@ -61,11 +64,27 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateUser = () => {
     const classes = useStyles();
-    const [newUser, setNewUser] = useState({ user_name: '', email: '', role: 'Unassigned', password: '', name: '', age: '' });
+    const [newUser, setNewUser] = useState({ user_name: '', email: '', role: 4, password: '', name: '', age: '', phone_number: '' });
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [validInput, setValidInput] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [dialogType, setDialogType] = useState(''); // success or error
+
+
+    useEffect(() => {
+        if (dialogOpen) {
+            const timer = setTimeout(() => {
+                setDialogOpen(false);
+            }, 10000); // 10 seconds timeout
+
+            return () => {
+                clearTimeout(timer);
+            };
+        }
+    }, [dialogOpen]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -122,18 +141,49 @@ const CreateUser = () => {
             console.log(errors)
             return;
         }
-        // Simulate loading
-        setLoading(true);
-        // Make API call
-        setTimeout(() => {
-            // Mock API response
+        try {
+            setLoading(true);
+            api.post('/users', {
+                "role_id": newUser.role,
+                "user_name": newUser.user_name,
+                "password": newUser.password,
+                "name": newUser.name,
+                "age": newUser.age,
+                "email": newUser.email,
+                "phone_number": newUser.phone_number
+            }).then((response) => {
+                console.log(response);
+                setLoading(false);
+                if (response.status < 300) {
+                    setLoading(false);
+                    setNewUser({ user_name: '', email: '', role: 'Unassigned', password: '', name: '', age: '' });
+                    setDialogType('success');
+                    setDialogMessage('User created successfully');
+                    setDialogOpen(true);
+                }
+            }).catch((error) => {
+                console.log(error);
+                setLoading(false);
+                setDialogType('error');
+                setDialogMessage(error?.response?.data?.msg || 'Could not create user. Please try again');
+                setDialogOpen(true);
+            });
+        } catch (error) {
+            console.log(error);
             setLoading(false);
-            setNewUser({ user_name: '', email: '', role: 'Unassigned', password: '', name: '', age: '' });
-        }, 10000);
+            setDialogType('error');
+            setDialogMessage(error.response.data.msg || 'Could not create user. Please try again');
+            setDialogOpen(true);
+        }
     };
     const handleTogglePasswordVisibility = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+    };
+
     return (
         <div className={classes.root}>
             <Grid container spacing={2} justifyContent="center">
@@ -181,10 +231,10 @@ const CreateUser = () => {
                                 className={classes.outlinedSelect}
                                 label="Role"
                             >
-                                <MenuItem value="admin">Admin</MenuItem>
-                                <MenuItem value="STS Manager">STS Manager</MenuItem>
-                                <MenuItem value="Landfill Manager">Landfill Manager</MenuItem>
-                                <MenuItem value="Unassigned">Unassigned</MenuItem>
+                                <MenuItem value="1">Admin</MenuItem>
+                                <MenuItem value="2">STS Manager</MenuItem>
+                                <MenuItem value="3">Landfill Manager</MenuItem>
+                                <MenuItem value="4">Unassigned</MenuItem>
                             </Select>
 
                             <TextField
@@ -233,6 +283,17 @@ const CreateUser = () => {
                     </Paper>
                 </Grid>
             </Grid>
+            <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+                <DialogTitle color={dialogType==='success'?EcoSyncBrand.Colors.green:'secondary'}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
+                <DialogContent color={dialogType==='success'?EcoSyncBrand.Colors.green:'secondary'}>
+                    <Typography>{dialogMessage}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color={dialogType==='success'?EcoSyncBrand.Colors.green:'secondary'}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

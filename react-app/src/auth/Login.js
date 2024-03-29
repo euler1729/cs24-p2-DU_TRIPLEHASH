@@ -12,6 +12,7 @@ import api from '../API';
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+    width: '100vw',
     backgroundColor: EcoBrand.Colors.greenWhite,
   },
   container: {

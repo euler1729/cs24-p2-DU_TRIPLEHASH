@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundColor: EcoBrand.Colors.greenWhite,
+    width: '100vw',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -37,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    width: '100vw',
+    height: '100vh',
   },
 }));
 
