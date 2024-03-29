@@ -15,6 +15,8 @@ from manageUser.Roles import Roles
 from manageUser.UpdateRole import UpdateRole
 from manageUser.Profile import Profile
 
+# Route
+from route.getRoute import GetRoute
 
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
@@ -68,7 +70,8 @@ api.add_resource(Roles, '/users/roles')
 api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 api.add_resource(Profile, '/profile')
 
-
+# Route
+api.add_resource(GetRoute, '/route')
 # Data Entry
 api.add_resource(AddVehicle, '/data-entry/add-vehicle')
 api.add_resource(CreateSTS, '/data-entry/create-sts')
