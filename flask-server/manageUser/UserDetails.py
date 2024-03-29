@@ -103,12 +103,12 @@ class UserDetails(Resource):
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
             if info:
-                key = info['key']
+                key = info['sub']['role_id']
                 if(key != 1):
                     return make_response(jsonify({'msg':'Unauthorized'}), 401)
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
-                cursor.execute('DELETE FROM user WHERE id = ?', (userId,))
+                cursor.execute('DELETE FROM user WHERE user_id = ?', (userId,))
                 conn.commit()
                 return make_response(jsonify({'msg':'User Deleted!'}), 201)
             return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)

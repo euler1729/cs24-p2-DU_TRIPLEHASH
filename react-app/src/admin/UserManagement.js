@@ -66,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
 const UserComponent = () => {
   const classes = useStyles();
   const cookies = new Cookies();
-  const [newUser, setNewUser] = useState({ user_name: '', email: '', role: 'Unassigned', name: '', age: '' });
   const [users, setUsers] = useState(initialUsers);
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
@@ -80,8 +79,16 @@ const UserComponent = () => {
   const [filterAge, setFilterAge] = useState('');
   const roleOptions = ['admin', 'STS Manager', 'Landfill Manager', 'Unassigned'];
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogType, setDialogType] = useState(''); // success or error
+
 
   useEffect(() => {
+    fetchUsers();
+  }, [users]);
+
+  const fetchUsers = () => {
     try {
       api.get('/users', {
         headers: {
@@ -94,11 +101,11 @@ const UserComponent = () => {
           response.data.users.forEach(user => {
             setUsers(users => [...users, {
               user_id: user.user_id,
-              user_name: user.user_name? user.user_name : 'N/A',
-              email: user.email? user.email : 'N/A',
-              role: user.role_id? roleOptions[user.role_id-1] : 'N/A',
-              name: user.name? user.name : 'N/A',
-              age: user.age? user.age : 'N/A'
+              user_name: user.user_name ? user.user_name : 'N/A',
+              email: user.email ? user.email : 'N/A',
+              role: user.role_id ? roleOptions[user.role_id - 1] : 'N/A',
+              name: user.name ? user.name : 'N/A',
+              age: user.age ? user.age : 'N/A'
             }]);
           });
         })
@@ -108,7 +115,77 @@ const UserComponent = () => {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  }, []);
+  };
+
+  const handleSaveUser = () => {
+    console.log('Saving user:', editingUser);
+    // Save user to database
+    try {
+      api.put(`/users/${editingUser.user_id}`, {
+        user_id: editingUser.user_id,
+        user_name: editingUser.user_name,
+        email: editingUser.email,
+        role_id: roleOptions.indexOf(editingUser.role) + 1,
+        name: editingUser.name,
+        age: editingUser.age
+      }, {
+        headers: {
+          "Authorization": `Bearer ${cookies.get('access_token')}`,
+        },
+        withCredentials: true
+      })
+        .then(response => {
+          fetchUsers();
+          setDialogType('success');
+          setDialogMessage('User Updated Successfully');
+          setEditingUser(null);
+          setDialogOpen(true);
+        })
+        .catch(error => {
+          console.error('Error saving user:', error);
+          setDialogType('error');
+          setDialogMessage(error?.response?.data?.message || 'Could not save user');
+          setDialogOpen(true);
+        });
+
+    } catch (error) {
+      console.error('Error saving user:', error);
+      setDialogType('error');
+      setDialogMessage(error?.response?.data?.message || 'Could not save user');
+      setDialogOpen(true);
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    console.log('Deleting user with ID:', deleteUserId);
+    // Delete user from API
+    try {
+      api.delete(`/users/${deleteUserId}`, {
+        headers: {
+          "Authorization": `Bearer ${cookies.get('access_token')}`,
+        },
+        withCredentials: true
+      })
+        .then(response => {
+          fetchUsers();
+          setDeleteUserId(null);
+          setDeleteDialogOpen(false);
+        })
+        .catch(error => {
+          console.error('Error deleting user:', error);
+          setDeleteDialogOpen(false);
+          setDialogType('error');
+          setDialogMessage(error?.response?.data?.message || 'COULD NOT DELETE THE USER');
+          setDialogOpen(true);
+        });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      setDeleteDialogOpen(false);
+      setDialogType('error');
+      setDialogMessage(error?.response?.data?.message || 'COULD NOT DELETE THE USER');
+      setDialogOpen(true);
+    }
+  };
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -123,26 +200,9 @@ const UserComponent = () => {
     setEditingUser(user);
   };
 
-  const handleSaveUser = () => {
-    console.log('Saving user:', editingUser);
-    setUsers(users.map(user => user.user_id === editingUser.user_id ? editingUser : user));
-    // Update user to API
-
-    setEditingUser(null);
-  };
-
   const handleDeleteUser = (userId) => {
     setDeleteUserId(userId);
     setDeleteDialogOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    console.log('Deleting user with ID:', deleteUserId);
-    // Delete user from API
-
-    setUsers(users.filter(user => user.user_id != deleteUserId));
-    setDeleteUserId(null);
-    setDeleteDialogOpen(false);
   };
 
   const handleCancelDelete = () => {
@@ -168,6 +228,10 @@ const UserComponent = () => {
 
   const handleFilterAge = (e) => {
     setFilterAge(e.target.value);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
   };
 
   const filteredUsers = users.filter(user =>
@@ -371,6 +435,18 @@ const UserComponent = () => {
         <DialogActions>
           <Button onClick={handleCancelDelete} color="primary">Cancel</Button>
           <Button onClick={handleConfirmDelete} color="secondary">Delete</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Dialog */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle style={{ color: dialogType === 'success' ? EcoSyncBrand.Colors.green : 'red', fontWeight: 'bold' }}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
+        <DialogContent color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
+          <Typography>{dialogMessage}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
     </Grid>
