@@ -29,6 +29,8 @@ from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.CreateLandfillSite import CreateLandfillSite
 from data_entry.CreateSTS import CreateSTS
 
+from data_entry.GetUserList import GetAllUsers
+
 
 
 with open('config.json', 'r') as f:
@@ -74,6 +76,7 @@ api.add_resource(Profile, '/profile')
 # Route
 api.add_resource(GetRoute, '/route')
 api.add_resource(Fleet, '/sts/fleet')
+
 # Data Entry
 api.add_resource(AddVehicle, '/data-entry/add-vehicle')
 api.add_resource(CreateSTS, '/data-entry/create-sts')
@@ -83,6 +86,8 @@ api.add_resource(AddSTSVehicleEntry, '/data-entry/add-sts-vehicle-entry')
 api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
 api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
+
+api.add_resource(GetAllUsers, '/data-entry/get-user-list')
 
 
 
