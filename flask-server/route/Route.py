@@ -13,13 +13,14 @@ class Route():
         self.end_address = None
         self.steps = None
         self.status_code = None
-
     def getRoute(self, origin, destination):
+        print(origin, destination)
         params = {
             'origin': origin,
             'destination': destination,
             'key': self.key
         }
+        
         response = requests.get(self.url, params=params)
         self.status_code = response.status_code
         if response.status_code == 200:
@@ -31,12 +32,26 @@ class Route():
             self.start_address = data['routes'][0]['legs'][0]['start_address']
             self.start_location = data['routes'][0]['legs'][0]['start_location']
             self.steps = data['routes'][0]['legs'][0]['steps']
-
             return self.__dict__
         else:
             return None
 
+    def getDistance(self, origin, destination):
+        self.getRoute(origin=origin, destination=destination)
 
-route = Route()
+        return float(self.distance.split(' ')[0])
+    def getGeoLocation(location):
 
-print(route.getRoute('TSC, Dhaka University', 'Mirpur 10'))
+        url = 'https://maps.googleapis.com/maps/api/geocode/json'
+        apiKey = 'AIzaSyCqtN5BFJp1GfhRMUs-fKjVqLD-zp_nNME'
+        param = {
+            'address' : location,
+            'key' : apiKey
+        }
+
+        response = requests.get(url, params=param)
+        data = response.json()
+        if data['status'] == 'OK':
+            return data['results'][0]['geometry']['location']
+
+print(Route.getGeoLocation('Dhaka University'))

@@ -17,6 +17,7 @@ from manageUser.Profile import Profile
 
 # Route
 from route.getRoute import GetRoute
+from route.Fleet import Fleet
 
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
@@ -72,6 +73,7 @@ api.add_resource(Profile, '/profile')
 
 # Route
 api.add_resource(GetRoute, '/route')
+api.add_resource(Fleet, '/sts/fleet')
 # Data Entry
 api.add_resource(AddVehicle, '/data-entry/add-vehicle')
 api.add_resource(CreateSTS, '/data-entry/create-sts')

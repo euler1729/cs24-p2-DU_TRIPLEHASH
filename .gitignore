@@ -1,0 +1,6 @@
+flask-server/sqlite.db
+flask-server/route/__pycache__/FindFleet.cpython-312.pyc
+flask-server/route/__pycache__/Fleet.cpython-312.pyc
+flask-server/route/__pycache__/Route.cpython-312.pyc
+flask-server/manageUser/__pycache__/UserDetails.cpython-312.pyc
+flask-server/route/__pycache__/Route.cpython-312.pyc
