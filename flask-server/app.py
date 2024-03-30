@@ -84,7 +84,7 @@ api.add_resource(Fleet, '/sts/fleet')
 
 #Trip
 api.add_resource(Trip, '/trip')
-api.add_resource(Trip, '/activetrip')
+api.add_resource(ActiveTrip, '/activetrip')
 
 
 
