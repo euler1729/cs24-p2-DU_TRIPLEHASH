@@ -21,6 +21,12 @@ class CreateSTS(Resource):
             conn = sqlite3.connect('sqlite.db')
             cursor = conn.cursor()
 
+            # Check if STS with the same ward number already exists
+            cursor.execute("SELECT * FROM sts WHERE ward_number = ?", (ward_number,))
+            existing_sts = cursor.fetchone()
+            if existing_sts:
+                return make_response(jsonify({'error': 'STS with the same ward number already exists'}), 400)
+
             # Insert STS data
             cursor.execute("""INSERT INTO sts 
                               (ward_number, capacity_tonnes, gps_longitude, gps_latitude)
