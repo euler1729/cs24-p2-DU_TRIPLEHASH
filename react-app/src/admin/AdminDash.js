@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore } from '@material-ui/icons';
-
+import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
@@ -19,6 +19,7 @@ import managers from './res/managers.png'
 import assignmanager from './res/assignmanager.png'
 import addtruck from './res/addtruck.png'
 import choosecar from './res/choosecar.png'
+
 
 // Component for Admin Dashboard
 import UserManagement from './UserManagement';
@@ -38,6 +39,17 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
 
   },
+  textField: {
+    marginBottom: theme.spacing(2),
+    color: EcoSyncBrand.Colors.green,
+    backgroundColor: EcoSyncBrand.Colors.greenWhite,
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: EcoSyncBrand.Colors.green, // Green color
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+        color: EcoSyncBrand.Colors.green, // Green color
+    },
+},
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
