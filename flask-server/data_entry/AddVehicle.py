@@ -4,19 +4,16 @@ from flask import jsonify, request, make_response
 
 class AddVehicle(Resource):
     def post(self):
-
         data = request.get_json()
-
-        # print("here's data", data)
 
         vehicle_reg_number = data.get('vehicle_reg_number')
         vehicle_type = data.get('vehicle_type')
         vehicle_capacity_in_ton = data.get('vehicle_capacity_in_ton')
         fuel_cost_per_km_loaded = data.get('fuel_cost_per_km_loaded')
         fuel_cost_per_km_unloaded = data.get('fuel_cost_per_km_unloaded')
-        sts_id = data.get('sts_id')  
+        sts_id = data.get('sts_id')
 
-        if not all([vehicle_reg_number, vehicle_type, vehicle_capacity_in_ton, 
+        if not all([vehicle_reg_number, vehicle_type, vehicle_capacity_in_ton,
                     fuel_cost_per_km_loaded, fuel_cost_per_km_unloaded]):
             return make_response(jsonify({'error': 'Missing required fields'}), 400)
 
@@ -24,6 +21,13 @@ class AddVehicle(Resource):
             conn = sqlite3.connect('sqlite.db')
             cursor = conn.cursor()
 
+            # Check if vehicle with the same registration number already exists
+            cursor.execute("SELECT * FROM vehicle WHERE vehicle_reg_number = ?", (vehicle_reg_number,))
+            existing_vehicle = cursor.fetchone()
+            if existing_vehicle:
+                return make_response(jsonify({'error': 'Vehicle with the same registration number already exists'}), 400)
+
+            # Insert new vehicle
             cursor.execute("""INSERT INTO vehicle 
                               (vehicle_reg_number, vehicle_type, vehicle_capacity_in_ton, 
                               fuel_cost_per_km_loaded, fuel_cost_per_km_unloaded, sts_id)
