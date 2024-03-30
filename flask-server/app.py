@@ -29,7 +29,7 @@ from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.CreateLandfillSite import CreateLandfillSite
 from data_entry.CreateSTS import CreateSTS
 
-from data_entry.GetUserList import GetAllUsers
+from data_entry.GetUserList import GetAllData
 
 
 
@@ -87,7 +87,7 @@ api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
 api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 
-api.add_resource(GetAllUsers, '/data-entry/get-user-list')
+api.add_resource(GetAllData, '/data-entry/get-user-list')
 
 
 
