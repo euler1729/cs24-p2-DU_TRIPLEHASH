@@ -10,8 +10,9 @@ import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
-        width: '100vw',
+        height: '90vh',
+        width: '75vw',
+        margin: 'auto',
     },
     title: {
         fontWeight: 'bold',
@@ -141,7 +142,7 @@ const CreateUser = () => {
             console.log(errors)
             return;
         }
-        if(!cookies.get('access_token')){
+        if (!cookies.get('access_token')) {
             localStorage.removeItem('user');
             cookies.remove('access_token');
             window.location.href = '/';
@@ -167,7 +168,7 @@ const CreateUser = () => {
                 setLoading(false);
                 if (response.status < 300) {
                     setLoading(false);
-                    setNewUser({ user_name: '', email: '', role: 4, password: '', name: '', age: '', phone_number:'' });
+                    setNewUser({ user_name: '', email: '', role: 4, password: '', name: '', age: '', phone_number: '' });
                     setDialogType('success');
                     setDialogMessage('User created successfully');
                     setDialogOpen(true);

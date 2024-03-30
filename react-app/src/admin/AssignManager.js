@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserComponent = () => {
+const AssignManager = () => {
   const classes = useStyles();
   const cookies = new Cookies();
   const [users, setUsers] = useState(initialUsers);
@@ -255,7 +255,7 @@ const UserComponent = () => {
           <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom:'60px' }}>
             <Grid item xs={12} style={{ height: '0px' }}>
               <Typography variant="h4" align="center" className={classes.title}>
-                USERS
+                Assign Manager
               </Typography>
             </Grid>
           </Grid>
@@ -463,4 +463,4 @@ const UserComponent = () => {
   );
 };
 
-export default UserComponent;
+export default AssignManager;

@@ -20,8 +20,8 @@ const user = {
 // Styles for the component
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-    width: '100vw',
+    height: '90vh',
+    width: '75vw',
   },
   paper: {
     padding: theme.spacing(3),
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
   },
   textField: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
     color: EcoSyncBrand.Colors.green,
     backgroundColor: EcoSyncBrand.Colors.greenWhite,
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {

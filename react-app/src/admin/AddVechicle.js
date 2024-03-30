@@ -8,7 +8,8 @@ import api from '../API';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        height: '90vh',
+        width: '75vw',
     },
     title: {
         fontWeight: 'bold',

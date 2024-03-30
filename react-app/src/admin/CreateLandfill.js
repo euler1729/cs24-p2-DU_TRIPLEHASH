@@ -1,11 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Typography, TextField, Button, Grid, Paper, makeStyles, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import { GoogleMap, useLoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 import api from '../API';
 import MapComponent from '../components/MapComponent';
-
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     button: {
-        marginTop: theme.spacing(2),
         fontWeight: 'bold',
         color: EcoSyncBrand.Colors.greenWhite,
         backgroundColor: EcoSyncBrand.Colors.green,
@@ -55,40 +51,55 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
         marginLeft: theme.spacing(1), // Adjust spacing as needed
     },
+    createLandfillPage: {
+        width: '80%', // Set the width to 80% of AdminDashboard
+        maxHeight: '100%', // Ensure that the component doesn't overflow the window size
+        overflow: 'auto', // Add scroll if the content overflows
+    },
 }));
 
-const CreateSTSPage = () => {
+
+
+const CreateLandfill = () => {
     const classes = useStyles();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
     const [dialogType, setDialogType] = useState(''); // success or error
-    const [sts, setSTS] = useState({
-        ward_number: '',
-        capacity_tonnes: '',
+    const [landfill, setlandfill] = useState({
+        site_name: '',
+        capacity: '',
+        operational_timespan: "2024-04-01 to 2024-04-30",
         gps_longitude: 90.4338,
         gps_latitude: 23.7191,
     });
-
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleSubmit = () => {
         setErrors({});
 
         const newErrors = {};
-        if (!sts.ward_number) {
-            newErrors.ward_number = 'Ward Number is required';
+        if (!landfill.site_name) {
+            newErrors.site_name = 'Site Name is Required';
         }
-        if (!sts.capacity_tonnes) {
-            newErrors.capacity_tonnes = 'capacity_tonnes is required';
-        } else if (isNaN(sts.capacity_tonnes) || sts.capacity_tonnes <= 0) {
-            newErrors.capacity_tonnes = 'capacity_tonnes must be a positive number';
+        if (!landfill.capacity) {
+            newErrors.capacity = 'capacity is required';
+        } else if (isNaN(landfill.capacity) || landfill.capacity <= 0) {
+            newErrors.capacity = 'capacity must be a positive number';
         }
-        if (!sts.gps_longitude) {
+        if (!landfill.gps_longitude) {
             newErrors.gps_longitude = 'GPS Coordinates are required';
         }
-        if (!sts.gps_latitude) {
+        if (!landfill.gps_latitude) {
             newErrors.gps_latitude = 'GPS Coordinates are required';
+        }
+        if (!startDate) {
+            newErrors.startDate = 'Start Date is required';
+        }
+        if (!endDate) {
+            newErrors.endDate = 'End Date is required';
         }
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) {
@@ -96,16 +107,17 @@ const CreateSTSPage = () => {
         }
         setLoading(true);
         try {
-            api.post('/data-entry/create-sts', sts)
+            api.post('/data-entry/create-landfill-site', landfill)
                 .then((res) => {
                     console.log(res);
                     setLoading(false);
                     setDialogType('success');
-                    setDialogMessage('STS created successfully');
+                    setDialogMessage('landfill created successfully');
                     setDialogOpen(true);
-                    setSTS({
-                        ward_number: '',
-                        capacity_tonnes: '',
+                    setlandfill({
+                        site_name: '',
+                        capacity: '',
+                        operational_timespan: `${startDate} to ${endDate}`,
                         gps_longitude: 90.4338,
                         gps_latitude: 23.7191,
                     });
@@ -113,7 +125,7 @@ const CreateSTSPage = () => {
                     console.log(err);
                     setLoading(false);
                     setDialogType('error');
-                    setDialogMessage('Failed to create STS');
+                    setDialogMessage('Failed to create landfill');
                     setDialogOpen(true);
                 });
 
@@ -121,7 +133,7 @@ const CreateSTSPage = () => {
             console.log(err);
             setLoading(false);
             setDialogType('error');
-            setDialogMessage('Failed to create STS');
+            setDialogMessage('Failed to create landfill');
             setDialogOpen(true);
         }
     };
@@ -130,52 +142,82 @@ const CreateSTSPage = () => {
         console.log(coords)
         const lat = parseFloat(coords?.lat).toFixed(2);
         const lng = parseFloat(coords?.lng).toFixed(2);
-        setSTS({ ...sts, gps_latitude: lat, gps_longitude: lng });
+        setlandfill({ ...landfill, gps_latitude: lat, gps_longitude: lng });
+    };
+    const handleStartDateChange = (event) => {
+        setStartDate(event.target.value);
     };
 
+    const handleEndDateChange = (event) => {
+        setEndDate(event.target.value);
+    };
     return (
         <div className={classes.root}>
             <Grid container spacing={3} justifyContent="center" alignItems="center">
                 <Grid item xs={12} sm={8} md={6}>
                     <Paper elevation={3} className={classes.paper}>
                         <Typography variant="h5" gutterBottom className={classes.title}>
-                            Create New STS
+                            Create New Landfill
                         </Typography>
                         <form className={classes.form}>
                             <TextField
-                                name="ward_number"
+                                name="site_name"
                                 className={classes.textField}
-                                label="Ward Number"
+                                label="Site Name"
                                 variant="outlined"
-                                value={sts.ward_number}
-                                onChange={(e) => setSTS({ ...sts, ward_number: e.target.value })}
-                                error={!!errors.ward_number}
-                                helperText={errors.ward_number}
+                                value={landfill.site_name}
+                                onChange={(e) => setlandfill({ ...landfill, site_name: e.target.value })}
+                                error={!!errors.site_name}
+                                helperText={errors.site_name}
                             />
                             <TextField
-                                name="capacity_tonnes"
+                                name="capacity"
                                 className={classes.textField}
                                 label="Capacity (in tonnes)"
                                 variant="outlined"
                                 type="number"
-                                value={sts.capacity_tonnes}
-                                onChange={(e) => setSTS({ ...sts, capacity_tonnes: e.target.value })}
-                                error={!!errors.capacity_tonnes}
-                                helperText={errors.capacity_tonnes}
+                                value={landfill.capacity}
+                                onChange={(e) => setlandfill({ ...landfill, capacity: e.target.value })}
+                                error={!!errors.capacity}
+                                helperText={errors.capacity}
                             />
+                            {/* <Grid container spacing={2} style={{border:2}}> */}
+                            {/* <Grid item xs={5}> */}
+                            <TextField
+                                label="Start Date"
+                                type="date"
+                                value={startDate}
+                                onChange={handleStartDateChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                            {/* </Grid> */}
+                            {/* <Grid item xs={5}> */}
+                            <TextField
+                                label="End Date"
+                                type="date"
+                                value={endDate}
+                                onChange={handleEndDateChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                            {/* </Grid> */}
+                            {/* </Grid> */}
                             <TextField
                                 name="location"
                                 className={classes.textField}
                                 label="Location (GPS Coordinates)"
                                 variant="outlined"
-                                value={'lat: ' + sts.gps_latitude + ', lon: ' + sts.gps_longitude}
-                                onChange={(e) => setSTS(e.target.value)}
-                                error={!!errors.capacity_tonnes}
-                                helperText={errors.capacity_tonnes}
+                                value={'lat: ' + landfill.gps_latitude + ', lon: ' + landfill.gps_longitude}
+                                onChange={(e) => setlandfill(e.target.value)}
+                                error={!!errors.capacity}
+                                helperText={errors.capacity}
                             />
                             <MapComponent onLocationChange={handleLocationChange} />
                             <Button className={classes.button} variant="contained" color="primary" fullWidth onClick={handleSubmit}>
-                                {loading ? 'Creating...' : 'Create STS'}
+                                {loading ? 'Creating...' : 'Create landfill'}
                                 {loading && <CircularProgress size={20} className={classes.circularProgress} />}
                             </Button>
                         </form>
@@ -197,4 +239,4 @@ const CreateSTSPage = () => {
     );
 };
 
-export default CreateSTSPage;
+export default CreateLandfill;
