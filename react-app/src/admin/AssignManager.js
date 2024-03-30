@@ -77,6 +77,7 @@ const UserComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
+  const [filterSTS, setFilterSTS] = useState('');
   const [filterUsername, setFilterUsername] = useState('');
   const [filterAge, setFilterAge] = useState('');
   const roleOptions = ['admin', 'STS Manager', 'Landfill Manager', 'Unassigned'];
@@ -249,6 +250,10 @@ const UserComponent = () => {
     setFilterRole(e.target.value);
   };
 
+  const handleFilterSite = (e) => {
+    setFilterSTS(e.target.value);
+  };
+
   const handleFilterEmail = (e) => {
     setFilterEmail(e.target.value);
   };
@@ -266,10 +271,20 @@ const UserComponent = () => {
   };
 
   const filteredUsers = users.filter(user =>
-    user.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.role_id.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.assigned_to.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    (
+      searchTerm === '' || (
+        user.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        roleOptions[user.role_id-1].toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (stsOptions[user.assigned_to - 1]?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (landfillOptions[user.assigned_to - 1]?.toLowerCase().includes(searchTerm.toLowerCase()))
+      )
+    ) &&
+    (
+      (filterRole === '' || roleOptions[user.role_id-1].toLowerCase().includes(filterRole.toLowerCase())) &&
+      (filterUsername === '' || user.user_name.toLowerCase().includes(filterUsername.toLowerCase())) &&
+      ((filterSTS === '' || stsOptions[user.assigned_to - 1]?.toLowerCase().includes(filterSTS.toLowerCase()))) && 
+      (((filterSTS === '' || landfillOptions[user.assigned_to - 1]?.toLowerCase().includes(filterSTS.toLowerCase()))))
+    )
   );
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
@@ -302,26 +317,6 @@ const UserComponent = () => {
               <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'flex-start', marginBottom: '20px' }}>
                 <Grid item>
                   <TextField
-                    label="Filter Role"
-                    className={classes.textField}
-                    value={filterRole}
-                    onChange={handleFilterRole}
-                    variant="outlined"
-                    margin="dense"
-                  />
-                </Grid>
-                {/* <Grid item>
-                  <TextField
-                    label="Filter Email"
-                    className={classes.textField}
-                    value={filterEmail}
-                    onChange={handleFilterEmail}
-                    variant="outlined"
-                    margin="dense"
-                  />
-                </Grid> */}
-                <Grid item>
-                  <TextField
                     label="Filter Username"
                     className={classes.textField}
                     value={filterUsername}
@@ -330,6 +325,27 @@ const UserComponent = () => {
                     margin="dense"
                   />
                 </Grid>
+                <Grid item>
+                  <TextField
+                    label="Filter Role"
+                    className={classes.textField}
+                    value={filterRole}
+                    onChange={handleFilterRole}
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="Filter Site"
+                    className={classes.textField}
+                    value={filterSTS}
+                    onChange={handleFilterSite}
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </Grid>
+
                 {/* <Grid item>
                   <TextField
                     label="Filter Age"
@@ -392,10 +408,10 @@ const UserComponent = () => {
                                     className={classes.textField}
                                   />
                                 ) : (
-                                  <span 
-                                      style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'blue', textDecoration: 'underline', cursor: 'pointer' }} 
-                                      onClick={() => switchPage(user.user_id)}>
-                                        {user.user_name}
+                                  <span
+                                    style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                                    onClick={() => switchPage(user.user_id)}>
+                                    {user.user_name}
                                   </span>
                                 )}
                               </TableCell>
@@ -420,7 +436,7 @@ const UserComponent = () => {
                                       <MenuItem value={3}>Landfill Manager</MenuItem>
                                       <MenuItem value={4}>Unassigned</MenuItem>
                                     </Select> :
-                                    <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{roleOptions[user.role_id-1]}</span>
+                                    <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{roleOptions[user.role_id - 1]}</span>
                                 }
                               </TableCell>
                               <TableCell>
@@ -430,16 +446,16 @@ const UserComponent = () => {
                                       {
                                         editingUser.role_id === 2 ?
                                           stsOptions.map((sts, index) => (
-                                            <MenuItem key={index} value={index+1}>{sts}</MenuItem>
+                                            <MenuItem key={index} value={index + 1}>{sts}</MenuItem>
                                           )) :
                                           editingUser.role_id === 3 ?
-                                          landfillOptions.map((landfill, index) => (
-                                            <MenuItem key={index} value={index+1}>{landfill}</MenuItem>
-                                          )) : <MenuItem value={0}>N/A</MenuItem>
+                                            landfillOptions.map((landfill, index) => (
+                                              <MenuItem key={index} value={index + 1}>{landfill}</MenuItem>
+                                            )) : <MenuItem value={0}>N/A</MenuItem>
                                       }
                                     </Select> :
                                     <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>
-                                      {user.role_id === 1 ? 'N/A' : user.assigned_to === 0 ? 'N/A' : user.role_id===4? 'N/A' :user.role_id === 2 ? stsOptions[user.assigned_to-1] : landfillOptions[user.assigned_to-1]}
+                                      {user.role_id === 1 ? 'N/A' : user.assigned_to === 0 ? 'N/A' : user.role_id === 4 ? 'N/A' : user.role_id === 2 ? stsOptions[user.assigned_to - 1] : landfillOptions[user.assigned_to - 1]}
                                     </span>
                                 }
                               </TableCell>

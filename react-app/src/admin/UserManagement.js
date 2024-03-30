@@ -88,7 +88,7 @@ const UserComponent = () => {
   const [Current, setCurrent] = useState(true);
   const [current_user, setCurrentUser] = useState(1);
   const [props, setProps] = useState({});
-
+  // const [filteredUsers, setFilteredUsers] = useState([]);
   useEffect(() => {
     setCurrent(true);
     fetchUsers();
@@ -244,18 +244,23 @@ const UserComponent = () => {
 
   const handleFilterRole = (e) => {
     setFilterRole(e.target.value);
+    setSearchTerm('');
   };
 
   const handleFilterEmail = (e) => {
     setFilterEmail(e.target.value);
+    setSearchTerm('');
+
   };
 
   const handleFilterUsername = (e) => {
     setFilterUsername(e.target.value);
+    setSearchTerm('');
   };
 
   const handleFilterAge = (e) => {
     setFilterAge(e.target.value);
+    setSearchTerm('');
   };
 
   const handleCloseDialog = () => {
@@ -263,11 +268,21 @@ const UserComponent = () => {
   };
 
   const filteredUsers = users.filter(user =>
-    user.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.role.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.age.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    (
+      searchTerm === '' || (
+        user.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.age.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    ) &&
+    (
+      (filterRole === '' || user.role.toLowerCase().includes(filterRole.toLowerCase())) &&
+      (filterEmail === '' || user.email.toLowerCase().includes(filterEmail.toLowerCase())) &&
+      (filterUsername === '' || user.user_name.toLowerCase().includes(filterUsername.toLowerCase())) &&
+      (filterAge === '' || user.age.toString().toLowerCase().includes(filterAge.toLowerCase()))
+    )
   );
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
@@ -280,227 +295,227 @@ const UserComponent = () => {
 
   const switchPage = (user_id) => {
     // setCurrentUser(user_id)
-    setProps({user_id: user_id, prev: 'users'})
+    setProps({ user_id: user_id, prev: 'users' })
     setCurrent(!Current);
   }
 
   return (
-    Current?
-    <>
-      <Grid container spacing={2} className={classes.root}>
-        <Grid container item xs={12} >
-          <Grid item xs={12}>
-            <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom: '60px' }}>
-              <Grid item xs={12} style={{ height: '0px' }}>
-                <Typography variant="h4" align="center" className={classes.title}>
-                  USERS
-                </Typography>
+    Current ?
+      <>
+        <Grid container spacing={2} className={classes.root}>
+          <Grid container item xs={12} >
+            <Grid item xs={12}>
+              <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom: '60px' }}>
+                <Grid item xs={12} style={{ height: '0px' }}>
+                  <Typography variant="h4" align="center" className={classes.title}>
+                    USERS
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
 
-            <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom: '20px' }}>
-              <Grid item>
-                <TextField
-                  label="Filter Role"
-                  className={classes.textField}
-                  value={filterRole}
-                  onChange={handleFilterRole}
-                  variant="outlined"
-                  margin="dense"
-                />
+              <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom: '20px' }}>
+                <Grid item>
+                  <TextField
+                    label="Filter Role"
+                    className={classes.textField}
+                    value={filterRole}
+                    onChange={handleFilterRole}
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="Filter Email"
+                    className={classes.textField}
+                    value={filterEmail}
+                    onChange={handleFilterEmail}
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="Filter Username"
+                    className={classes.textField}
+                    value={filterUsername}
+                    onChange={handleFilterUsername}
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="Filter Age"
+                    className={classes.textField}
+                    value={filterAge}
+                    onChange={handleFilterAge}
+                    variant="outlined"
+                    margin="dense"
+                    type="number"
+                    InputProps={{
+                      inputProps: { min: 0 },
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item>
-                <TextField
-                  label="Filter Email"
-                  className={classes.textField}
-                  value={filterEmail}
-                  onChange={handleFilterEmail}
-                  variant="outlined"
-                  margin="dense"
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  label="Filter Username"
-                  className={classes.textField}
-                  value={filterUsername}
-                  onChange={handleFilterUsername}
-                  variant="outlined"
-                  margin="dense"
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  label="Filter Age"
-                  className={classes.textField}
-                  value={filterAge}
-                  onChange={handleFilterAge}
-                  variant="outlined"
-                  margin="dense"
-                  type="number"
-                  InputProps={{
-                    inputProps: { min: 0 },
-                  }}
-                />
-              </Grid>
-            </Grid>
 
-            <Grid container item xs={12}>
-              {/* Search */}
-              <Grid item xs={12} style={{ marginBottom: '20px' }}>
-                <TextField
-                  label="Search"
-                  className={classes.textField}
-                  value={searchTerm}
-                  onChange={handleInputChange}
-                  fullWidth
-                  variant="outlined"
-                  margin="dense"
-                />
-              </Grid>
-              {/* User List */}
-              <Grid item xs={12}>
-                <Paper elevation={3} className={classes.paper}>
-                  <TableContainer>
-                    <Table>
-                      <TableHead >
-                        <TableRow >
-                          <TableCell>
-                            <TableSortLabel className={classes.table_head} active={sortBy === 'user_name'} direction={sortOrder} onClick={() => handleSort('user_name')}>USERNAME</TableSortLabel>
-                          </TableCell>
-                          <TableCell>
-                            <TableSortLabel className={classes.table_head} active={sortBy === 'email'} direction={sortOrder} onClick={() => handleSort('email')}>EMAIL</TableSortLabel>
-                          </TableCell>
-                          <TableCell>
-                            <TableSortLabel className={classes.table_head} active={sortBy === 'role'} direction={sortOrder} onClick={() => handleSort('role')}>ROLE</TableSortLabel>
-                          </TableCell>
-                          <TableCell className={classes.table_head} >NAME</TableCell>
-                          <TableCell>
-                            <TableSortLabel className={classes.table_head} active={sortBy === 'age'} direction={sortOrder} onClick={() => handleSort('age')}>AGE</TableSortLabel>
-                          </TableCell>
-                          <TableCell className={classes.table_head} >EDIT</TableCell>
-                          <TableCell className={classes.table_head} >DELETE</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {sortedUsers.map(user => (
-                          <TableRow key={user.user_id} >
+              <Grid container item xs={12}>
+                {/* Search */}
+                <Grid item xs={12} style={{ marginBottom: '20px' }}>
+                  <TextField
+                    label="Search"
+                    className={classes.textField}
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                    fullWidth
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </Grid>
+                {/* User List */}
+                <Grid item xs={12}>
+                  <Paper elevation={3} className={classes.paper}>
+                    <TableContainer>
+                      <Table>
+                        <TableHead >
+                          <TableRow >
                             <TableCell>
-                              {editingUser && editingUser.user_id === user.user_id ? (
-                                <TextField
-                                  name="user_name"
-                                  value={editingUser.user_name}
-                                  onChange={(e) => setEditingUser({ ...editingUser, user_name: e.target.value })}
-                                  className={classes.textField}
-                                />
-                              ) : (
-                                <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'blue', textDecoration: 'underline', cursor: 'pointer'}} onClick={()=>switchPage(user.user_id)}>{user.user_name}</span>
-                              )}
+                              <TableSortLabel className={classes.table_head} active={sortBy === 'user_name'} direction={sortOrder} onClick={() => handleSort('user_name')}>USERNAME</TableSortLabel>
                             </TableCell>
                             <TableCell>
-                              {editingUser && editingUser.user_id === user.user_id ? (
-                                <TextField
-                                  name="email"
-                                  value={editingUser.email}
-                                  onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
-                                  className={classes.textField}
-                                />
-                              ) : (
-                                <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.email}</span>
-                              )}
+                              <TableSortLabel className={classes.table_head} active={sortBy === 'email'} direction={sortOrder} onClick={() => handleSort('email')}>EMAIL</TableSortLabel>
                             </TableCell>
                             <TableCell>
-                              {
-                                editingUser && editingUser.user_id === user.user_id ?
-                                  <Select name="role" label='Role' value={editingUser.role} onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })} >
-                                    <MenuItem value="admin">Admin</MenuItem>
-                                    <MenuItem value="STS Manager">STS Manager</MenuItem>
-                                    <MenuItem value="Landfill Manager">Landfill Manager</MenuItem>
-                                    <MenuItem value="Unassigned">Unassigned</MenuItem>
-                                  </Select> : <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.role}</span>
-                              }
+                              <TableSortLabel className={classes.table_head} active={sortBy === 'role'} direction={sortOrder} onClick={() => handleSort('role')}>ROLE</TableSortLabel>
                             </TableCell>
+                            <TableCell className={classes.table_head} >NAME</TableCell>
                             <TableCell>
-                              {editingUser && editingUser.user_id === user.user_id ? (
-                                <TextField
-                                  name="name"
-                                  value={editingUser.name}
-                                  onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                                  className={classes.textField}
-                                />
-                              ) : (
-                                <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.name}</span>
-                              )}
+                              <TableSortLabel className={classes.table_head} active={sortBy === 'age'} direction={sortOrder} onClick={() => handleSort('age')}>AGE</TableSortLabel>
                             </TableCell>
-                            <TableCell>
-                              {editingUser && editingUser.user_id === user.user_id ? (
-                                <TextField
-                                  name="age"
-                                  value={editingUser.age}
-                                  onChange={(e) => setEditingUser({ ...editingUser, age: e.target.value })}
-                                  className={classes.textField}
-                                  type="number"
-                                />
-                              ) : (
-                                <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.age}</span>
-                              )}
-                            </TableCell>
-                            {
-                              editingUser && editingUser.user_id === user.user_id ? (
-                                <TableCell>
-                                  <Button style={{ color: 'white', backgroundColor: EcoSyncBrand.Colors.greenDark, fontWeight: 'bold' }} variant="contained" onClick={handleSaveUser}>Save</Button>
-                                </TableCell>
-                              ) : (
-                                <React.Fragment>
-                                  <TableCell>
-                                    <Button className={classes.button} variant="outlined" onClick={() => handleEditUser(user)}>Edit</Button>
-                                  </TableCell>
-                                  <TableCell>
-                                    <IconButton color="secondary" onClick={() => handleDeleteUser(user.user_id)}><Delete /></IconButton>
-                                  </TableCell>
-                                </React.Fragment>
-                              )
-                            }
+                            <TableCell className={classes.table_head} >EDIT</TableCell>
+                            <TableCell className={classes.table_head} >DELETE</TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Paper>
-              </Grid>
+                        </TableHead>
+                        <TableBody>
+                          {sortedUsers.map(user => (
+                            <TableRow key={user.user_id} >
+                              <TableCell>
+                                {editingUser && editingUser.user_id === user.user_id ? (
+                                  <TextField
+                                    name="user_name"
+                                    value={editingUser.user_name}
+                                    onChange={(e) => setEditingUser({ ...editingUser, user_name: e.target.value })}
+                                    className={classes.textField}
+                                  />
+                                ) : (
+                                  <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'blue', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => switchPage(user.user_id)}>{user.user_name}</span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {editingUser && editingUser.user_id === user.user_id ? (
+                                  <TextField
+                                    name="email"
+                                    value={editingUser.email}
+                                    onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                                    className={classes.textField}
+                                  />
+                                ) : (
+                                  <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{user.email}</span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {
+                                  editingUser && editingUser.user_id === user.user_id ?
+                                    <Select name="role" label='Role' value={editingUser.role} onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })} >
+                                      <MenuItem value="admin">Admin</MenuItem>
+                                      <MenuItem value="STS Manager">STS Manager</MenuItem>
+                                      <MenuItem value="Landfill Manager">Landfill Manager</MenuItem>
+                                      <MenuItem value="Unassigned">Unassigned</MenuItem>
+                                    </Select> : <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{user.role}</span>
+                                }
+                              </TableCell>
+                              <TableCell>
+                                {editingUser && editingUser.user_id === user.user_id ? (
+                                  <TextField
+                                    name="name"
+                                    value={editingUser.name}
+                                    onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
+                                    className={classes.textField}
+                                  />
+                                ) : (
+                                  <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{user.name}</span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {editingUser && editingUser.user_id === user.user_id ? (
+                                  <TextField
+                                    name="age"
+                                    value={editingUser.age}
+                                    onChange={(e) => setEditingUser({ ...editingUser, age: e.target.value })}
+                                    className={classes.textField}
+                                    type="number"
+                                  />
+                                ) : (
+                                  <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{user.age}</span>
+                                )}
+                              </TableCell>
+                              {
+                                editingUser && editingUser.user_id === user.user_id ? (
+                                  <TableCell>
+                                    <Button style={{ color: 'white', backgroundColor: EcoSyncBrand.Colors.greenDark, fontWeight: 'bold' }} variant="contained" onClick={handleSaveUser}>Save</Button>
+                                  </TableCell>
+                                ) : (
+                                  <React.Fragment>
+                                    <TableCell>
+                                      <Button className={classes.button} variant="outlined" onClick={() => handleEditUser(user)}>Edit</Button>
+                                    </TableCell>
+                                    <TableCell>
+                                      <IconButton color="secondary" onClick={() => handleDeleteUser(user.user_id)}><Delete /></IconButton>
+                                    </TableCell>
+                                  </React.Fragment>
+                                )
+                              }
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Paper>
+                </Grid>
 
+              </Grid>
             </Grid>
           </Grid>
+
+
+          {/* Delete Confirmation Dialog */}
+          <Dialog open={deleteDialogOpen} onClose={handleCancelDelete}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this user?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete} color="primary">Cancel</Button>
+              <Button onClick={handleConfirmDelete} color="secondary">Delete</Button>
+            </DialogActions>
+          </Dialog>
+          {/* Dialog */}
+          <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+            <DialogTitle style={{ color: dialogType === 'success' ? EcoSyncBrand.Colors.green : 'red', fontWeight: 'bold' }}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
+            <DialogContent color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
+              <Typography>{dialogMessage}</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
-
-
-        {/* Delete Confirmation Dialog */}
-        <Dialog open={deleteDialogOpen} onClose={handleCancelDelete}>
-          <DialogTitle>Confirm Delete</DialogTitle>
-          <DialogContent>
-            Are you sure you want to delete this user?
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCancelDelete} color="primary">Cancel</Button>
-            <Button onClick={handleConfirmDelete} color="secondary">Delete</Button>
-          </DialogActions>
-        </Dialog>
-        {/* Dialog */}
-        <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-          <DialogTitle style={{ color: dialogType === 'success' ? EcoSyncBrand.Colors.green : 'red', fontWeight: 'bold' }}>{dialogType === 'success' ? 'Success' : 'Failure'}</DialogTitle>
-          <DialogContent color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
-            <Typography>{dialogMessage}</Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color={dialogType === 'success' ? EcoSyncBrand.Colors.green : 'secondary'}>
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Grid>
-    </>
-    :
-    <UserProfile props={props} />
+      </>
+      :
+      <UserProfile props={props} />
   );
 };
 

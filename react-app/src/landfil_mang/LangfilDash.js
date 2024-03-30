@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
+import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore } from '@material-ui/icons';
 
@@ -19,12 +19,14 @@ import managers from './res/managers.png'
 import assignmanager from './res/assignmanager.png'
 import addtruck from './res/addtruck.png'
 import choosecar from './res/choosecar.png'
+import fleet from './res/fleet.png'
+import routes from './res/routes.png'
 
 // Component for Admin Dashboard
 // import UserManagement from './UserManagement';
 // import CreateUser from './CreateUser';
 import ProfileView from '../general/ProfileView';
-// import VehiclePage from './AddVechicle';
+import VechicleEntry from './VechicleEntry';
 // import CreateSTSPage from './CreateSTS';
 // import CreateLandfill from './CreateLandfill';
 // import AssignManager from './AssignManager';
@@ -105,8 +107,8 @@ function LandfillManagerDashboard() {
 
   const renderComponent = () => {
     switch (selectedOption) {
-      // case 'dashboard':
-      //   return <Typography variant="h4">Welcome to Admin Dashboard</Typography>;
+      case 'dashboard':
+        return <Typography variant="h4">Welcome to Admin Dashboard</Typography>;
       // case 'users':
       //   return <UserManagement />;
       // case 'createUser':
@@ -121,8 +123,8 @@ function LandfillManagerDashboard() {
       //   return <CreateLandfill />;
       // case 'assignManager':
       //   return <AssignManager />;
-      // case 'assignVehicle':
-      //   return <AssignVehicle />;
+      case 'entry':
+        return <VechicleEntry />;
 
 
       // Add cases for other options
@@ -156,67 +158,20 @@ function LandfillManagerDashboard() {
                     <ListItemIcon><Dashboard /></ListItemIcon>
                     <ListItemText primary="Dashboard" />
                   </ListItem>
-                  <ListItem button onClick={() => handleOptionClick('users')}>
-                    <ListItemIcon><People /></ListItemIcon>
-                    <ListItemText primary="Users" />
-                  </ListItem>
-                  <ListItem button onClick={() => handleOptionClick('createUser')}>
-                    <ListItemIcon><PersonAdd /></ListItemIcon>
-                    <ListItemText primary="Create New User" />
-                  </ListItem>
 
-
-
-                  <ListItem button onClick={handleSubOptionClick}>
+                  <ListItem button onClick={() => handleOptionClick('entry')}>
                     <ListItemIcon>
-                      <img src={managers} alt="STS Manager Icon" style={{ width: '20px' }} />
+                      <img src={stsman} alt="Entry" style={{ width: '24px' }} />
                     </ListItemIcon>
-                    <ListItemText primary="Managers" />
-                    {open ? <ExpandLess /> : <ExpandMore />}
+                    <ListItemText primary="Vechicle Entry" />
                   </ListItem>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('createLandfill')}>
-                      <ListItemIcon>
-                        <img src={landfillicon} alt="Landfill Icon" style={{ width: '20px' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Create Landfill" />
-                    </ListItem>
-                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('createSTS')}>
-                      <ListItemIcon>
-                        <img src={stsman} alt="STS Icon" style={{ width: '20px' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Create STS" />
-                    </ListItem>
-                    <ListItem button className={classes.nested} onClick={() => handleOptionClick('assignManager')}>
-                      <ListItemIcon>
-                        <img src={assignmanager} alt="Manager Icon" style={{ width: '20px' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Assign Manager" />
-                    </ListItem>
-                  </Collapse>
 
-                  <ListItem button onClick={handleTruckOptionClick}>
+                  <ListItem button onClick={() => handleOptionClick('routes')}>
                     <ListItemIcon>
-                      <img src={stsicon} alt="STS Icon" style={{ width: '20px' }} />
+                      <img src={routes} alt="Routes" style={{ width: '24px' }} />
                     </ListItemIcon>
-                    <ListItemText primary="Vechicle" />
-                    {truckOpen ? <ExpandLess /> : <ExpandMore />}
+                    <ListItemText primary="Routes" />
                   </ListItem>
-                  <Collapse in={truckOpen} timeout="auto" unmountOnExit>
-                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('addVehicle')}>
-                      <ListItemIcon>
-                        <img src={addtruck} alt="Add Truck Icon" style={{ width: '20px' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Add Vehicle" />
-                    </ListItem>
-                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('assignVehicle')}>
-                      <ListItemIcon>
-                        <img src={choosecar} alt="Assign Vehicle Icon" style={{ width: '20px' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Assign Vehicle" />
-                    </ListItem>
-                  </Collapse>
-
                 </List>
               </div>
 

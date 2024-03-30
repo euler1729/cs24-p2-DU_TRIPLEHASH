@@ -1,79 +1,106 @@
 import React, { useState } from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, TextField, InputAdornment, IconButton, Typography, FormControl, Select, MenuItem } from '@material-ui/core';
-import { Search, FilterList } from '@material-ui/icons';
+import { Typography, Button, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, TableSortLabel, Grid, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, Select, makeStyles } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 
-// Sample truck data
-const truckData = [
-  { registrationNumber: 'ABC123', truckType: 'Semi-trailer', capacity: '30 tons', loadedCostPerKm: '$0.50', unloadedCostPerKm: '$0.30', assignedSTS: 'STS Facility 1' },
-  { registrationNumber: 'XYZ456', truckType: 'Flatbed', capacity: '25 tons', loadedCostPerKm: '$0.60', unloadedCostPerKm: '$0.35', assignedSTS: 'STS Facility 2' },
-  // Add more truck data as needed
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '90vh',
+    width: '75vw',
+    margin: 'auto',
+  },
+  title: {
+    color: '#4caf50',
+    fontWeight: 'bold',
+  },
+  paper: {
+    marginBottom: theme.spacing(2),
+  },
+  textField: {
+    margin: theme.spacing(1),
+    width: 200,
+  },
+  table_head: {
+    fontWeight: 'bold',
+  },
+}));
+
+const mockVehicles = [
+  { id: 1, plateNumber: 'ABC123', brand: 'Toyota', model: 'Camry' },
+  { id: 2, plateNumber: 'XYZ456', brand: 'Honda', model: 'Accord' },
+  { id: 3, plateNumber: 'DEF789', brand: 'Ford', model: 'Focus' },
 ];
 
 const AssignVehicle = () => {
-  const [filter, setFilter] = useState('');
+  const classes = useStyles();
+  const [filterPlate, setFilterPlate] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogType, setDialogType] = useState('');
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value);
+  const handleAssign = (vehicleId) => {
+    console.log('Assigning vehicle with ID:', vehicleId);
+    setDialogType('success');
+    setDialogMessage('Vehicle Assigned Successfully');
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
   };
 
   return (
-    <div>
-      <Typography variant="h5">Truck List</Typography>
-      <FormControl style={{ marginBottom: 16 }}>
-        <TextField
-          variant="outlined"
-          label="Search"
-          value={filter}
-          onChange={handleFilterChange}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <Search />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </FormControl>
-      <FormControl style={{ marginBottom: 16 }}>
-        <Select
-          variant="outlined"
-          value={''}
-          displayEmpty
-          onChange={() => {}}
-          startAdornment={<FilterList />}
-        >
-          <MenuItem value="">Filter by Truck Type</MenuItem>
-          <MenuItem value="Semi-trailer">Semi-trailer</MenuItem>
-          <MenuItem value="Flatbed">Flatbed</MenuItem>
-          {/* Add more truck types as needed */}
-        </Select>
-      </FormControl>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Registration Number</TableCell>
-            <TableCell>Truck Type</TableCell>
-            <TableCell>Capacity</TableCell>
-            <TableCell>Cost Per Km (Loaded)</TableCell>
-            <TableCell>Cost Per Km (Unloaded)</TableCell>
-            <TableCell>Assigned STS</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {truckData.map((truck, index) => (
-            <TableRow key={index}>
-              <TableCell>{truck.registrationNumber}</TableCell>
-              <TableCell>{truck.truckType}</TableCell>
-              <TableCell>{truck.capacity}</TableCell>
-              <TableCell>{truck.loadedCostPerKm}</TableCell>
-              <TableCell>{truck.unloadedCostPerKm}</TableCell>
-              <TableCell>{truck.assignedSTS}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className={classes.root}>
+      <Typography variant="h4" className={classes.title}>Assign Vehicle</Typography>
+      <TextField
+        label="Filter Plate"
+        className={classes.textField}
+        value={filterPlate}
+        onChange={(e) => setFilterPlate(e.target.value)}
+        variant="outlined"
+      />
+      <Paper elevation={3} className={classes.paper}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.table_head}>Plate Number</TableCell>
+                <TableCell className={classes.table_head}>Brand</TableCell>
+                <TableCell className={classes.table_head}>Model</TableCell>
+                <TableCell className={classes.table_head}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {mockVehicles.map((vehicle) => (
+                <TableRow key={vehicle.id}>
+                  <TableCell>{vehicle.plateNumber}</TableCell>
+                  <TableCell>{vehicle.brand}</TableCell>
+                  <TableCell>{vehicle.model}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => handleAssign(vehicle.id)}
+                    >
+                      Assign
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>{dialogType === 'success' ? 'Success' : 'Error'}</DialogTitle>
+        <DialogContent>
+          <Typography>{dialogMessage}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
