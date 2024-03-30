@@ -22,12 +22,12 @@ from route.Fleet import Fleet
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
 from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
-from data_entry.AddVehicle import AddVehicle
+from data_entry.AddVehicle import AddVehicle, GetAllVehicles
 from data_entry.AssignLandfillManagers import AssignLandfillManagers
 from data_entry.AssignSTSManagers import AssignSTSManagers
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.CreateLandfillSite import CreateLandfillSite
-from data_entry.CreateSTS import CreateSTS
+from data_entry.CreateSTS import CreateSTS, GetSTSVehicleList
 
 from data_entry.GetUserList import GetAllData
 
@@ -88,6 +88,8 @@ api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 
 api.add_resource(GetAllData, '/data-entry/get-user-list')
+api.add_resource(GetAllVehicles, '/data-entry/get-vehicle-list')
+api.add_resource(GetSTSVehicleList, '/data-entry/get-sts-vehicle-list')
 
 
 

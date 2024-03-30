@@ -38,3 +38,35 @@ class AddVehicle(Resource):
 
         except sqlite3.Error as e:
             return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
+        
+
+class GetAllVehicles(Resource):
+    def get(self):
+        try:
+            conn = sqlite3.connect('sqlite.db')
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT * FROM vehicle")
+            vehicles = cursor.fetchall()
+
+            vehicles_list = []
+
+            for vehicle in vehicles:
+                vehicle_dict = {
+                    'vehicle_id': vehicle[0],
+                    'vehicle_reg_number': vehicle[1],
+                    'vehicle_type': vehicle[2],
+                    'vehicle_capacity_in_ton': vehicle[3],
+                    'fuel_cost_per_km_loaded': vehicle[4],
+                    'fuel_cost_per_km_unloaded': vehicle[5],
+                    'sts_id': vehicle[6]
+                }
+
+                vehicles_list.append(vehicle_dict)
+
+            conn.close()
+
+            return make_response(jsonify(vehicles_list), 200)
+
+        except sqlite3.Error as e:
+            return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
