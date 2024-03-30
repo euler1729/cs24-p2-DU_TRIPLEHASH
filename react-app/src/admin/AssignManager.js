@@ -83,7 +83,7 @@ const AssignManager = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [users]);
+  }, []);
 
   const fetchUsers = () => {
     try {
@@ -94,6 +94,7 @@ const AssignManager = () => {
         withCredentials: true
       })
         .then(response => {
+          console.log(response.data.users)
           setUsers([])
           response.data.users.forEach(user => {
             setUsers(users => [...users, {

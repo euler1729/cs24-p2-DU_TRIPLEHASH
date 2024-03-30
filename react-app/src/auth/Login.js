@@ -100,36 +100,39 @@ function LoginPage() {
     setPasswordError('');
     setLoading(true);
     console.log(user_name, password);
-
-    api.post('/auth/login', {
-      user_name: user_name,
-      password: password
-    }).then((response) => {
-      console.log(response);
-      if (response.status <300) {
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        cookies.set('access_token', response.data.access_token, { path: '/' });
-        if (response.data.user.role_id === 1) {
-          navigate('/admin/dashboard');
+    try{
+      api.post('/auth/login', {
+        user_name: user_name,
+        password: password
+      }).then((response) => {
+        console.log(response);
+        if (response.status <300) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          cookies.set('access_token', response.data.access_token, { path: '/' });
+          if (response.data.user.role_id === 1) {
+            navigate('/admin/dashboard');
+          }
+          else if (response.data.user.role_id === 2) {
+            navigate('/sts/dashboard');
+          }
+          else if (response.data.user.role_id === 3) {
+            navigate('/landfill/dashboard');
+          } else {
+            navigate('/');
+          }
         }
-        else if (response.data.user.role_id === 2) {
-          navigate('/sts/dashboard');
+        else {
+          setError(response.data.msg);
         }
-        else if (response.data.user.role_id === 3) {
-          navigate('/landfill/dashboard');
-        } else {
-          navigate('/');
-        }
-      }
-      else {
-        setError(response.data.msg);
-      }
-
-    }).catch((error) => {
+  
+      }).catch((error) => {
+        console.log(error);
+        setError(error.response.data.msg);
+      });
+      setLoading(false);
+    }catch(error){
       console.log(error);
-      setError(error.response.data.msg);
-    });
-    setLoading(false);
+    }
   };
 
   const handleTogglePasswordVisibility = () => {

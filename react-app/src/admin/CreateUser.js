@@ -172,6 +172,9 @@ const CreateUser = () => {
                     setDialogType('success');
                     setDialogMessage('User created successfully');
                     setDialogOpen(true);
+                    setTimeout(() => {
+                        setDialogOpen(false);
+                    }, 5000);
                 }
             }).catch((error) => {
                 console.log(error);
@@ -179,6 +182,9 @@ const CreateUser = () => {
                 setDialogType('error');
                 setDialogMessage(error?.response?.data?.msg || 'Could not create user. Please try again');
                 setDialogOpen(true);
+                setTimeout(() => {
+                    setDialogOpen(false);
+                }, 5000);
             });
         } catch (error) {
             console.log(error);
@@ -186,6 +192,9 @@ const CreateUser = () => {
             setDialogType('error');
             setDialogMessage(error.response.data.msg || 'Could not create user. Please try again');
             setDialogOpen(true);
+            setTimeout(() => {
+                setDialogOpen(false);
+            }, 5000);
         }
     };
     const handleTogglePasswordVisibility = () => {
