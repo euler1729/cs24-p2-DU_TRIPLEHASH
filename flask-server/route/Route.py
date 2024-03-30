@@ -40,5 +40,18 @@ class Route():
         self.getRoute(origin=origin, destination=destination)
 
         return float(self.distance.split(' ')[0])
+    def getGeoLocation(location):
 
+        url = 'https://maps.googleapis.com/maps/api/geocode/json'
+        apiKey = 'AIzaSyCqtN5BFJp1GfhRMUs-fKjVqLD-zp_nNME'
+        param = {
+            'address' : location,
+            'key' : apiKey
+        }
 
+        response = requests.get(url, params=param)
+        data = response.json()
+        if data['status'] == 'OK':
+            return data['results'][0]['geometry']['location']
+
+print(Route.getGeoLocation('Dhaka University'))
