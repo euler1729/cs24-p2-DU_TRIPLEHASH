@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
     overflowY: 'auto',
     padding: '10px',
   },
+  list1: {
+    // height: '100%',
+  },
   list2: {
     alignSelf: 'flex-end',
     marginTop: 'auto',

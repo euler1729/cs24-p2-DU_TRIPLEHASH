@@ -23,7 +23,7 @@ import choosecar from './res/choosecar.png'
 // Component for Admin Dashboard
 // import UserManagement from './UserManagement';
 // import CreateUser from './CreateUser';
-// import ProfileView from '../general/ProfileView';
+import ProfileView from '../general/ProfileView';
 // import VehiclePage from './AddVechicle';
 // import CreateSTSPage from './CreateSTS';
 // import CreateLandfill from './CreateLandfill';
@@ -111,8 +111,8 @@ function STSManagerDashboard() {
       //   return <UserManagement />;
       // case 'createUser':
       //   return <CreateUser />;
-      // case 'profile':
-      //   return <ProfileView />;
+      case 'profile':
+        return <ProfileView />;
       // case 'addVehicle':
       //   return <VehiclePage />;
       // case 'createSTS':
@@ -149,7 +149,7 @@ function STSManagerDashboard() {
               </Typography>
             </div>
 
-            {/* <div className={classes.list}>
+            <div className={classes.list}>
               <div className={classes.list1}>
                 <List>
                   <ListItem button onClick={() => handleOptionClick('dashboard')}>
@@ -232,7 +232,7 @@ function STSManagerDashboard() {
                   </ListItem>
                 </List>
               </div>
-            </div> */}
+            </div>
           </div>
         </Drawer>
       </div>
