@@ -15,6 +15,11 @@ from manageUser.Roles import Roles
 from manageUser.UpdateRole import UpdateRole
 from manageUser.Profile import Profile
 
+#Trip
+
+from trip.Trip import Trip
+from trip.ActiveTrip import ActiveTrip
+
 # Route
 from route.getRoute import GetRoute
 from route.Fleet import Fleet
@@ -76,6 +81,12 @@ api.add_resource(Profile, '/profile')
 # Route
 api.add_resource(GetRoute, '/route')
 api.add_resource(Fleet, '/sts/fleet')
+
+#Trip
+api.add_resource(Trip, '/trip')
+api.add_resource(Trip, '/activetrip')
+
+
 
 # Data Entry
 api.add_resource(AddVehicle, '/data-entry/add-vehicle')
