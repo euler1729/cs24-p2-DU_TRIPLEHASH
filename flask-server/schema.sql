@@ -113,3 +113,30 @@ CREATE TABLE dump_entries (
     FOREIGN KEY (landfill_id) REFERENCES landfill_sites(landfill_id),
     FOREIGN KEY (manager_id) REFERENCES sts_managers(manager_id)
 );
+
+DROP TABLE IF EXISTS trips;
+CREATE TABLE trips(
+    trip_id INTEGER PRIMARY KEY,
+    vehicle_id INTEGER,
+    sts_id INTEGER,
+    landfill_id INTEGER,
+    start_time DATETIME,
+    dump_time DATETIME,
+    end_time DATETIME,
+    cost REAL,
+    fuel REAL,
+    laod real,
+    FOREIGN KEY(vehicle_id) REFERENCES vehicle(vehicle),
+    FOREIGN KEY(sts_id) REFERENCES sts(sts_id),
+    FOREIGN KEY(landfill_id)  REFERENCES landfill_sites(landfill_id)
+)
+
+DROP TABLE if EXISTS active_trip;
+CREATE TABLE active_trip(
+    trips_id INTEGER,
+    vehicle_id INTEGER,
+    to_landfill INTEGER,
+
+    FOREIGN KEY(trips) REFERENCES trips,
+    FOREIGN KEY(vehicle_id) REFERENCES vehile(vehicle_id)
+)
