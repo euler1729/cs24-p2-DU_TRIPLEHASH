@@ -30,7 +30,6 @@ class Trip(Resource):
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
             if info:
-                role_id = info['sub']['rule_id']
             
                 # if role_id != 1:
                 #     return make_response(jsonify({'msg': 'Unauthorized access.'}), 403)

@@ -28,7 +28,8 @@ class ActiveTrip(Resource):
                     return make_response(jsonify({'active_trips': active_trips}), 200)
                 else:
                     # For STS managers, retrieve their own active trips based on STS ID
-                    sts_id = info['sub']['sts_id']
+                    data = request.json()
+                    sts_id = data.get('sts_id')
                     # Connect to the database
                     conn = sqlite3.connect('sqlite.db') 
                     cursor = conn.cursor()
