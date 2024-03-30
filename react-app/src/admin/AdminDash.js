@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Collapse } from '@material-ui/core';
+import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Menu, Dashboard, People, BarChart, ExitToApp, PersonAdd, Edit, Settings, PlaylistAddm, AccountBox, ExpandLess, ExpandMore } from '@material-ui/icons';
-import FireTruckIcon from '@mui/icons-material/FireTruck';
-import WarehouseIcon from '@mui/icons-material/Warehouse';
+import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore } from '@material-ui/icons';
 
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 // Brand
@@ -16,8 +14,11 @@ import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 // PNG ICONS
 import stsicon from './res/sts.png'
 import landfillicon from './res/landfill.png'
-import stsmanager from './res/stsmanager.png'
-import landfillmanager from './res/landfillmanager.png'
+import stsman from './res/stsman.png'
+import managers from './res/managers.png'
+import assignmanager from './res/assignmanager.png'
+import addtruck from './res/addtruck.png'
+import choosecar from './res/choosecar.png'
 
 // Component for Admin Dashboard
 import UserManagement from './UserManagement';
@@ -27,6 +28,7 @@ import VehiclePage from './AddVechicle';
 import CreateSTSPage from './CreateSTS';
 import CreateLandfill from './CreateLandfill';
 import AssignManager from './AssignManager';
+import AssignVehicle from './AssignVehicle';
 
 const drawerWidth = 260;
 
@@ -64,12 +66,12 @@ const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
-  list:{  
+  list: {
     flex: 1,
     overflowY: 'auto',
     padding: '10px',
   },
-  list2:{
+  list2: {
     alignSelf: 'flex-end',
     marginTop: 'auto',
   }
@@ -82,6 +84,7 @@ function AdminDashboard() {
 
   const [selectedOption, setSelectedOption] = useState('dashboard');
   const [open, setOpen] = useState(false);
+  const [truckOpen, setTruckOpen] = useState(false);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -95,6 +98,9 @@ function AdminDashboard() {
 
   const handleSubOptionClick = () => {
     setOpen(!open);
+  };
+  const handleTruckOptionClick = () => {
+    setTruckOpen(!truckOpen);
   };
 
   const renderComponent = () => {
@@ -113,8 +119,11 @@ function AdminDashboard() {
         return <CreateSTSPage />;
       case 'createLandfill':
         return <CreateLandfill />;
-      case 'assignSTSManager':
+      case 'assignManager':
         return <AssignManager />;
+      case 'assignVehicle':
+        return <AssignVehicle />;
+
 
       // Add cases for other options
       default:
@@ -155,15 +164,12 @@ function AdminDashboard() {
                     <ListItemIcon><PersonAdd /></ListItemIcon>
                     <ListItemText primary="Create New User" />
                   </ListItem>
-                  <ListItem button onClick={() => handleOptionClick('addVehicle')}>
-                    <ListItemIcon><FireTruckIcon /></ListItemIcon>
-                    <ListItemText primary="Add Vehicle" />
-                  </ListItem>
+
 
 
                   <ListItem button onClick={handleSubOptionClick}>
                     <ListItemIcon>
-                      <img src={stsmanager} alt="STS Manager Icon" style={{ width: '20px' }} />
+                      <img src={managers} alt="STS Manager Icon" style={{ width: '20px' }} />
                     </ListItemIcon>
                     <ListItemText primary="Managers" />
                     {open ? <ExpandLess /> : <ExpandMore />}
@@ -177,19 +183,40 @@ function AdminDashboard() {
                     </ListItem>
                     <ListItem className={classes.nested} button onClick={() => handleOptionClick('createSTS')}>
                       <ListItemIcon>
-                        <img src={stsicon} alt="STS Icon" style={{ width: '20px' }} />
+                        <img src={stsman} alt="STS Icon" style={{ width: '20px' }} />
                       </ListItemIcon>
                       <ListItemText primary="Create STS" />
                     </ListItem>
-                    <List component="div" disablePadding>
-                      <ListItem button className={classes.nested}>
-                        <ListItemIcon>
-                          <img src={landfillmanager} alt="Manager Icon" style={{ width: '20px' }} />
-                        </ListItemIcon>
-                        <ListItemText primary="Assign Manager" onClick={() => handleOptionClick('assignSTSManager')} />
-                      </ListItem>
-                    </List>
+                    <ListItem button className={classes.nested} onClick={() => handleOptionClick('assignManager')}>
+                      <ListItemIcon>
+                        <img src={assignmanager} alt="Manager Icon" style={{ width: '20px' }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Assign Manager" />
+                    </ListItem>
                   </Collapse>
+
+                  <ListItem button onClick={handleTruckOptionClick}>
+                    <ListItemIcon>
+                      <img src={stsicon} alt="STS Icon" style={{ width: '20px' }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Vechicle" />
+                    {truckOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={truckOpen} timeout="auto" unmountOnExit>
+                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('addVehicle')}>
+                      <ListItemIcon>
+                        <img src={addtruck} alt="Add Truck Icon" style={{ width: '20px' }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Add Vehicle" />
+                    </ListItem>
+                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('assignVehicle')}>
+                      <ListItemIcon>
+                        <img src={choosecar} alt="Assign Vehicle Icon" style={{ width: '20px' }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Assign Vehicle" />
+                    </ListItem>
+                  </Collapse>
+
                 </List>
               </div>
 

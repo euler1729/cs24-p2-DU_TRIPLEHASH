@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const UserComponent = () => {
   const classes = useStyles();
   const cookies = new Cookies();
+  const self = JSON.parse(localStorage.getItem('user'));
   const [users, setUsers] = useState(initialUsers);
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
@@ -83,7 +84,7 @@ const UserComponent = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [users]);
+  }, []);
 
   const fetchUsers = () => {
     try {
@@ -94,6 +95,7 @@ const UserComponent = () => {
         withCredentials: true
       })
         .then(response => {
+          // console.log('Users:', response.data.users)
           setUsers([])
           response.data.users.forEach(user => {
             setUsers(users => [...users, {
@@ -137,12 +139,18 @@ const UserComponent = () => {
           setDialogMessage('User Updated Successfully');
           setEditingUser(null);
           setDialogOpen(true);
+          setTimeout(() => {
+            setDialogOpen(false);
+          }, 5000);
         })
         .catch(error => {
           console.error('Error saving user:', error);
           setDialogType('error');
           setDialogMessage(error?.response?.data?.message || 'Could not save user');
           setDialogOpen(true);
+          setTimeout(() => {
+            setDialogOpen(false);
+          }, 5000);
         });
 
     } catch (error) {
@@ -150,6 +158,9 @@ const UserComponent = () => {
       setDialogType('error');
       setDialogMessage(error?.response?.data?.message || 'Could not save user');
       setDialogOpen(true);
+      setTimeout(() => {
+        setDialogOpen(false);
+      }, 5000);
     }
   };
 
@@ -167,6 +178,12 @@ const UserComponent = () => {
           fetchUsers();
           setDeleteUserId(null);
           setDeleteDialogOpen(false);
+          setDialogType('success');
+          setDialogMessage('User Deleted Successfully');
+          setDialogOpen(true);
+          setTimeout(() => {
+            setDialogOpen(false);
+          }, 5000);
         })
         .catch(error => {
           console.error('Error deleting user:', error);
@@ -174,6 +191,9 @@ const UserComponent = () => {
           setDialogType('error');
           setDialogMessage(error?.response?.data?.message || 'COULD NOT DELETE THE USER');
           setDialogOpen(true);
+          setTimeout(() => {
+            setDialogOpen(false);
+          }, 5000);
         });
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -181,6 +201,9 @@ const UserComponent = () => {
       setDialogType('error');
       setDialogMessage(error?.response?.data?.message || 'COULD NOT DELETE THE USER');
       setDialogOpen(true);
+      setTimeout(() => {
+        setDialogOpen(false);
+      }, 5000);
     }
   };
 
@@ -252,7 +275,7 @@ const UserComponent = () => {
       <Grid container item xs={12} >
 
         <Grid item xs={12}>
-          <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom:'60px' }}>
+          <Grid container spacing={2} alignItems="center" style={{ justifyContent: 'space-between', marginBottom: '60px' }}>
             <Grid item xs={12} style={{ height: '0px' }}>
               <Typography variant="h4" align="center" className={classes.title}>
                 USERS
@@ -309,7 +332,7 @@ const UserComponent = () => {
 
           <Grid container item xs={12}>
             {/* Search */}
-            <Grid item xs={12} style={{marginBottom: '20px'}}>
+            <Grid item xs={12} style={{ marginBottom: '20px' }}>
               <TextField
                 label="Search"
                 className={classes.textField}
@@ -346,7 +369,7 @@ const UserComponent = () => {
                     </TableHead>
                     <TableBody>
                       {sortedUsers.map(user => (
-                        <TableRow key={user.user_id}>
+                        <TableRow key={user.user_id} >
                           <TableCell>
                             {editingUser && editingUser.user_id === user.user_id ? (
                               <TextField
@@ -356,7 +379,7 @@ const UserComponent = () => {
                                 className={classes.textField}
                               />
                             ) : (
-                              user.user_name
+                              <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.user_name}</span>
                             )}
                           </TableCell>
                           <TableCell>
@@ -368,7 +391,7 @@ const UserComponent = () => {
                                 className={classes.textField}
                               />
                             ) : (
-                              user.email
+                              <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.email}</span>
                             )}
                           </TableCell>
                           <TableCell>
@@ -379,7 +402,7 @@ const UserComponent = () => {
                                   <MenuItem value="STS Manager">STS Manager</MenuItem>
                                   <MenuItem value="Landfill Manager">Landfill Manager</MenuItem>
                                   <MenuItem value="Unassigned">Unassigned</MenuItem>
-                                </Select> : user.role
+                                </Select> : <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.role}</span>
                             }
                           </TableCell>
                           <TableCell>
@@ -391,7 +414,7 @@ const UserComponent = () => {
                                 className={classes.textField}
                               />
                             ) : (
-                              user.name
+                              <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.name}</span>
                             )}
                           </TableCell>
                           <TableCell>
@@ -404,7 +427,7 @@ const UserComponent = () => {
                                 type="number"
                               />
                             ) : (
-                              user.age
+                              <span style={{color: self?.user_id===user.user_id? EcoSyncBrand.Colors.green:'black'}}>{user.age}</span>
                             )}
                           </TableCell>
                           {
