@@ -1,47 +1,62 @@
 import sqlite3
 from flask_restful import Resource
 from flask import jsonify, request, make_response
-from TokenManager import decode_token        
+from TokenManager import decode_token
 
-
-class AssignSTSManagers(Resource):
+class AssignManager(Resource):
     def post(self):
-        token = request.headers['Authorization'].split(' ')[1]
-        info = decode_token(token)
+        try:
+            token = request.headers['Authorization'].split(' ')[1]
+            info = decode_token(token)
 
-        # print(info)
-        if info and info['sub']['role_id'] == 1:
-            data = request.get_json()
+            if info and info['sub']['role_id'] == 1:
+                data = request.get_json()
 
-            sts_id = data.get('sts_id')
-            manager_ids = data.get('manager_ids')
+                sts_id = data.get('sts_id')
+                user_id = data.get('user_id')
+                landfill_id = data.get('landfill_id')
 
-            if not all([sts_id, manager_ids]):
-                return make_response(jsonify({'error': 'Missing required fields'}), 400)
+                if not any([sts_id, landfill_id]):
+                    return make_response(jsonify({'error': 'No STS ID or Landfill ID provided'}), 400)
 
-            try:
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
 
-                # Check if STS exists
-                cursor.execute("SELECT * FROM sts WHERE sts_id=?", (sts_id,))
-                sts = cursor.fetchone()
-                if not sts:
-                    return make_response(jsonify({'error': 'STS not found'}), 404)
+                # Verify if the given STS ID exists
+                if sts_id:
+                    cursor.execute("SELECT sts_id FROM sts WHERE sts_id = ?", (sts_id,))
+                    existing_sts = cursor.fetchone()
+                    if not existing_sts:
+                        return make_response(jsonify({'error': 'STS with the provided ID does not exist'}), 404)
 
-                # Assign each manager to the STS
-                for manager_id in manager_ids:
-                    cursor.execute("""INSERT INTO sts_managers 
-                                    (user_id, sts_id)
-                                    VALUES (?, ?)""",
-                                (manager_id, sts_id))
+                # Verify if the given Landfill ID exists
+                if landfill_id:
+                    cursor.execute("SELECT landfill_id FROM landfill_sites WHERE landfill_id = ?", (landfill_id,))
+                    existing_landfill = cursor.fetchone()
+                    if not existing_landfill:
+                        return make_response(jsonify({'error': 'Landfill with the provided ID does not exist'}), 404)
+
+                # Remove previous associations
+                cursor.execute("DELETE FROM sts_managers WHERE user_id = ?", (user_id,))
+                cursor.execute("DELETE FROM landfill_managers WHERE user_id = ?", (user_id,))
+
+                # Assign the manager to the new site
+                if sts_id:
+                    role_id = 2
+                    cursor.execute("INSERT INTO sts_managers (user_id, sts_id) VALUES (?, ?)", (user_id, sts_id))
+                elif landfill_id:
+                    role_id = 3
+                    cursor.execute("INSERT INTO landfill_managers (user_id, landfill_id) VALUES (?, ?)", (user_id, landfill_id))
+
+                # Change user's role
+                cursor.execute("UPDATE user SET role_id = ? WHERE user_id = ?", (role_id, user_id))
 
                 conn.commit()
                 conn.close()
 
-                return make_response(jsonify({'msg': 'STS managers assigned successfully'}), 201)
+                return make_response(jsonify({'msg': 'Manager assigned and role changed successfully'}), 201)
 
-            except sqlite3.Error as e:
-                return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
+            return make_response(jsonify({'msg':'Unauthorized access'}), 401)
 
-        return make_response(jsonify({'msg':'Unauthorized access'}), 401)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 500)
