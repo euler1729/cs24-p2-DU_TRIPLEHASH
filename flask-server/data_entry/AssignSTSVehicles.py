@@ -10,8 +10,8 @@ class AssignSTSVehicles(Resource):
         token = request.headers['Authorization'].split(' ')[1]
         info = decode_token(token)
 
-        # print(info)
-        if info and info['sub']['role_id'] == 2:
+        print(info)
+        if info and info['sub']['role_id'] == 1:
             data = request.get_json()
 
             sts_id = data.get('sts_id')
@@ -31,6 +31,7 @@ class AssignSTSVehicles(Resource):
                     return make_response(jsonify({'error': 'STS not found'}), 404)
 
                 # Assign each vehicle to the STS
+                print(vehicle_ids)
                 for vehicle_id in vehicle_ids:
                     # Check if vehicle exists and is not assigned to another STS
                     cursor.execute("SELECT * FROM vehicle WHERE vehicle_id=? AND sts_id IS NULL", (vehicle_id,))
