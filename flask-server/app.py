@@ -15,6 +15,11 @@ from manageUser.Roles import Roles
 from manageUser.UpdateRole import UpdateRole
 from manageUser.Profile import Profile
 
+#Trip
+
+from trip.Trip import Trip
+from trip.ActiveTrip import ActiveTrip
+
 # Route
 from route.getRoute import GetRoute
 from route.Fleet import Fleet
@@ -22,12 +27,12 @@ from route.Fleet import Fleet
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
 from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
-from data_entry.AddVehicle import AddVehicle
+from data_entry.AddVehicle import AddVehicle, GetAllVehicles
 from data_entry.AssignLandfillManagers import AssignLandfillManagers
 from data_entry.AssignSTSManagers import AssignSTSManagers
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.CreateLandfillSite import CreateLandfillSite
-from data_entry.CreateSTS import CreateSTS
+from data_entry.CreateSTS import CreateSTS, GetSTSVehicleList
 
 from data_entry.GetUserList import GetAllData
 
@@ -77,6 +82,12 @@ api.add_resource(Profile, '/profile')
 api.add_resource(GetRoute, '/route')
 api.add_resource(Fleet, '/sts/fleet')
 
+#Trip
+api.add_resource(Trip, '/trip')
+api.add_resource(ActiveTrip, '/activetrip')
+
+
+
 # Data Entry
 api.add_resource(AddVehicle, '/data-entry/add-vehicle')
 api.add_resource(CreateSTS, '/data-entry/create-sts')
@@ -88,6 +99,8 @@ api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 
 api.add_resource(GetAllData, '/data-entry/get-user-list')
+api.add_resource(GetAllVehicles, '/data-entry/get-vehicle-list')
+api.add_resource(GetSTSVehicleList, '/data-entry/get-sts-vehicle-list')
 
 
 
