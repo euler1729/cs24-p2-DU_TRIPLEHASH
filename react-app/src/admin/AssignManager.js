@@ -165,10 +165,9 @@ const UserComponent = () => {
 
   const handleSaveUser = () => {
     console.log('Saving user:', editingUser);
-    console.log(sts_mapping, landfill_mapping)
     // Save user to database
     try {
-      api.post('/data-entry/assign-manager', {
+      api.put('/data-entry/assign-manager', {
         user_id: editingUser.user_id,
         role_id: editingUser.role_id,
         assigned_to: editingUser.assigned_to
@@ -331,13 +330,6 @@ const UserComponent = () => {
     setCurrent(!Current);
   }
 
-  const changeRole = (e) => {
-    setEditingUser({ ...editingUser, role_id: e.target.value });
-    if (e.target.value === 1 || e.target.value === 4) {
-      setEditingUser({ ...editingUser, assigned_to: 0 });
-    }
-  }
-
   return (
     Current ?
       <>
@@ -453,7 +445,7 @@ const UserComponent = () => {
                               <TableCell>
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
-                                    <Select name="role" label='Role' value={editingUser.role_id} onChange={changeRole} >
+                                    <Select name="role" label='Role' value={editingUser.role_id} onChange={editRole} >
                                       <MenuItem value={1}>Admin</MenuItem>
                                       <MenuItem value={2}>STS Manager</MenuItem>
                                       <MenuItem value={3}>Landfill Manager</MenuItem>
