@@ -49,6 +49,51 @@ class CreateSTS(Resource):
         
         return make_response(jsonify({'msg':'Unauthorized access'}), 401)
 
+
+class UpdateSTS(Resource):
+    def put(self, sts_id):
+        try:
+            token = request.headers['Authorization'].split(' ')[1]
+            info = decode_token(token)
+
+            if info and info['sub']['role_id'] == 1:
+                data = request.get_json()
+
+                # Check if STS exists
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM sts WHERE sts_id = ?", (sts_id,))
+                existing_sts = cursor.fetchone()
+                
+                if not existing_sts:
+                    conn.close()
+                    return make_response(jsonify({'error': 'STS not found'}), 404)
+
+                # Check if ward number is being updated
+                if 'ward_number' in data:
+                    conn.close()
+                    return make_response(jsonify({'error': 'Ward number cannot be updated'}), 400)
+
+                # Update STS information
+                capacity_tonnes = data.get('capacity_tonnes', existing_sts[2])
+                gps_longitude = data.get('gps_longitude', existing_sts[3])
+                gps_latitude = data.get('gps_latitude', existing_sts[4])
+
+                cursor.execute("""UPDATE sts SET capacity_tonnes=?, 
+                                gps_longitude=?, gps_latitude=? WHERE sts_id=?""",
+                                (capacity_tonnes, gps_longitude, gps_latitude, sts_id))
+                conn.commit()
+                conn.close()
+
+                return make_response(jsonify({'msg': 'STS updated successfully'}), 200)
+
+            return make_response(jsonify({'msg': 'Unauthorized access'}), 401)
+
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 500)
+
+
+
 class GetSTSVehicleList(Resource):
     def get(self):
         try:
@@ -94,3 +139,34 @@ class GetSTSVehicleList(Resource):
         except sqlite3.Error as e:
             return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
         
+
+
+
+class GetAllSTS(Resource):
+    def get(self):
+        try:
+            conn = sqlite3.connect('sqlite.db')
+            cursor = conn.cursor()
+
+            # Fetch all STS from the database
+            cursor.execute("SELECT * FROM sts")
+            sts_list = cursor.fetchall()
+
+            conn.close()
+
+            # Format the STS data
+            formatted_sts_list = []
+            for sts in sts_list:
+                sts_dict = {
+                    'sts_id': sts[0],
+                    'ward_number': sts[1],
+                    'capacity_tonnes': sts[2],
+                    'gps_longitude': sts[3],
+                    'gps_latitude': sts[4]
+                }
+                formatted_sts_list.append(sts_dict)
+
+            return make_response(jsonify(formatted_sts_list), 200)
+
+        except sqlite3.Error as e:
+            return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)

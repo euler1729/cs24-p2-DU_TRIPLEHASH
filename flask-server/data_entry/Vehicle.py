@@ -95,32 +95,36 @@ class UpdateVehicle(Resource):
 
             if info and info['sub']['role_id'] == 1:
                 data = request.get_json()
+                # print(data)
 
                 # Check if vehicle exists
                 conn = sqlite3.connect('sqlite.db')
+                
                 cursor = conn.cursor()
                 cursor.execute("SELECT * FROM vehicle WHERE vehicle_id = ?", (vehicle_id,))
                 existing_vehicle = cursor.fetchone()
-                conn.close()
-
+                
                 if not existing_vehicle:
+                    conn.close()
                     return make_response(jsonify({'error': 'Vehicle not found'}), 404)
 
+
+                # Check if registration number is being updated
+                if 'vehicle_reg_number' in data and data['vehicle_reg_number'] != existing_vehicle[1]:
+                    conn.close()
+                    return make_response(jsonify({'error': 'Registration number cannot be updated'}), 400)
+
                 # Update vehicle information
-                vehicle_reg_number = data.get('vehicle_reg_number', existing_vehicle[1])
                 vehicle_type = data.get('vehicle_type', existing_vehicle[2])
                 vehicle_capacity_in_ton = data.get('vehicle_capacity_in_ton', existing_vehicle[3])
                 fuel_cost_per_km_loaded = data.get('fuel_cost_per_km_loaded', existing_vehicle[4])
                 fuel_cost_per_km_unloaded = data.get('fuel_cost_per_km_unloaded', existing_vehicle[5])
-                sts_id = data.get('sts_id', existing_vehicle[6])
 
-                conn = sqlite3.connect('sqlite.db')
-                cursor = conn.cursor()
-                cursor.execute("""UPDATE vehicle SET vehicle_reg_number=?, vehicle_type=?, 
+                cursor.execute("""UPDATE vehicle SET vehicle_type=?, 
                                 vehicle_capacity_in_ton=?, fuel_cost_per_km_loaded=?, 
-                                fuel_cost_per_km_unloaded=?, sts_id=? WHERE vehicle_id=?""",
-                                (vehicle_reg_number, vehicle_type, vehicle_capacity_in_ton,
-                                 fuel_cost_per_km_loaded, fuel_cost_per_km_unloaded, sts_id, vehicle_id))
+                                fuel_cost_per_km_unloaded=? WHERE vehicle_id=?""",
+                                (vehicle_type, vehicle_capacity_in_ton,
+                                 fuel_cost_per_km_loaded, fuel_cost_per_km_unloaded, vehicle_id))
                 conn.commit()
                 conn.close()
 
@@ -130,7 +134,6 @@ class UpdateVehicle(Resource):
 
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 500)
-
 
 
 class GetAllVehicles(Resource):

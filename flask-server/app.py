@@ -32,7 +32,7 @@ from data_entry.AssignLandfillManagers import AssignLandfillManagers
 from data_entry.AssignSTSManagers import AssignSTSManagers
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.LandfillSite import CreateLandfillSite
-from data_entry.STS import CreateSTS, GetSTSVehicleList
+from data_entry.STS import *
 
 from data_entry.GetUserList import GetAllData
 
@@ -101,8 +101,13 @@ api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 api.add_resource(GetAllData, '/data-entry/get-user-list')
 api.add_resource(GetAllVehicles, '/data-entry/get-vehicle-list')
 api.add_resource(GetSTSVehicleList, '/data-entry/get-sts-vehicle-list')
+api.add_resource(GetAllSTS, '/data-entry/get-sts-list')
+
 
 api.add_resource(DeleteVehicle, '/data-entry/delete-vehicle/<int:vehicle_id>')
+api.add_resource(UpdateVehicle, '/data-entry/update-vehicle/<int:vehicle_id>')
+
+api.add_resource(UpdateSTS, '/data-entry/update-sts/<int:sts_id>')
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, use_reloader=True, host='0.0.0.0', port=8000)
