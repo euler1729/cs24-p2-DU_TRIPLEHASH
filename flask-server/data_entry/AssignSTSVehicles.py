@@ -2,11 +2,9 @@ import sqlite3
 from flask_restful import Resource
 from flask import jsonify, request, make_response
 from TokenManager import decode_token       
-        
-
 
 class AssignSTSVehicles(Resource):
-    def post(self):
+    def put(self):
         token = request.headers['Authorization'].split(' ')[1]
         info = decode_token(token)
 
@@ -15,10 +13,7 @@ class AssignSTSVehicles(Resource):
             data = request.get_json()
 
             sts_id = data.get('sts_id')
-            vehicle_ids = data.get('vehicle_ids')
-
-            if not all([sts_id, vehicle_ids]):
-                return make_response(jsonify({'error': 'Missing required fields'}), 400)
+            vehicle_id = data.get('vehicle_id')
 
             try:
                 conn = sqlite3.connect('sqlite.db')
@@ -30,13 +25,15 @@ class AssignSTSVehicles(Resource):
                 if not sts:
                     return make_response(jsonify({'error': 'STS not found'}), 404)
 
-                # Assign each vehicle to the STS
-                for vehicle_id in vehicle_ids:
+                if sts_id == 0:
+                    # Unassign the vehicle from its STS
+                    cursor.execute("UPDATE vehicle SET sts_id=NULL WHERE vehicle_id=?", (vehicle_id,))
+                else:
                     # Check if vehicle exists and is not assigned to another STS
-                    cursor.execute("SELECT * FROM vehicle WHERE vehicle_id=? AND sts_id IS NULL", (vehicle_id,))
+                    cursor.execute("SELECT * FROM vehicle WHERE vehicle_id=? AND (sts_id IS NULL OR sts_id=?)", (vehicle_id, sts_id))
                     vehicle = cursor.fetchone()
                     if not vehicle:
-                        return make_response(jsonify({'error': 'Vehicle not found or already assigned to an STS'}), 404)
+                        return make_response(jsonify({'error': 'Vehicle not found or already assigned to another STS'}), 404)
 
                     # Update STS ID for the vehicle
                     cursor.execute("UPDATE vehicle SET sts_id=? WHERE vehicle_id=?", (sts_id, vehicle_id))
