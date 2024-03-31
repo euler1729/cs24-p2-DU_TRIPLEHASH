@@ -22,7 +22,7 @@ class AssignSTSVehicles(Resource):
                 # Check if STS exists
                 cursor.execute("SELECT * FROM sts WHERE sts_id=?", (sts_id,))
                 sts = cursor.fetchone()
-                if not sts:
+                if not sts and sts_id != 0:
                     return make_response(jsonify({'error': 'STS not found'}), 404)
 
                 if sts_id == 0:
