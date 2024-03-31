@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore } from '@material-ui/icons';
+import AddIcon from '@mui/icons-material/Add';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+
+
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +16,8 @@ import LogGif from '../EcoSyncBrand/logogif.gif'
 import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 
 // PNG ICONS
-import stsicon from './res/sts.png'
 import landfillicon from './res/landfill.png'
 import stsman from './res/stsman.png'
-import managers from './res/managers.png'
 import assignmanager from './res/assignmanager.png'
 import addtruck from './res/addtruck.png'
 import choosecar from './res/choosecar.png'
@@ -44,12 +46,12 @@ const useStyles = makeStyles((theme) => ({
     color: EcoSyncBrand.Colors.green,
     backgroundColor: EcoSyncBrand.Colors.greenWhite,
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: EcoSyncBrand.Colors.green, // Green color
+      borderColor: EcoSyncBrand.Colors.green, // Green color
     },
     '& .MuiInputLabel-root.Mui-focused': {
-        color: EcoSyncBrand.Colors.green, // Green color
+      color: EcoSyncBrand.Colors.green, // Green color
     },
-},
+  },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -175,21 +177,18 @@ function AdminDashboard() {
                     <ListItemIcon><People /></ListItemIcon>
                     <ListItemText primary="Users" />
                   </ListItem>
-                  <ListItem button onClick={() => handleOptionClick('createUser')}>
-                    <ListItemIcon><PersonAdd /></ListItemIcon>
-                    <ListItemText primary="Create New User" />
-                  </ListItem>
-
-
-
                   <ListItem button onClick={handleSubOptionClick}>
                     <ListItemIcon>
-                      <img src={managers} alt="STS Manager Icon" style={{ width: '20px' }} />
+                      <AddIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Managers" />
+                    <ListItemText primary="Create" />
                     {open ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse in={open} timeout="auto" unmountOnExit>
+                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('createUser')}>
+                      <ListItemIcon><PersonAdd /></ListItemIcon>
+                      <ListItemText primary="Create New User" />
+                    </ListItem>
                     <ListItem className={classes.nested} button onClick={() => handleOptionClick('createLandfill')}>
                       <ListItemIcon>
                         <img src={landfillicon} alt="Landfill Icon" style={{ width: '20px' }} />
@@ -202,27 +201,27 @@ function AdminDashboard() {
                       </ListItemIcon>
                       <ListItemText primary="Create STS" />
                     </ListItem>
-                    <ListItem button className={classes.nested} onClick={() => handleOptionClick('assignManager')}>
-                      <ListItemIcon>
-                        <img src={assignmanager} alt="Manager Icon" style={{ width: '20px' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Assign Manager" />
-                    </ListItem>
-                  </Collapse>
-
-                  <ListItem button onClick={handleTruckOptionClick}>
-                    <ListItemIcon>
-                      <img src={stsicon} alt="STS Icon" style={{ width: '20px' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Vechicle" />
-                    {truckOpen ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={truckOpen} timeout="auto" unmountOnExit>
                     <ListItem className={classes.nested} button onClick={() => handleOptionClick('addVehicle')}>
                       <ListItemIcon>
                         <img src={addtruck} alt="Add Truck Icon" style={{ width: '20px' }} />
                       </ListItemIcon>
                       <ListItemText primary="Add Vehicle" />
+                    </ListItem>
+                  </Collapse>
+
+                  <ListItem button onClick={handleTruckOptionClick}>
+                    <ListItemIcon>
+                      <AssignmentTurnedInIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Assign" />
+                    {truckOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={truckOpen} timeout="auto" unmountOnExit>
+                    <ListItem button className={classes.nested} onClick={() => handleOptionClick('assignManager')}>
+                      <ListItemIcon>
+                        <img src={assignmanager} alt="Manager Icon" style={{ width: '20px' }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Assign Manager" />
                     </ListItem>
                     <ListItem className={classes.nested} button onClick={() => handleOptionClick('assignVehicle')}>
                       <ListItemIcon>

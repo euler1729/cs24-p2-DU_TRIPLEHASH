@@ -16,3 +16,4 @@ services:
     volumes:
       - ./react-app:/usr/src/app
       - /usr/src/app/node_modules
+    stdin_open: true

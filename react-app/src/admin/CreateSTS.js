@@ -1,6 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Typography, TextField, Button, Grid, Paper, makeStyles, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import { GoogleMap, useLoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 import api from '../API';
 import MapComponent from '../components/MapComponent';
 
