@@ -1,47 +1,53 @@
 import sqlite3
 from flask_restful import Resource
 from flask import jsonify, request, make_response
-        
+from TokenManager import decode_token
 
 
 # For STS
 class CreateSTS(Resource):
     def post(self):
-        data = request.get_json()
+        token = request.headers['Authorization'].split(' ')[1]
+        info = decode_token(token)
 
-        ward_number = data.get('ward_number')
-        capacity_tonnes = data.get('capacity_tonnes')
-        gps_longitude = data.get('gps_longitude')
-        gps_latitude = data.get('gps_latitude')
+        # print(info)
+        if info and info['sub']['role_id'] == 2:
+            
+            data = request.get_json()
 
-        if not all([ward_number, capacity_tonnes, gps_longitude, gps_latitude]):
-            return make_response(jsonify({'error': 'Missing required fields'}), 400)
+            ward_number = data.get('ward_number')
+            capacity_tonnes = data.get('capacity_tonnes')
+            gps_longitude = data.get('gps_longitude')
+            gps_latitude = data.get('gps_latitude')
 
-        try:
-            conn = sqlite3.connect('sqlite.db')
-            cursor = conn.cursor()
+            if not all([ward_number, capacity_tonnes, gps_longitude, gps_latitude]):
+                return make_response(jsonify({'error': 'Missing required fields'}), 400)
 
-            # Check if STS with the same ward number already exists
-            cursor.execute("SELECT * FROM sts WHERE ward_number = ?", (ward_number,))
-            existing_sts = cursor.fetchone()
-            if existing_sts:
-                return make_response(jsonify({'error': 'STS with the same ward number already exists'}), 400)
+            try:
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
 
-            # Insert STS data
-            cursor.execute("""INSERT INTO sts 
-                              (ward_number, capacity_tonnes, gps_longitude, gps_latitude)
-                              VALUES (?, ?, ?, ?)""",
-                           (ward_number, capacity_tonnes, gps_longitude, gps_latitude))
+                # Check if STS with the same ward number already exists
+                cursor.execute("SELECT * FROM sts WHERE ward_number = ?", (ward_number,))
+                existing_sts = cursor.fetchone()
+                if existing_sts:
+                    return make_response(jsonify({'error': 'STS with the same ward number already exists'}), 400)
 
-            conn.commit()
-            conn.close()
+                # Insert STS data
+                cursor.execute("""INSERT INTO sts 
+                                (ward_number, capacity_tonnes, gps_longitude, gps_latitude)
+                                VALUES (?, ?, ?, ?)""",
+                            (ward_number, capacity_tonnes, gps_longitude, gps_latitude))
 
-            return make_response(jsonify({'msg': 'STS created successfully'}), 200)
+                conn.commit()
+                conn.close()
 
-        except sqlite3.Error as e:
-            return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
+                return make_response(jsonify({'msg': 'STS created successfully'}), 200)
+
+            except sqlite3.Error as e:
+                return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
         
-
+        return make_response(jsonify({'msg':'Unauthorized access'}), 401)
 
 class GetSTSVehicleList(Resource):
     def get(self):

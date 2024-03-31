@@ -27,12 +27,12 @@ from route.Fleet import Fleet
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
 from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
-from data_entry.AddVehicle import AddVehicle, GetAllVehicles
+from data_entry.Vehicle import AddVehicle, GetAllVehicles
 from data_entry.AssignLandfillManagers import AssignLandfillManagers
 from data_entry.AssignSTSManagers import AssignSTSManagers
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
-from data_entry.CreateLandfillSite import CreateLandfillSite
-from data_entry.CreateSTS import CreateSTS, GetSTSVehicleList
+from data_entry.LandfillSite import CreateLandfillSite
+from data_entry.STS import CreateSTS, GetSTSVehicleList
 
 from data_entry.GetUserList import GetAllData
 
