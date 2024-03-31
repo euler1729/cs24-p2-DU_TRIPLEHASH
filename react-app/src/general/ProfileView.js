@@ -7,16 +7,6 @@ import avatar from './res/avatar.png';
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 import api from '../API';
 
-// Sample user data
-const user = {
-  name: 'John Doe',
-  username: 'johndoe123',
-  email: 'johndoe@example.com',
-  age: 30,
-  phone_number: '01234',
-  profileImage: 'https://via.placeholder.com/150', // URL to profile image
-};
-
 // Styles for the component
 const useStyles = makeStyles((theme) => ({
   root: {

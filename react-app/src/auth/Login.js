@@ -84,7 +84,7 @@ function LoginPage() {
         navigate('/');
       }
     }
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,7 +105,7 @@ function LoginPage() {
         user_name: user_name,
         password: password
       }).then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.status <300) {
           localStorage.setItem('user', JSON.stringify(response.data.user));
           cookies.set('access_token', response.data.access_token, { path: '/' });

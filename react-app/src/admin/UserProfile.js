@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Paper, Typography, Avatar, makeStyles, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, InputAdornment, IconButton, } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Grid, Paper, Typography, Avatar, makeStyles, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+// import { Visibility, VisibilityOff } from '@material-ui/icons';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Cookies from 'universal-cookie';
 import { useNavigate } from 'react-router-dom';

@@ -16,10 +16,8 @@ import LogGif from '../EcoSyncBrand/logogif.gif'
 import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 
 // PNG ICONS
-import stsicon from './res/sts.png'
 import landfillicon from './res/landfill.png'
 import stsman from './res/stsman.png'
-import managers from './res/managers.png'
 import assignmanager from './res/assignmanager.png'
 import addtruck from './res/addtruck.png'
 import choosecar from './res/choosecar.png'
