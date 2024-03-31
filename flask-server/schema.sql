@@ -125,18 +125,18 @@ CREATE TABLE trips(
     end_time DATETIME,
     cost REAL,
     fuel REAL,
-    laod real,
-    FOREIGN KEY(vehicle_id) REFERENCES vehicle(vehicle),
+    load REAL,
+    FOREIGN KEY(vehicle_id) REFERENCES vehicle(vehicle_id),
     FOREIGN KEY(sts_id) REFERENCES sts(sts_id),
-    FOREIGN KEY(landfill_id)  REFERENCES landfill_sites(landfill_id)
-)
+    FOREIGN KEY(landfill_id) REFERENCES landfill_sites(landfill_id)
+);
 
-DROP TABLE if EXISTS active_trip;
+
+DROP TABLE IF EXISTS active_trip;
 CREATE TABLE active_trip(
-    trips_id INTEGER,
+    trip_id INTEGER,
     vehicle_id INTEGER,
     to_landfill INTEGER,
-
-    FOREIGN KEY(trips) REFERENCES trips,
-    FOREIGN KEY(vehicle_id) REFERENCES vehile(vehicle_id)
-)
+    FOREIGN KEY(trip_id) REFERENCES trips(trip_id),
+    FOREIGN KEY(vehicle_id) REFERENCES vehicle(vehicle_id)
+);

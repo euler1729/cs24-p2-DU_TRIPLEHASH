@@ -9,28 +9,61 @@ class Trip(Resource):
 
     def get(self):
         try:
-            token = request.headers['Authorization'].split(' ')[1]
+            token = request.headers.get('Authorization', '').split(' ')[1]
             info = decode_token(token)
+            data = request.get_json()
             if info:
-                role_id = info['sub']['rule_id']
-                if role_id == 1:
-                    conn = sqlite3.connect('your_database.db')  # replace with your database name
-                    cursor = conn.cursor()
-                    cursor.execute("SELECT * FROM trips")
-                    trips = cursor.fetchall()
-                    conn.close()
-                    return make_response(jsonify({'trips': trips}), 200)
-                else:
-                    return make_response(jsonify({'msg': 'Unauthorized access.'}), 403)
+                role_id = info['sub']['role_id']
+                conn = sqlite3.connect('sqlite.db')  
+                cursor = conn.cursor()
+                params = []
+                query = "SELECT * FROM trips WHERE 1=1"  # Starting query
+                if 'date1' and 'date2' in data:
+                    date1 = data.get('date1')
+                    date2 = data.get('date2')
+                    query += " AND start_time BETWEEN ? AND ?"
+                    params.extend((date1, date2))
+                if 'vehicle_id' in data:
+                    vehicle_id = data.get('vehicle_id')
+                    query += " AND vehicle_id = ?"
+                    params.append(vehicle_id)
+                if role_id == 2:
+                    sts_id = data.get('sts_id')
+                    if sts_id is None:
+                        return make_response(jsonify({'msg': 'STS ID is required for STS managers.'}), 400)
+                    print(sts_id, 'sts_id')
+                    query += " AND sts_id = ?"
+                    params.append(sts_id)
+                cursor.execute(query, params)
+                trips = cursor.fetchall()
+                res = []
+                for t in trips:
+                    trip_data = {
+                        "trip_id": t[0],
+                        "vehicle_id": t[1],
+                        "sts_id": t[2],
+                        "landfill_id": t[3],
+                        "start_time": t[4],
+                        "dump_time": t[5],
+                        "end_time": t[6],
+                        "cost": t[7],
+                        "fuel": t[8],
+                        "load": t[9],
+                    }
+                    res.append(trip_data)
+                print(params)
+                conn.close()
+                return make_response(jsonify({'trips': res}), 200)
         except Exception as e:
             return make_response(jsonify({'msg': str(e)}), 401)
+
+
         
     def post(self):
         try:
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
             if info:
-                role_id = info['sub']['rule_id']
             
                 # if role_id != 1:
                 #     return make_response(jsonify({'msg': 'Unauthorized access.'}), 403)
