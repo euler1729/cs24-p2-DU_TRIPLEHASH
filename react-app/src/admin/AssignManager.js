@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserComponent = () => {
+const AssignManager = () => {
   const classes = useStyles();
   const cookies = new Cookies();
   const self = JSON.parse(localStorage.getItem('user'));
@@ -534,4 +534,4 @@ const UserComponent = () => {
   );
 };
 
-export default UserComponent;
+export default AssignManager;
