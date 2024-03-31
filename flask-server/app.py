@@ -14,6 +14,7 @@ from manageUser.UserDetails import UserDetails
 from manageUser.Roles import Roles
 from manageUser.UpdateRole import UpdateRole
 from manageUser.Profile import Profile
+from manageUser.getSTS import getSTS
 
 #Trip
 
@@ -77,6 +78,8 @@ api.add_resource(UserDetails, '/users/<int:userId>')
 api.add_resource(Roles, '/users/roles')
 api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 api.add_resource(Profile, '/profile')
+
+api.add_resource(getSTS, '/sts')
 
 # Route
 api.add_resource(GetRoute, '/route')
