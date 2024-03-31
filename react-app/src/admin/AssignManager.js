@@ -76,20 +76,17 @@ const UserComponent = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('');
-  const [filterEmail, setFilterEmail] = useState('');
   const [filterSTS, setFilterSTS] = useState('');
   const [filterUsername, setFilterUsername] = useState('');
-  const [filterAge, setFilterAge] = useState('');
   const roleOptions = ['admin', 'STS Manager', 'Landfill Manager', 'Unassigned'];
-  const [stsOptions, setStsOptions] = useState(['STS1', 'STS2', 'STS3', 'STS4', 'STS5', 'STS6', 'STS7', 'STS8', 'STS9', 'STS10', 'STS11', 'STS12', 'STS13', 'STS14', 'STS15', 'STS16', 'STS17', 'STS18', 'STS19', 'STS20', 'STS21', 'STS22', 'STS23', 'STS24', 'STS25', 'STS26', 'STS27', 'STS28', 'STS29', 'STS30', 'STS31', 'STS32', 'STS33', 'STS34', 'STS35', 'STS36', 'STS37', 'STS38', 'STS39', 'STS40', 'STS41', 'STS42', 'STS43', 'STS44', 'STS45', 'STS46', 'STS47', 'STS48', 'STS49', 'STS50', 'STS51', 'STS52', 'STS53', 'STS54', 'STS55', 'STS56', 'STS57', 'STS58', 'STS59', 'STS60', 'STS61', 'STS62', 'STS63', 'STS64', 'STS65', 'STS66', 'STS67', 'STS68', 'STS69', 'STS70', 'STS71', 'STS72', 'STS73', 'STS74', 'STS75', 'STS76', 'STS77', 'STS78', 'STS79', 'STS80', 'STS81', 'STS82', 'STS83', 'STS84', 'STS85', 'STS86', 'STS87', 'STS88', 'STS89', 'STS90', 'STS91', 'STS92', 'STS93', 'STS94', 'STS95', 'STS96', 'STS97', 'STS98', 'STS99', 'STS100']);
-  const [landfillOptions, setLandfillOptions] = useState(['LF1', 'LF2', 'LF3']);
+  const [stsOptions, setStsOptions] = useState([]);
+  const [landfillOptions, setLandfillOptions] = useState([]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [dialogType, setDialogType] = useState(''); // success or error
 
   const [Current, setCurrent] = useState(true);
-  const [current_user, setCurrentUser] = useState(1);
   const [props, setProps] = useState({});
 
   useEffect(() => {
@@ -99,7 +96,7 @@ const UserComponent = () => {
 
   const fetchUsers = () => {
     try {
-      api.get('/users', {
+      api.get('/data-entry/get-user-list', {
         headers: {
           "Authorization": `Bearer ${cookies.get('access_token')}`,
         },
@@ -107,17 +104,23 @@ const UserComponent = () => {
       })
         .then(response => {
           // console.log('Users:', response.data.users)
-          setUsers([])
+          setUsers([]);
+          setStsOptions([]);
+          setLandfillOptions([]);
           response.data.users.forEach(user => {
             setUsers(users => [...users, {
               user_id: user.user_id,
               user_name: user.user_name ? user.user_name : 'N/A',
-              email: user.email ? user.email : 'N/A',
-              role_id: user.role_id,
               name: user.name ? user.name : 'N/A',
-              age: user.age ? user.age : 'N/A',
-              assigned_to: user.assigned_manager ? user.assigned_manager : 0
+              role_id: user.role_id,
+              assigned_to: user.sites_managed_by_user.length > 0 ? user.role_id === 2 ? user.sites_managed_by_user[0].sts_id : user.sites_managed_by_user[0].landfill_id : 0
             }]);
+          });
+          response.data.sts_sites.forEach(sts => {
+            setStsOptions(stsOptions => [...stsOptions, sts.ward_number]);
+          });
+          response.data.landfill_sites.forEach(landfill => {
+            setLandfillOptions(landfillOptions => [...landfillOptions, landfill.landfill_name]);
           });
         })
         .catch(error => {
@@ -127,6 +130,31 @@ const UserComponent = () => {
       console.error('Error fetching users:', error);
     }
   };
+
+  // const fetchStsOptions = () => {
+  //   try {
+  //     api.get('/data-entry/get-sts-list', {
+  //       headers: {
+  //         "Authorization": `Bearer ${cookies.get('access_token')}`,
+  //       },
+  //       withCredentials: true
+  //     })
+  //       .then(response => {
+  //         console.log(response.data.sts)
+  //         setStsOptions([]);
+  //         response.data.sts.forEach(sts => {
+  //           setStsOptions(stsOptions => [...stsOptions, sts.sts_name]);
+  //         });
+  //       })
+  //       .catch(error => {
+  //         console.error('Error fetching STS:', error);
+  //       });
+  //   } catch (error) {
+  //     console.error('Error fetching STS:', error);
+  //   }
+  // };
+
+
 
   const handleSaveUser = () => {
     console.log('Saving user:', editingUser);
@@ -254,16 +282,8 @@ const UserComponent = () => {
     setFilterSTS(e.target.value);
   };
 
-  const handleFilterEmail = (e) => {
-    setFilterEmail(e.target.value);
-  };
-
   const handleFilterUsername = (e) => {
     setFilterUsername(e.target.value);
-  };
-
-  const handleFilterAge = (e) => {
-    setFilterAge(e.target.value);
   };
 
   const handleCloseDialog = () => {
@@ -400,7 +420,7 @@ const UserComponent = () => {
                           {sortedUsers.map(user => (
                             <TableRow key={user.user_id} >
                               <TableCell>
-                                {editingUser && editingUser.user_id === user.user_id ? (
+                                {false? (
                                   <TextField
                                     name="user_name"
                                     value={editingUser.user_name}
@@ -416,7 +436,7 @@ const UserComponent = () => {
                                 )}
                               </TableCell>
                               <TableCell>
-                                {editingUser && editingUser.user_id === user.user_id ? (
+                                {false? (
                                   <TextField
                                     name="name"
                                     value={editingUser.name}
@@ -455,23 +475,11 @@ const UserComponent = () => {
                                       }
                                     </Select> :
                                     <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>
-                                      {user.role_id === 1 ? 'N/A' : user.assigned_to === 0 ? 'N/A' : user.role_id === 4 ? 'N/A' : user.role_id === 2 ? stsOptions[user.assigned_to - 1] : landfillOptions[user.assigned_to - 1]}
+                                      {user.role_id === 1 ? 'N/A' : user.assigned_to === 0 ? 'N/A' : 
+                                      user.role_id === 4 ? 'N/A' : user.role_id === 2 ? stsOptions[user.assigned_to - 1] : landfillOptions[user.assigned_to - 1]}
                                     </span>
                                 }
                               </TableCell>
-                              {/* <TableCell>
-                                {editingUser && editingUser.user_id === user.user_id ? (
-                                  <TextField
-                                    name="age"
-                                    value={editingUser.age}
-                                    onChange={(e) => setEditingUser({ ...editingUser, age: e.target.value })}
-                                    className={classes.textField}
-                                    type="number"
-                                  />
-                                ) : (
-                                  <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>{user.age}</span>
-                                )}
-                              </TableCell> */}
                               {
                                 editingUser && editingUser.user_id === user.user_id ? (
                                   <TableCell>

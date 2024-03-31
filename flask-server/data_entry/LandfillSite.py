@@ -8,7 +8,7 @@ class CreateLandfillSite(Resource):
         token = request.headers['Authorization'].split(' ')[1]
         info = decode_token(token)
 
-        if info and info['sub']['role_id'] == 3:
+        if info and info['sub']['role_id'] == 1:
             data = request.get_json()
 
             site_name = data.get('site_name')
