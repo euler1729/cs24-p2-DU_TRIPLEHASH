@@ -89,6 +89,9 @@ const UserComponent = () => {
   const [Current, setCurrent] = useState(true);
   const [props, setProps] = useState({});
 
+  const [sts_mapping, setStsMapping] = useState({});
+  const [landfill_mapping, setLandfillMapping] = useState({});
+
   useEffect(() => {
     setCurrent(true);
     fetchUsers();
@@ -116,12 +119,16 @@ const UserComponent = () => {
               assigned_to: user.sites_managed_by_user.length > 0 ? user.role_id === 2 ? user.sites_managed_by_user[0].sts_id : user.sites_managed_by_user[0].landfill_id : 0
             }]);
           });
+          const newstsmapping = {};
           response.data.sts_sites.forEach(sts => {
-            setStsOptions(stsOptions => [...stsOptions, sts.ward_number]);
+            newstsmapping[sts.sts_id] = sts.ward_number;
           });
+          setStsMapping(newstsmapping);
+          const newlandfillmapping = {};
           response.data.landfill_sites.forEach(landfill => {
-            setLandfillOptions(landfillOptions => [...landfillOptions, landfill.landfill_name]);
+            newlandfillmapping[landfill.landfill_id] = landfill.site_name;
           });
+          setLandfillMapping(newlandfillmapping);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -158,15 +165,13 @@ const UserComponent = () => {
 
   const handleSaveUser = () => {
     console.log('Saving user:', editingUser);
+    console.log(sts_mapping, landfill_mapping)
     // Save user to database
     try {
-      api.put(`/users/${editingUser.user_id}`, {
+      api.post('/data-entry/assign-manager', {
         user_id: editingUser.user_id,
-        user_name: editingUser.user_name,
-        email: editingUser.email,
         role_id: editingUser.role_id,
-        name: editingUser.name,
-        age: editingUser.age
+        assigned_to: editingUser.assigned_to
       }, {
         headers: {
           "Authorization": `Bearer ${cookies.get('access_token')}`,
@@ -289,21 +294,27 @@ const UserComponent = () => {
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
+  const editRole  = (e)=>{
+    setEditingUser({...editingUser, role_id: e.target.value})
+    if(e.target.value == 1 || e.target.value == 4){
+      setEditingUser({...editingUser, assigned_to: 0})
+    }
+  }
 
   const filteredUsers = users.filter(user =>
     (
       searchTerm === '' || (
         user.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         roleOptions[user.role_id-1].toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (stsOptions[user.assigned_to - 1]?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (landfillOptions[user.assigned_to - 1]?.toLowerCase().includes(searchTerm.toLowerCase()))
+        (sts_mapping[user.assigned_to]?.toString().toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (landfill_mapping[user.assigned_to]?.toString().toLowerCase().includes(searchTerm.toLowerCase()))
       )
     ) &&
     (
       (filterRole === '' || roleOptions[user.role_id-1].toLowerCase().includes(filterRole.toLowerCase())) &&
       (filterUsername === '' || user.user_name.toLowerCase().includes(filterUsername.toLowerCase())) &&
-      ((filterSTS === '' || stsOptions[user.assigned_to - 1]?.toLowerCase().includes(filterSTS.toLowerCase()))) && 
-      (((filterSTS === '' || landfillOptions[user.assigned_to - 1]?.toLowerCase().includes(filterSTS.toLowerCase()))))
+      ((filterSTS === '' || sts_mapping[user.assigned_to]?.toString().toLowerCase().includes(filterSTS.toLowerCase()))) && 
+      (((filterSTS === '' || landfill_mapping[user.assigned_to]?.toString().toLowerCase().includes(filterSTS.toLowerCase()))))
     )
   );
 
@@ -318,6 +329,13 @@ const UserComponent = () => {
   const switchPage = (user_id) => {
     setProps({ user_id: user_id, prev: 'assign_manager' });
     setCurrent(!Current);
+  }
+
+  const changeRole = (e) => {
+    setEditingUser({ ...editingUser, role_id: e.target.value });
+    if (e.target.value === 1 || e.target.value === 4) {
+      setEditingUser({ ...editingUser, assigned_to: 0 });
+    }
   }
 
   return (
@@ -365,21 +383,6 @@ const UserComponent = () => {
                     margin="dense"
                   />
                 </Grid>
-
-                {/* <Grid item>
-                  <TextField
-                    label="Filter Age"
-                    className={classes.textField}
-                    value={filterAge}
-                    onChange={handleFilterAge}
-                    variant="outlined"
-                    margin="dense"
-                    type="number"
-                    InputProps={{
-                      inputProps: { min: 0 },
-                    }}
-                  />
-                </Grid> */}
               </Grid>
 
               <Grid container item xs={12}>
@@ -450,7 +453,7 @@ const UserComponent = () => {
                               <TableCell>
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
-                                    <Select name="role" label='Role' value={editingUser.role_id} onChange={(e) => setEditingUser({ ...editingUser, role_id: e.target.value })} >
+                                    <Select name="role" label='Role' value={editingUser.role_id} onChange={changeRole} >
                                       <MenuItem value={1}>Admin</MenuItem>
                                       <MenuItem value={2}>STS Manager</MenuItem>
                                       <MenuItem value={3}>Landfill Manager</MenuItem>
@@ -463,20 +466,17 @@ const UserComponent = () => {
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
                                     <Select name="assigned_to" label='Assigned To' value={editingUser.assigned_to} onChange={(e) => setEditingUser({ ...editingUser, assigned_to: e.target.value })} >
-                                      {
-                                        editingUser.role_id === 2 ?
-                                          stsOptions.map((sts, index) => (
-                                            <MenuItem key={index} value={index + 1}>{sts}</MenuItem>
-                                          )) :
-                                          editingUser.role_id === 3 ?
-                                            landfillOptions.map((landfill, index) => (
-                                              <MenuItem key={index} value={index + 1}>{landfill}</MenuItem>
-                                            )) : <MenuItem value={0}>N/A</MenuItem>
+                                      { editingUser.role_id === 2 &&  
+                                        Object.keys(sts_mapping).map((sts_id) => (
+                                          <MenuItem key={sts_id} value={sts_id}>{sts_mapping[sts_id]}</MenuItem>
+                                        ))
                                       }
+                                      { editingUser.role_id === 3 &&  Object.keys(landfill_mapping).map((landfill_id) => (
+                                        <MenuItem key={landfill_id} value={landfill_id}>{landfill_mapping[landfill_id]}</MenuItem>
+                                      ))}
                                     </Select> :
                                     <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>
-                                      {user.role_id === 1 ? 'N/A' : user.assigned_to === 0 ? 'N/A' : 
-                                      user.role_id === 4 ? 'N/A' : user.role_id === 2 ? stsOptions[user.assigned_to - 1] : landfillOptions[user.assigned_to - 1]}
+                                      {user.assigned_to === 0 ? 'N/A' : user.role_id === 2 ? sts_mapping[user.assigned_to] : landfill_mapping[user.assigned_to]}
                                     </span>
                                 }
                               </TableCell>

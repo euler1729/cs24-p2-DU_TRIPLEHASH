@@ -8,8 +8,8 @@ class AssignSTSVehicles(Resource):
         token = request.headers['Authorization'].split(' ')[1]
         info = decode_token(token)
 
-        # print(info)
-        if info and info['sub']['role_id'] == 2:
+        print(info)
+        if info and info['sub']['role_id'] == 1:
             data = request.get_json()
 
             sts_id = data.get('sts_id')
