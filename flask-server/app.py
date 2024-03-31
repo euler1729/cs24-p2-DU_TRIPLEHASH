@@ -29,7 +29,7 @@ from route.Fleet import Fleet
 from data_entry.AddDumpEntry import AddDumpEntry
 from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
 from data_entry.Vehicle import *
-from data_entry.AssignSTSManagers import AssignManager
+from data_entry.AssignManager import AssignManager
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.LandfillSite import CreateLandfillSite
 from data_entry.STS import *
