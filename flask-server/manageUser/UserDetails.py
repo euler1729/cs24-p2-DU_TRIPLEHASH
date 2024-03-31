@@ -68,6 +68,8 @@ class UserDetails(Resource):
                     data['user_name'] = exist_user[1]
                 if 'password' not in data:
                     data['password'] = exist_user[3]
+                else :
+                    data['password'] = generate_password_hash(data['password'])
                 if 'role_id' not in data:
                     data['role_id'] = exist_user[4]
                 
@@ -90,7 +92,7 @@ class UserDetails(Resource):
                     exist_username = cursor.execute('SELECT user_name FROM user WHERE user_name = ?', (data['user_name'],)).fetchone()
                     if exist_username:
                         return make_response(jsonify({'msg':'Username already exists!'}), 409)
-                cursor.execute('UPDATE user SET user_name = ?, password = ?, email = ?, role_id = ?, name = ?, age = ?, phone_number = ? WHERE user_id = ?', (data['user_name'], generate_password_hash(data['password']), data['email'], data['role_id'], data['name'], data['age'], data['phone_number'], userId))
+                cursor.execute('UPDATE user SET user_name = ?, password = ?, email = ?, role_id = ?, name = ?, age = ?, phone_number = ? WHERE user_id = ?', (data['user_name'], data['password'], data['email'], data['role_id'], data['name'], data['age'], data['phone_number'], userId))
                 conn.commit()
                 return make_response(jsonify({'msg':'User Updated!'}), 201)
             return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)
