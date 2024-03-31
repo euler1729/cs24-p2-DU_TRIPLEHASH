@@ -56,7 +56,7 @@ class UpdateSTS(Resource):
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
 
-            if info and info['sub']['role_id'] == 1:
+            if info and (info['sub']['role_id'] == 1 or info['sub']['role_id'] == 2):
                 data = request.get_json()
 
                 # Check if STS exists

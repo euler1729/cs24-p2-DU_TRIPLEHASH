@@ -7,6 +7,7 @@ from TokenManager import decode_token
 class getSTS(Resource):
     def get(self):
         try:
+            
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
             if info:

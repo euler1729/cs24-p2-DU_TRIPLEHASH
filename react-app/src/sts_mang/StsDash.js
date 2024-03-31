@@ -33,6 +33,7 @@ import ProfileView from '../general/ProfileView';
 // import AssignVehicle from './AssignVehicle';
 import Route from './Route';
 import Fleet from './Fleet';
+import STSManagerStatisticsPage from './STSstats';
 
 
 const drawerWidth = 260;
@@ -111,7 +112,7 @@ function STSManagerDashboard() {
   const renderComponent = () => {
     switch (selectedOption) {
       case 'dashboard':
-        return <Typography variant="h4">Welcome to Admin Dashboard</Typography>;
+        return <STSManagerStatisticsPage />;
       // case 'users':
       //   return <UserManagement />;
       // case 'createUser':
@@ -132,6 +133,7 @@ function STSManagerDashboard() {
         return <Route />;
       case 'fleet' : 
         return <Fleet/>
+        
 
 
       // Add cases for other options
