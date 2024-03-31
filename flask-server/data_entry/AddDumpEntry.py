@@ -53,7 +53,7 @@ class AddDumpEntry(Resource):
                 conn.commit()
                 conn.close()
 
-                return make_response(jsonify({'msg': 'Dump entry added successfully'}), 200)
+                return make_response(jsonify({'msg': 'Dump entry added successfully'}), 201)
 
             except sqlite3.Error as e:
                 return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
