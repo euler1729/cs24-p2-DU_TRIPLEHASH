@@ -29,8 +29,7 @@ from route.Fleet import Fleet
 from data_entry.AddDumpEntry import AddDumpEntry
 from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
 from data_entry.Vehicle import *
-from data_entry.AssignLandfillManagers import AssignLandfillManagers
-from data_entry.AssignSTSManagers import AssignSTSManagers
+from data_entry.AssignSTSManagers import AssignManager
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
 from data_entry.LandfillSite import CreateLandfillSite
 from data_entry.STS import *
@@ -94,11 +93,11 @@ api.add_resource(ActiveTrip, '/activetrip')
 # Data Entry
 api.add_resource(AddVehicle, '/data-entry/add-vehicle')
 api.add_resource(CreateSTS, '/data-entry/create-sts')
-api.add_resource(AssignSTSManagers, '/data-entry/assign-sts-managers')
+api.add_resource(AssignManager, '/data-entry/assign-manager')
 api.add_resource(AssignSTSVehicles, '/data-entry/assign-sts-vehicles')
 api.add_resource(AddSTSVehicleEntry, '/data-entry/add-sts-vehicle-entry')
 api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
-api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
+# api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 
 api.add_resource(GetAllData, '/data-entry/get-user-list')
