@@ -129,6 +129,7 @@ const UserComponent = () => {
             newlandfillmapping[landfill.landfill_id] = landfill.site_name;
           });
           setLandfillMapping(newlandfillmapping);
+          console.log(newstsmapping, newlandfillmapping);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -293,10 +294,12 @@ const UserComponent = () => {
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
+
   const editRole  = (e)=>{
-    setEditingUser({...editingUser, role_id: e.target.value})
+    setEditingUser({...editingUser, role_id: parseInt(e.target.value)})
     if(e.target.value == 1 || e.target.value == 4){
       setEditingUser({...editingUser, assigned_to: 0})
+      console.log(editingUser)
     }
   }
 
@@ -445,7 +448,7 @@ const UserComponent = () => {
                               <TableCell>
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
-                                    <Select name="role" label='Role' value={editingUser.role_id} onChange={editRole} >
+                                    <Select name="role" label='Role' type='number' value={editingUser.role_id} onChange={editRole} >
                                       <MenuItem value={1}>Admin</MenuItem>
                                       <MenuItem value={2}>STS Manager</MenuItem>
                                       <MenuItem value={3}>Landfill Manager</MenuItem>
@@ -457,18 +460,18 @@ const UserComponent = () => {
                               <TableCell>
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
-                                    <Select name="assigned_to" label='Assigned To' value={editingUser.assigned_to} onChange={(e) => setEditingUser({ ...editingUser, assigned_to: e.target.value })} >
+                                    <Select name="assigned_to" label='Assigned To' type='number' value={editingUser.assigned_to} onChange={(e) => setEditingUser({ ...editingUser, assigned_to: parseInt(e.target.value )})} >
                                       { editingUser.role_id === 2 &&  
                                         Object.keys(sts_mapping).map((sts_id) => (
-                                          <MenuItem key={sts_id} value={sts_id}>{sts_mapping[sts_id]}</MenuItem>
+                                          <MenuItem key={sts_id} type='number' value={sts_id}>Ward No. {sts_mapping[sts_id]}</MenuItem>
                                         ))
                                       }
                                       { editingUser.role_id === 3 &&  Object.keys(landfill_mapping).map((landfill_id) => (
-                                        <MenuItem key={landfill_id} value={landfill_id}>{landfill_mapping[landfill_id]}</MenuItem>
+                                        <MenuItem key={landfill_id} type='number' value={landfill_id}>{landfill_mapping[landfill_id]}</MenuItem>
                                       ))}
                                     </Select> :
                                     <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>
-                                      {user.assigned_to === 0 ? 'N/A' : user.role_id === 2 ? sts_mapping[user.assigned_to] : landfill_mapping[user.assigned_to]}
+                                      {user.assigned_to === 0 ? 'N/A' : user.role_id === 2 ? 'Ward No. '+sts_mapping[user.assigned_to] : landfill_mapping[user.assigned_to]}
                                     </span>
                                 }
                               </TableCell>
