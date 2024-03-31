@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import Cookies from 'universal-cookie';
 import { GoogleMap, useLoadScript, Marker, Autocomplete, DirectionsRenderer, TrafficLayer } from '@react-google-maps/api';
 import { Typography, TextField, Button, Grid, Paper, makeStyles, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import api from '../API';
 const KEY = 'AIzaSyB1HyhM-zUAmxq3USoPS-qb2MmJu1pUu70';
 
-
-const MapComponent = ({ onLocationChange }) => {
+const MapComponent = ({ props }) => {
+    console.log(props)
     const libraries = ['places', 'geometry', 'drawing', 'visualization'];
     const mapContainerStyle = {
         width: '50vw',
@@ -14,7 +16,7 @@ const MapComponent = ({ onLocationChange }) => {
         lat: 23.7191, // default latitude
         lng: 90.4338, // default longitude
     };
-    const [position, setPosition] = useState(center);
+    const [position, setPosition] = useState(props.src);
     const [directions, setDirections] = useState(null);
     const [selectedRoute, setSelectedRoute] = useState(null);
     const [trafficLayer, setTrafficLayer] = useState(null);
@@ -59,7 +61,7 @@ const MapComponent = ({ onLocationChange }) => {
         directionsService.route(
             {
                 origin: position,
-                destination: {lat: 23.4498, lng:  91.1847}, // Set your destination here
+                destination: props.dest, // Set your destination here
                 travelMode: 'DRIVING',
             },
             (result, status) => {
@@ -91,7 +93,11 @@ const MapComponent = ({ onLocationChange }) => {
     }
 
     if (!isLoaded) {
-        return <div>Loading maps</div>;
+        return (
+            <div>
+                <CircularProgress />
+            </div>
+        )
     }
 
     return (
@@ -137,17 +143,20 @@ const MapComponent = ({ onLocationChange }) => {
                 </Autocomplete>
                 <TrafficLayer autoUpdate />
             </GoogleMap>
-            <Button variant="contained" color="primary" onClick={calculateDirections}>
-                Show Route
-            </Button>
-            <Button variant="contained" color="secondary" onClick={toggleTrafficLayer}>
-                Toggle Traffic
-            </Button>
+            <div style={{ justifyContent: 'space-evenly', display: 'flex', flexDirection: 'row', margin: '10px' }}>
+                <Button variant="contained" color="primary" onClick={calculateDirections}>
+                    Show Route
+                </Button>
+                <Button variant="contained" color="secondary" onClick={toggleTrafficLayer}>
+                    Toggle Traffic
+                </Button>
+            </div>
         </div>
     );
 };
 
 const Route = () => {
+    const cookies = new Cookies();
     const divStyle = {
         display: 'flex',
         flexDirection: 'column',
@@ -155,13 +164,39 @@ const Route = () => {
         justifyContent: 'center',
         minHeight: '50vh', // Adjust as needed
     };
+    const [props, setProps] = useState({
+        src: {
+            lat: 23.7191, // default latitude
+            lng: 90.4338, // default longitude
+        },
+        dest: {
+            lat: 23.8028,
+            lng: 90.3748
+        }
+    });
+    useEffect(() => {
+        try {
+            // api.get('/route', {
+            //     headers: {
+            //         "Authorization": `Bearer ${cookies.get('access_token')}`,
+            //     },
+            //     withCredentials: true
+            // }).then((response)=>{
+            //     console.log(response);
+            // }).catch((e)=>{
+            //     console.log(e)
+            // })
+        } catch (e) {
+            console.log(e)
+        }
+    }, []);
 
     return (
         <div style={divStyle}>
             <Typography variant="h4" gutterBottom>
                 Route
             </Typography>
-            <MapComponent />
+            <MapComponent props={props} />
         </div>
     );
 }
