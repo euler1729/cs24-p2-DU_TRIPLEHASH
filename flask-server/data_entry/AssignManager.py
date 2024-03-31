@@ -32,8 +32,9 @@ class AssignManager(Resource):
                     if not landfill:
                         return make_response(jsonify({'error': 'Landfill with the provided ID does not exist'}), 404)
                     
-                    # Remove from STS
+                    # Remove from STS and landfill
                     cursor.execute("DELETE FROM sts_managers WHERE user_id = ?", (user_id,))
+                    cursor.execute("DELETE FROM landfill_managers WHERE user_id = ?", (user_id,))
                     
                     # Assign user as manager of landfill
                     cursor.execute("INSERT INTO landfill_managers (user_id, landfill_id) VALUES (?, ?)", (user_id, assigned_to))
@@ -47,8 +48,9 @@ class AssignManager(Resource):
                         return make_response(jsonify({'error': 'STS with the provided ID does not exist'}), 404)
                     
 
-                    # Remove from landfill
+                    # Remove from landfill and sts
                     cursor.execute("DELETE FROM landfill_managers WHERE user_id = ?", (user_id,))
+                    cursor.execute("DELETE FROM sts_managers WHERE user_id = ?", (user_id,))
 
 
                     # Assign user as manager of STS
