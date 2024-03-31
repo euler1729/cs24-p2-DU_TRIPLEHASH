@@ -1,5 +1,5 @@
 
-import requests
+from flask import request
 
 class Route():
     def __init__(self):
