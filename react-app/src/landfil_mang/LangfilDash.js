@@ -166,12 +166,12 @@ function LandfillManagerDashboard() {
                     <ListItemText primary="Vechicle Entry" />
                   </ListItem>
 
-                  <ListItem button onClick={() => handleOptionClick('routes')}>
+                  {/* <ListItem button onClick={() => handleOptionClick('routes')}>
                     <ListItemIcon>
                       <img src={routes} alt="Routes" style={{ width: '24px' }} />
                     </ListItemIcon>
                     <ListItemText primary="Routes" />
-                  </ListItem>
+                  </ListItem> */}
                 </List>
               </div>
 

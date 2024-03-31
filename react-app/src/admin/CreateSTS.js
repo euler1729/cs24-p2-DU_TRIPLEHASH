@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Typography, TextField, Button, Grid, Paper, makeStyles, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import api from '../API';
+import Cookies from 'universal-cookie';
 import MapComponent from '../components/MapComponent';
+
 
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 
@@ -58,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateSTSPage = () => {
     const classes = useStyles();
+    const cookies = new Cookies();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
     const [dialogType, setDialogType] = useState(''); // success or error
@@ -95,7 +98,12 @@ const CreateSTSPage = () => {
         }
         setLoading(true);
         try {
-            api.post('/data-entry/create-sts', sts)
+            api.post('/data-entry/create-sts', sts, {
+                headers: {
+                    "Authorization": `Bearer ${cookies.get('access_token')}`,
+                },
+                withCredentials: true
+            })
                 .then((res) => {
                     console.log(res);
                     setLoading(false);
@@ -112,7 +120,7 @@ const CreateSTSPage = () => {
                     console.log(err);
                     setLoading(false);
                     setDialogType('error');
-                    setDialogMessage('Failed to create STS');
+                    setDialogMessage(err?.response?.data?.error || 'Failed to create STS');
                     setDialogOpen(true);
                 });
 

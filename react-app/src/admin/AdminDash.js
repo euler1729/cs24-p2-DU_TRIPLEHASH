@@ -32,6 +32,7 @@ import CreateSTSPage from './CreateSTS';
 import CreateLandfill from './CreateLandfill';
 import AssignManager from './AssignManager';
 import AssignVehicle from './AssignVehicle';
+import StatisticsPage from './Stats';
 
 const drawerWidth = 260;
 
@@ -123,7 +124,7 @@ function AdminDashboard() {
   const renderComponent = () => {
     switch (selectedOption) {
       case 'dashboard':
-        return <Typography variant="h4">Welcome to Admin Dashboard</Typography>;
+        return <StatisticsPage />;
       case 'users':
         return <UserManagement />;
       case 'createUser':

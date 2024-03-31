@@ -3,6 +3,7 @@ import { Typography, TextField, Button, Grid, Paper, makeStyles, CircularProgres
 import api from '../API';
 import MapComponent from '../components/MapComponent';
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
+import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateLandfill = () => {
     const classes = useStyles();
+    const cookies = new Cookies();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
     const [dialogType, setDialogType] = useState(''); // success or error
@@ -107,12 +109,17 @@ const CreateLandfill = () => {
         }
         setLoading(true);
         try {
-            api.post('/data-entry/create-landfill-site', landfill)
+            api.post('/data-entry/create-landfill-site', landfill,{
+                headers: {
+                  "Authorization": `Bearer ${cookies.get('access_token')}`,
+                },
+                withCredentials: true
+              })
                 .then((res) => {
                     console.log(res);
                     setLoading(false);
                     setDialogType('success');
-                    setDialogMessage('landfill created successfully');
+                    setDialogMessage('Landfill Created Successfully');
                     setDialogOpen(true);
                     setlandfill({
                         site_name: '',
