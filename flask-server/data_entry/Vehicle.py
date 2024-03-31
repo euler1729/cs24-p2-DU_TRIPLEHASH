@@ -45,7 +45,7 @@ class AddVehicle(Resource):
                     conn.commit()
                     conn.close()
 
-                    return make_response(jsonify({'msg': 'Vehicle added successfully'}), 200)
+                    return make_response(jsonify({'msg': 'Vehicle added successfully'}), 201)
 
                 except sqlite3.Error as e:
                     return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
@@ -56,7 +56,82 @@ class AddVehicle(Resource):
         except Exception as e:
             return make_response(jsonify({'msg': e}), 401)
 
-        
+
+class DeleteVehicle(Resource):
+    def delete(self, vehicle_id):
+        try:
+            token = request.headers['Authorization'].split(' ')[1]
+            info = decode_token(token)
+
+            if info and info['sub']['role_id'] == 1:
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
+
+                # Check if vehicle exists
+                cursor.execute("SELECT * FROM vehicle WHERE vehicle_id = ?", (vehicle_id,))
+                existing_vehicle = cursor.fetchone()
+                if not existing_vehicle:
+                    conn.close()
+                    return make_response(jsonify({'error': 'Vehicle not found'}), 404)
+
+                # Delete vehicle
+                cursor.execute("DELETE FROM vehicle WHERE vehicle_id = ?", (vehicle_id,))
+                conn.commit()
+                conn.close()
+
+                return make_response(jsonify({'msg': 'Vehicle deleted successfully'}), 200)
+
+            return make_response(jsonify({'msg': 'Unauthorized access'}), 401)
+
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 500)
+
+
+class UpdateVehicle(Resource):
+    def put(self, vehicle_id):
+        try:
+            token = request.headers['Authorization'].split(' ')[1]
+            info = decode_token(token)
+
+            if info and info['sub']['role_id'] == 1:
+                data = request.get_json()
+
+                # Check if vehicle exists
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM vehicle WHERE vehicle_id = ?", (vehicle_id,))
+                existing_vehicle = cursor.fetchone()
+                conn.close()
+
+                if not existing_vehicle:
+                    return make_response(jsonify({'error': 'Vehicle not found'}), 404)
+
+                # Update vehicle information
+                vehicle_reg_number = data.get('vehicle_reg_number', existing_vehicle[1])
+                vehicle_type = data.get('vehicle_type', existing_vehicle[2])
+                vehicle_capacity_in_ton = data.get('vehicle_capacity_in_ton', existing_vehicle[3])
+                fuel_cost_per_km_loaded = data.get('fuel_cost_per_km_loaded', existing_vehicle[4])
+                fuel_cost_per_km_unloaded = data.get('fuel_cost_per_km_unloaded', existing_vehicle[5])
+                sts_id = data.get('sts_id', existing_vehicle[6])
+
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
+                cursor.execute("""UPDATE vehicle SET vehicle_reg_number=?, vehicle_type=?, 
+                                vehicle_capacity_in_ton=?, fuel_cost_per_km_loaded=?, 
+                                fuel_cost_per_km_unloaded=?, sts_id=? WHERE vehicle_id=?""",
+                                (vehicle_reg_number, vehicle_type, vehicle_capacity_in_ton,
+                                 fuel_cost_per_km_loaded, fuel_cost_per_km_unloaded, sts_id, vehicle_id))
+                conn.commit()
+                conn.close()
+
+                return make_response(jsonify({'msg': 'Vehicle updated successfully'}), 200)
+
+            return make_response(jsonify({'msg': 'Unauthorized access'}), 401)
+
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 500)
+
+
 
 class GetAllVehicles(Resource):
     def get(self):

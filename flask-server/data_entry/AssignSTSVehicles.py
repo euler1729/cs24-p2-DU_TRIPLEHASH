@@ -44,7 +44,7 @@ class AssignSTSVehicles(Resource):
                 conn.commit()
                 conn.close()
 
-                return make_response(jsonify({'msg': 'Vehicles assigned to STS successfully'}), 200)
+                return make_response(jsonify({'msg': 'Vehicles assigned to STS successfully'}), 201)
 
             except sqlite3.Error as e:
                 return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)

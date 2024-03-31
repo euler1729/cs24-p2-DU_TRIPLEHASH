@@ -47,7 +47,7 @@ class AddSTSVehicleEntry(Resource):
                 conn.commit()
                 conn.close()
 
-                return make_response(jsonify({'msg': 'Vehicle entry added successfully'}), 200)
+                return make_response(jsonify({'msg': 'Vehicle entry added successfully'}), 201)
 
             except sqlite3.Error as e:
                 return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
