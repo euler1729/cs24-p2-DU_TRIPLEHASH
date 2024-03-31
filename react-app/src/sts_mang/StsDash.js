@@ -32,6 +32,7 @@ import ProfileView from '../general/ProfileView';
 // import AssignManager from './AssignManager';
 // import AssignVehicle from './AssignVehicle';
 import Route from './Route';
+import Fleet from './Fleet';
 
 
 const drawerWidth = 260;
@@ -129,6 +130,8 @@ function STSManagerDashboard() {
       //   return <AssignVehicle />;
       case 'routes':
         return <Route />;
+      case 'fleet' : 
+        return <Fleet/>
 
 
       // Add cases for other options

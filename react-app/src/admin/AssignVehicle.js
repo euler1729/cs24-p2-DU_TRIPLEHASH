@@ -1,108 +1,126 @@
-import React, { useState } from 'react';
-import { Typography, Button, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, TableSortLabel, Grid, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, Select, makeStyles } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'universal-cookie';
+import { Typography, Button, Table, TableHead, TableBody, TableCell, TableRow, Paper, CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import api from '../API';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '90vh',
-    width: '75vw',
-    margin: 'auto',
+    marginTop: theme.spacing(2),
   },
-  title: {
-    color: '#4caf50',
-    fontWeight: 'bold',
+  table: {
+    minWidth: 500,
   },
-  paper: {
-    marginBottom: theme.spacing(2),
+  vehicleCell: {
+    width: '20%',
   },
-  textField: {
-    margin: theme.spacing(1),
-    width: 200,
+  costCell: {
+    width: '20%',
   },
-  table_head: {
-    fontWeight: 'bold',
+  loadCell: {
+    width: '20%',
+  },
+  actionCell: {
+    width: '40%',
   },
 }));
 
-const mockVehicles = [
-  { id: 1, plateNumber: 'ABC123', brand: 'Toyota', model: 'Camry' },
-  { id: 2, plateNumber: 'XYZ456', brand: 'Honda', model: 'Accord' },
-  { id: 3, plateNumber: 'DEF789', brand: 'Ford', model: 'Focus' },
-];
-
-const AssignVehicle = () => {
+const Fleet = () => {
   const classes = useStyles();
-  const [filterPlate, setFilterPlate] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState('');
-  const [dialogType, setDialogType] = useState('');
+  const cookies = new Cookies();
+  const [stsId, setStsId] = useState(null);
+  const [fleetData, setFleetData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleAssign = (vehicleId) => {
-    console.log('Assigning vehicle with ID:', vehicleId);
-    setDialogType('success');
-    setDialogMessage('Vehicle Assigned Successfully');
-    setDialogOpen(true);
+  useEffect(() => {
+    // Function to fetch STS ID
+    const fetchStsId = async () => {
+      try {
+        const response = await api.get('/sts', {
+          headers: {
+            "Authorization": `Bearer ${cookies.get('access_token')}`,
+          },
+          withCredentials: true
+        });
+        setStsId(response.data.sts_id);
+      } catch (error) {
+        console.error("Error fetching STS ID:", error);
+      }
+    };
+
+    // Fetch STS ID
+    fetchStsId();
+  }, []); // Empty dependency array ensures the effect runs only once on mount
+
+  // Function to fetch fleet data
+  const fetchFleetData = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/sts/fleet?sts_id=${stsId}&total_waste=4`, {
+        headers: {
+          "Authorization": `Bearer ${cookies.get('access_token')}`,
+        },
+        withCredentials: true
+      });
+      setFleetData(response.data.trips);
+    } catch (error) {
+      console.error("Error fetching fleet data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
+  // Function to handle making a trip
+  const makeTrip = async (tripId) => {
+    try {
+      // Implement the logic to make a trip using the tripId
+      console.log("Making trip with ID:", tripId);
+    } catch (error) {
+      console.error("Error making trip:", error);
+    }
   };
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h4" className={classes.title}>Assign Vehicle</Typography>
-      <TextField
-        label="Filter Plate"
-        className={classes.textField}
-        value={filterPlate}
-        onChange={(e) => setFilterPlate(e.target.value)}
-        variant="outlined"
-      />
-      <Paper elevation={3} className={classes.paper}>
-        <TableContainer>
-          <Table>
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Fleet Information
+      </Typography>
+      {stsId && <Typography>STS ID: {stsId}</Typography>}
+      <Button variant="contained" color="primary" onClick={fetchFleetData} disabled={!stsId || loading}>
+        {loading ? 'Loading...' : 'Fetch Fleet Data'}
+      </Button>
+      {fleetData ? (
+        <Paper className={classes.root}>
+          <Table className={classes.table} size="small">
             <TableHead>
               <TableRow>
-                <TableCell className={classes.table_head}>Plate Number</TableCell>
-                <TableCell className={classes.table_head}>Brand</TableCell>
-                <TableCell className={classes.table_head}>Model</TableCell>
-                <TableCell className={classes.table_head}>Actions</TableCell>
+                <TableCell className={classes.vehicleCell}>Vehicle ID</TableCell>
+                <TableCell className={classes.costCell}>Cost</TableCell>
+                <TableCell className={classes.loadCell}>Load</TableCell>
+                <TableCell className={classes.actionCell}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockVehicles.map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell>{vehicle.plateNumber}</TableCell>
-                  <TableCell>{vehicle.brand}</TableCell>
-                  <TableCell>{vehicle.model}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => handleAssign(vehicle.id)}
-                    >
-                      Assign
+              {fleetData.map((trip, index) => (
+                <TableRow key={index}>
+                  <TableCell className={classes.vehicleCell}>{trip.vehicle_id}</TableCell>
+                  <TableCell className={classes.costCell}>{trip.cost}</TableCell>
+                  <TableCell className={classes.loadCell}>{trip.load}</TableCell>
+                  <TableCell className={classes.actionCell}>
+                    <Button className={classes.actionButton} size="small" variant="contained" color="primary" onClick={() => makeTrip(trip.trip_id)}>
+                      Make Trip
                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
-      </Paper>
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>{dialogType === 'success' ? 'Success' : 'Error'}</DialogTitle>
-        <DialogContent>
-          <Typography>{dialogMessage}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary" autoFocus>
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </Paper>
+      ) : (
+        <Typography>No fleet data available.</Typography>
+      )}
     </div>
   );
 };
 
-export default AssignVehicle;
+export default Fleet;

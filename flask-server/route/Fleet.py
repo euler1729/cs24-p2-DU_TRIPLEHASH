@@ -7,16 +7,18 @@ from route.FindFleet import optimal_cost, Vehicle
 
 
 class Fleet(Resource):
-
+    
     def get(self):
+        print(request)
         try:
             token = request.headers['Authorization'].split(' ')[1]
             info = decode_token(token)
             if info:
-                data = request.get_json()
-                sts_id = data.get('sts_id')
-                landfil_id = data.get('landfill_id')
-                total_waste = data.get('total_waste')
+            
+                sts_id = request.args.get('sts_id')  
+                total_waste = request.args.get('total_waste')
+                sts_id = int(sts_id)
+                total_waste = int(total_waste)
                 if sts_id is None:
                     return make_response(jsonify({'msg': 'No sts_id.'}))
                 conn = sqlite3.connect('sqlite.db')
@@ -47,4 +49,5 @@ class Fleet(Resource):
                 return make_response(jsonify({"trips": trips}), 200)
 
         except Exception as e:
+            print(e)
             return make_response(jsonify({'msg': str(e)}), 401)
