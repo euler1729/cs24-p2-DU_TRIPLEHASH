@@ -11,11 +11,7 @@ class CreateSTS(Resource):
         info = decode_token(token)
 
         # print(info)
-<<<<<<< HEAD
-        if info and (info['sub']['role_id'] == 1 or info['sub']['role_id'] == 2):
-=======
         if info and info['sub']['role_id'] == 1:
->>>>>>> c0d82e31dfd085852b94062d747e16783f0c4717
             
             data = request.get_json()
 
