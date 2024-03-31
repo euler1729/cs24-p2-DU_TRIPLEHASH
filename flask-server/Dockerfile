@@ -12,11 +12,11 @@ RUN bash -c "pip install -r requirements.txt"
 
 RUN bash -c "python init_db.py"
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
 
 # Define environment variable
 ENV FLASK_ENV development
 
 # Run app.py when the container launches
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8000"]

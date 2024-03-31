@@ -10,3 +10,5 @@ flask-restful
 flask-cors
 flask-jwt-extended
 Flask-Mail
+requests
+numpy
