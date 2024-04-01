@@ -48,7 +48,7 @@ CREATE TABLE sts (
     capacity_tonnes INTEGER,
     gps_longitude REAL,
     gps_latitude REAL,
-    curretn_waste REAL
+    waste REAL
 );
 
 

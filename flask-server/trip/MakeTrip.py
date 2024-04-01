@@ -27,6 +27,7 @@ class MakeTrip(Resource):
                 conn.commit()
                 cursor.execute('INSERT INTO active_trip (vehicle_id, to_landfill) VALUES (?, ?)', (vehicle_id, 1))
                 conn.commit()
+
                 conn.close()
                 return make_response(jsonify({'msg': 'Trip created successfully'}), 201)
         except Exception as e:

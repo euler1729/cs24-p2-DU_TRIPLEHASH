@@ -25,6 +25,7 @@ from trip.ActiveTrip import ActiveTrip
 # Route
 from route.getRoute import GetRoute
 from route.Fleet import Fleet
+from route.STSVehicle import STSVehicle
 
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
@@ -89,6 +90,7 @@ api.add_resource(Fleet, '/sts/fleet')
 api.add_resource(Trip, '/trip')
 api.add_resource(ActiveTrip, '/activetrip')
 api.add_resource(MakeTrip, '/maketrip')
+api.add_resource(STSVehicle, '/sts/vehicle')
 
 
 
