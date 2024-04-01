@@ -128,9 +128,25 @@ const VehicleAssignment = () => {
       console.log(e);
     }
   };
-
+  
   const handleConfirmDelete = () => {
     // Delete vehicle from API
+    try {
+      api.delete(`/data-entry/delete-vehicle/${deleteVehicleId}`, {
+        headers: {
+            "Authorization": `Bearer ${cookies.get('access_token')}`,
+        },
+        withCredentials: true
+    }).then((res) => {
+        console.log(res.data);
+        fetchVehicles();
+        setDeleteVehicleId(null);
+        setDeleteDialogOpen(false);
+      })
+    }catch(e){
+      console.log(e);
+    }
+    
   };
 
   const handleSort = (column) => {
@@ -318,7 +334,7 @@ const VehicleAssignment = () => {
                         ) : (
                           <React.Fragment>
                             <TableCell>
-                              <Button variant='outlined' classes={classes.button} onClick={() => handleEditVehicle(vehicle)}>
+                              <Button variant='outlined' className={classes.button} onClick={() => handleEditVehicle(vehicle)}>
                                 <Edit /> Edit
                               </Button>
                             </TableCell>

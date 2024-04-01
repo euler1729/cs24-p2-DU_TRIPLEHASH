@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
-import { Typography, Button, Table, TableHead, TableBody, TableCell, TableRow, Paper, CircularProgress, useTheme, Tab } from '@material-ui/core';
+import { Typography, Button, Table, TableHead, TableBody, TableCell, TableRow, Paper, CircularProgress, useTheme, Tab, TextField } from '@material-ui/core';
 import api from '../API';
 
 const Fleet = () => {
@@ -89,7 +89,7 @@ const Fleet = () => {
             </Typography>
             {stsId && <Typography>Waste Remaning: {stsWaste}</Typography>}
             <Typography>Waste to be transfer</Typography>
-            <input type="number" value={stsWaste} onChange={(e) => setStsWaste(e.target.value)} />
+            <TextField variant='outlined' type="number" value={stsWaste} onChange={(e) => setStsWaste(e.target.value)} />
             <Button variant="contained" color="primary" onClick={fetchFleetData} disabled={!stsId || loading}>
                 {loading ? 'Loading...' : 'Fetch Fleet Data'}
             </Button>

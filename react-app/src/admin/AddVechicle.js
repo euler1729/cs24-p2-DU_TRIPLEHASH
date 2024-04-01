@@ -175,9 +175,12 @@ const VehiclePage = () => {
                                 value={vehicle.vehicle_reg_number}
                                 onChange={handleInputChange}
                             />
-                            <Select
-                                name="type"
+                            <TextField
+                                className={classes.textField}
+                                name="vehicle_type"
                                 variant="outlined"
+                                label="Vehicle Type"
+                                select
                                 error={!!errors.vehicle_type}
                                 helperText={errors.vehicle_type}
                                 value={vehicle.vehicle_type}
@@ -187,10 +190,13 @@ const VehiclePage = () => {
                                 <MenuItem value="dumpTruck">Dump Truck</MenuItem>
                                 <MenuItem value="compactor">Compactor</MenuItem>
                                 <MenuItem value="containerCarrier">Container Carrier</MenuItem>
-                            </Select>
-                            <Select
+                            </TextField>
+                            <TextField
+                                className={classes.textField}
                                 name="vehicle_capacity_in_ton"
                                 variant="outlined"
+                                select
+                                label="Vehicle Capacity in Ton"
                                 error={!!errors.vehicle_capacity_in_ton}
                                 helperText={errors.vehicle_capacity_in_ton}
                                 value={vehicle.vehicle_capacity_in_ton}
@@ -200,7 +206,7 @@ const VehiclePage = () => {
                                 <MenuItem value={5}>5 ton</MenuItem>
                                 <MenuItem value={7}>7 ton</MenuItem>
                                 <MenuItem value={15}>15 ton</MenuItem>
-                            </Select>
+                            </TextField>
                             <TextField
                                 name="fuel_cost_per_km_loaded"
                                 className={classes.textField}
