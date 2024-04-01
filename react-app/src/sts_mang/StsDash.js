@@ -21,6 +21,8 @@ import addtruck from './res/addtruck.png'
 import choosecar from './res/choosecar.png'
 import fleet from './res/fleet.png'
 import routes from './res/routes.png'
+import waste_transfer from './res/waste_transfer.png'
+import ActiveTrips from './ActiveTrip';
 
 // Component for Admin Dashboard
 // import UserManagement from './UserManagement';
@@ -34,6 +36,7 @@ import ProfileView from '../general/ProfileView';
 import Route from './Route';
 import Fleet from './Fleet';
 import STSManagerStatisticsPage from './STSstats';
+import WasteTransfer from './Waste_transfer';
 
 
 const drawerWidth = 260;
@@ -133,6 +136,10 @@ function STSManagerDashboard() {
         return <Route />;
       case 'fleet' : 
         return <Fleet/>
+      case 'Waste Transfer':
+        return <WasteTransfer />;
+      case 'Active Trips':
+        return <ActiveTrips />;
         
 
 
@@ -166,6 +173,16 @@ function STSManagerDashboard() {
                   <ListItem button onClick={() => handleOptionClick('dashboard')}>
                     <ListItemIcon><Dashboard /></ListItemIcon>
                     <ListItemText primary="Dashboard" />
+                  </ListItem>
+
+                  <ListItem button onClick={() => handleOptionClick('Active Trips')}>
+                    <img src={waste_transfer} alt="active_trips" style={{ width: '24px',  }} />
+                    <ListItemText primary="active_trips" />
+                  </ListItem>
+
+                  <ListItem button onClick={() => handleOptionClick('Waste Transfer')}>
+                    <img src={waste_transfer} alt="waste_transfer" style={{ width: '24px',  }} />
+                    <ListItemText primary="waste_transfer" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('fleet')}>

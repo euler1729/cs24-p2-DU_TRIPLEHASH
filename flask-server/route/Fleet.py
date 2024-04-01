@@ -46,7 +46,14 @@ class Fleet(Resource):
                     vehicles=vehi, total_waste=total_waste, dist=dist)
                 total_cost, trips = cost.findOptimal()
                 print(total_cost)
-                return make_response(jsonify({"trips": trips}), 200)
+                response = {
+                    "total_cost": total_cost,
+                    "trips": trips,
+                    "total_waste": total_waste,
+                    "total_distance": dist,
+                    "total_vehicles": cost.no_v
+                }
+                return make_response(jsonify(response), 200)
 
         except Exception as e:
             print(e)

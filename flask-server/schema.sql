@@ -47,7 +47,8 @@ CREATE TABLE sts (
     ward_number INTEGER,
     capacity_tonnes INTEGER,
     gps_longitude REAL,
-    gps_latitude REAL
+    gps_latitude REAL,
+    curretn_waste REAL
 );
 
 
@@ -134,7 +135,7 @@ CREATE TABLE trips(
 
 DROP TABLE IF EXISTS active_trip;
 CREATE TABLE active_trip(
-    trip_id INTEGER,
+    trip_id INTEGER PRIMARY KEY,
     vehicle_id INTEGER,
     to_landfill INTEGER,
     FOREIGN KEY(trip_id) REFERENCES trips(trip_id),
