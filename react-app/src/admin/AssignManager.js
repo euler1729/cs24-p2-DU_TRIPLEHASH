@@ -171,7 +171,7 @@ const AssignManager = () => {
       api.put('/data-entry/assign-manager', {
         user_id: editingUser.user_id,
         role_id: editingUser.role_id,
-        assigned_to: editingUser.assigned_to
+        assigned_to: editingUser.role_id === 2 ? editingUser.assigned_to : editingUser.role_id === 3 ? editingUser.assigned_to : 0
       }, {
         headers: {
           "Authorization": `Bearer ${cookies.get('access_token')}`,
@@ -297,10 +297,10 @@ const AssignManager = () => {
 
   const editRole  = (e)=>{
     setEditingUser({...editingUser, role_id: parseInt(e.target.value)})
-    if(e.target.value == 1 || e.target.value == 4){
-      setEditingUser({...editingUser, assigned_to: 0})
-      console.log(editingUser)
-    }
+    // if(parseInt(e.target.value) == 1 || parseInt(e.target.value) == 4){
+    //   setEditingUser({...editingUser, assigned_to: 0})
+    //   console.log(editingUser)
+    // }
   }
 
   const filteredUsers = users.filter(user =>
@@ -448,7 +448,7 @@ const AssignManager = () => {
                               <TableCell>
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
-                                    <Select name="role" label='Role' type='number' value={editingUser.role_id} onChange={editRole} >
+                                    <Select name="role" label='Role' value={editingUser.role_id} onChange={(e)=> editRole(e)} >
                                       <MenuItem value={1}>Admin</MenuItem>
                                       <MenuItem value={2}>STS Manager</MenuItem>
                                       <MenuItem value={3}>Landfill Manager</MenuItem>
@@ -460,16 +460,16 @@ const AssignManager = () => {
                               <TableCell>
                                 {
                                   editingUser && editingUser.user_id === user.user_id ?
-                                    <Select name="assigned_to" label='Assigned To' type='number' value={editingUser.assigned_to} onChange={(e) => setEditingUser({ ...editingUser, assigned_to: parseInt(e.target.value )})} >
+                                    <TextField select name="assigned_to" label='Assigned To' value={editingUser.assigned_to} onChange={(e) => setEditingUser({ ...editingUser, assigned_to: parseInt(e.target.value )})} >
                                       { editingUser.role_id === 2 &&  
                                         Object.keys(sts_mapping).map((sts_id) => (
-                                          <MenuItem key={sts_id} type='number' value={sts_id}>Ward No. {sts_mapping[sts_id]}</MenuItem>
+                                          <MenuItem key={sts_id} value={sts_id}>Ward No. {sts_mapping[sts_id]}</MenuItem>
                                         ))
                                       }
                                       { editingUser.role_id === 3 &&  Object.keys(landfill_mapping).map((landfill_id) => (
-                                        <MenuItem key={landfill_id} type='number' value={landfill_id}>{landfill_mapping[landfill_id]}</MenuItem>
+                                        <MenuItem key={landfill_id} value={landfill_id}>{landfill_mapping[landfill_id]}</MenuItem>
                                       ))}
-                                    </Select> :
+                                    </TextField> :
                                     <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'black' }}>
                                       {user.assigned_to === 0 ? 'N/A' : user.role_id === 2 ? 'Ward No. '+sts_mapping[user.assigned_to] : landfill_mapping[user.assigned_to]}
                                     </span>

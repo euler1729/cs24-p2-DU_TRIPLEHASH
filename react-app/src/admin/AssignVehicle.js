@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
-import { Typography, Button, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, Select, makeStyles } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import React, { useEffect, useState } from 'react';
+import { Typography, Button, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, TableSortLabel, MenuItem, Select, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper, makeStyles, TextField, InputAdornment } from '@material-ui/core';
+import { Delete, Edit } from '@material-ui/icons';
+import Cookies from 'universal-cookie';
+
+// API
+import api from '../API';
+
+// Brand
 import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
+
+const initialVehicles = [
+  { vehicle_id: 1, vehicle_name: 'Truck 1', status: 'Available', ward_number: '1' },
+  { vehicle_id: 2, vehicle_name: 'Truck 2', status: 'Assigned', ward_number: '5' },
+  { vehicle_id: 3, vehicle_name: 'Truck 3', status: 'Available', ward_number: '10' },
+];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,204 +22,334 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
   },
   title: {
-    color: '#4caf50',
+    color: EcoSyncBrand.Colors.green,
     fontWeight: 'bold',
-  },
-  paper: {
     marginBottom: theme.spacing(2),
   },
-  textField: {
-    margin: theme.spacing(2),
+  paper: {
+    width: '100%',
+  },
+  button: {
     color: EcoSyncBrand.Colors.green,
     backgroundColor: EcoSyncBrand.Colors.greenWhite,
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderColor: EcoSyncBrand.Colors.green, // Green color
     },
     '& .MuiInputLabel-root.Mui-focused': {
-      color: EcoSyncBrand.Colors.green, // Green color
+      color: '#4caf50', // Green color
     },
-    width: '200px',
   },
-  table_head: {
-    fontWeight: 'bold',
+  textField: {
+    margin: 'auto',
+    color: EcoSyncBrand.Colors.green,
+    backgroundColor: EcoSyncBrand.Colors.greenWhite,
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: EcoSyncBrand.Colors.green, // Green color
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#4caf50', // Green color
+    },
   },
 }));
 
-const mockVehicles = [
-  { id: 1, plateNumber: 'ABC123', arrivalTime: '2024-03-30T09:00', departureTime: '2024-03-30T17:00', wasteAmount: '10' },
-  { id: 2, plateNumber: 'XYZ456', arrivalTime: '2024-03-30T10:00', departureTime: '2024-03-30T16:00', wasteAmount: '8' },
-  { id: 3, plateNumber: 'DEF789', arrivalTime: '2024-03-30T11:00', departureTime: '2024-03-30T15:00', wasteAmount: '6' },
-];
-
-const AssignVehicle = () => {
+const VehicleAssignment = () => {
   const classes = useStyles();
-  const [filterPlate, setFilterPlate] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState('');
-  const [dialogType, setDialogType] = useState('');
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const cookies = new Cookies();
+  const [vehicles, setVehicles] = useState(initialVehicles);
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [editingVehicle, setEditingVehicle] = useState(null);
+  const [deleteVehicleId, setDeleteVehicleId] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  const [filterWard, setFilterWard] = useState('');
+  const statusOptions = ['Available', 'Assigned'];
+  const [stslist, setStslist] = useState([]);
 
-  const handleAssign = () => {
-    if (!selectedVehicle) {
-      setDialogType('error');
-      setDialogMessage('Please select a vehicle');
-      setDialogOpen(true);
-      return;
+  useEffect(() => {
+    fetchVehicles();
+    fetchSts();
+  }, []);
+
+  const fetchSts = () => {
+    // Fetch sts from API and set state
+    try {
+      api.get('/data-entry/get-sts-list', {
+        headers: {
+          'Authorization': `Bearer ${cookies.get('token')}`
+        },
+        withCredentials: true
+      }).then((res) => {
+        setStslist(res.data);
+        console.log(res.data);
+      })
+    } catch (e) {
+      console.log(e);
     }
-    // Perform assignment action here
-    setDialogType('success');
-    setDialogMessage('Vehicle Entry Added Successfully');
-    setDialogOpen(true);
-    // Reset fields after assignment
-    setSelectedVehicle(null);
   };
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
+  const fetchVehicles = () => {
+    // Fetch vehicles from API and set state
+    try {
+      api.get('/data-entry/get-vehicle-list', {
+        headers: {
+          'Authorization': `Bearer ${cookies.get('token')}`
+        },
+        withCredentials: true
+      }).then((res) => {
+        setVehicles(res.data);
+        console.log(res.data);
+      })
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const handleEditRow = (vehicle) => {
-    setSelectedVehicle(vehicle);
+  const handleSaveVehicle = () => {
+    // Save vehicle to database
+    try {
+      api.put('/data-entry/assign-sts-vehicles', {
+        sts_id: editingVehicle.sts_id,
+        vehicle_id: editingVehicle.vehicle_id
+      }, {
+        headers: {
+          "Authorization": `Bearer ${cookies.get('access_token')}`,
+        },
+        withCredentials: true
+      }).then((res) => {
+        console.log(res.data);
+        fetchVehicles();
+        setEditingVehicle(null);
+      }).catch((e) => {
+        console.log(e);
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const handleSaveRow = () => {
-    // Save edited row logic here
-    setSelectedVehicle(null); // Reset selected vehicle after saving
+  const handleConfirmDelete = () => {
+    // Delete vehicle from API
   };
+
+  const handleSort = (column) => {
+    // Handle sorting logic
+  };
+
+  const handleEditVehicle = (vehicle) => {
+    // Handle editing a vehicle
+    setEditingVehicle(vehicle);
+  };
+
+  const handleDeleteVehicle = (vehicleId) => {
+    // Handle deleting a vehicle
+    setDeleteVehicleId(vehicleId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    // Handle canceling delete operation
+    setDeleteVehicleId(null);
+    setDeleteDialogOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    // Handle input change for search term
+    setSearchTerm(e.target.value);
+  };
+
+  const handleFilterStatus = (e) => {
+    // Handle filtering vehicles by status
+    setFilterStatus(e.target.value);
+  };
+
+  const handleFilterWard = (e) => {
+    // Handle filtering vehicles by ward number
+    setFilterWard(e.target.value);
+  };
+  function convertString(str) {
+    // Convert first character to uppercase
+    str = str.charAt(0).toUpperCase() + str.slice(1);
+
+    // Insert space before every uppercase letter (except the first one)
+    str = str.replace(/([A-Z])/g, ' $1');
+
+    return str;
+  }
+  // Inside the VehicleAssignment component
+  const filteredVehicles = vehicles.filter((vehicle) => {
+    if (filterStatus && (vehicle.sts_id ? vehicle.sts_id != 0 ? 'Assigned' : 'Available' : 'Available') !== filterStatus) {
+      return false;
+    }
+    if (filterWard && vehicle.ward_number !== filterWard) {
+      return false;
+    }
+    if (searchTerm && !vehicle.vehicle_reg_number.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return false;
+    }
+    return true;
+  });
+
+  const clearFilter = () => {
+    setFilterStatus('');
+    setFilterWard('');
+    setSearchTerm('');
+  }
+  function convertString(str) {
+    // Convert first character to uppercase
+    str = str.charAt(0).toUpperCase() + str.slice(1);
+
+    // Insert space before every uppercase letter (except the first one)
+    str = str.replace(/([A-Z])/g, ' $1');
+
+    return str;
+  }
+
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h4" className={classes.title}>Vehicle Entry</Typography>
-      <div style={{ marginTop: '20px' }}>
-        <TextField
-          label="Registration Number"
-          select
-          className={classes.textField}
-          value={selectedVehicle ? selectedVehicle.plateNumber : ''}
-          onChange={(e) => setSelectedVehicle(mockVehicles.find(vehicle => vehicle.plateNumber === e.target.value))}
-          variant="outlined"
-        >
-          {mockVehicles.map((vehicle) => (
-            <MenuItem key={vehicle.id} value={vehicle.plateNumber}>
-              {vehicle.plateNumber}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          label="Arrival Time"
-          className={classes.textField}
-          type="datetime-local"
-          value={selectedVehicle ? selectedVehicle.arrivalTime : ''}
-          onChange={(e) => setSelectedVehicle({ ...selectedVehicle, arrivalTime: e.target.value })}
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label="Departure Time"
-          className={classes.textField}
-          type="datetime-local"
-          value={selectedVehicle ? selectedVehicle.departureTime : ''}
-          onChange={(e) => setSelectedVehicle({ ...selectedVehicle, departureTime: e.target.value })}
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label="Waste Amount"
-          className={classes.textField}
-          value={selectedVehicle ? selectedVehicle.wasteAmount : ''}
-          onChange={(e) => setSelectedVehicle({ ...selectedVehicle, wasteAmount: e.target.value })}
-          variant="outlined"
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAssign}
-          style={{ margin: '20px' }}
-        >
-          Assign Entry
-        </Button>
-      </div>
-      <TextField
-        label="Filter Plate"
-        className={classes.textField}
-        value={filterPlate}
-        onChange={(e) => setFilterPlate(e.target.value)}
-        variant="outlined"
-      />
-      <Paper elevation={3} className={classes.paper}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.table_head}>Registration Number</TableCell>
-                <TableCell className={classes.table_head}>Arrival Time</TableCell>
-                <TableCell className={classes.table_head}>Departure Time</TableCell>
-                <TableCell className={classes.table_head}>Dumped Amount</TableCell>
-                <TableCell className={classes.table_head}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {mockVehicles.map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell>
-                    <TextField
-                      disabled={selectedVehicle !== vehicle}
-                      value={vehicle.plateNumber}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      disabled={selectedVehicle !== vehicle}
-                      value={vehicle.arrivalTime}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      disabled={selectedVehicle !== vehicle}
-                      value={vehicle.departureTime}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      disabled={selectedVehicle !== vehicle}
-                      value={vehicle.wasteAmount}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {selectedVehicle === vehicle ? (
-                      <Button variant="outlined" color="primary" onClick={handleSaveRow}>
-                        Save
-                      </Button>
-                    ) : (
-                      <Button variant="outlined" color="primary" onClick={() => handleEditRow(vehicle)}>
-                        Edit
-                      </Button>
-                    )}
-                  </TableCell>
-                </TableRow>
+    <Grid container spacing={2} className={classes.root}>
+      <Grid item xs={12}>
+        <Typography variant="h4" align="center" className={classes.title}>
+          Vehicle Assignment
+        </Typography>
+        <Grid container spacing={2} alignItems="center" justifyContent="flex-start" style={{ marginBottom: '20px' }}>
+          <Grid item xs={2}>
+            <TextField
+              className={classes.textField}
+              label="Filter Status"
+              value={filterStatus}
+              onChange={handleFilterStatus}
+              select
+              variant="outlined"
+              margin="dense"
+              fullWidth
+            >
+              {statusOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>{dialogType === 'success' ? 'Success' : 'Error'}</DialogTitle>
+            </TextField>
+          </Grid>
+          <Button variant="outlined" className={classes.button} onClick={clearFilter}>Clear filter</Button>
+          {/* <Grid item>
+            <TextField
+              label="Filter STS"
+              value={filterWard}
+              onChange={handleFilterWard}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+            />
+          </Grid> */}
+        </Grid>
+        <TextField
+          className={classes.textField}
+          label="Search"
+          value={searchTerm}
+          onChange={handleInputChange}
+          variant="outlined"
+          margin="dense"
+          fullWidth
+        />
+        <Paper elevation={3} className={classes.paper}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    Vehicle Reg No
+                  </TableCell>
+                  <TableCell>
+                    Vehicle Type
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel active={sortBy === 'status'} direction={sortOrder} onClick={() => handleSort('status')}>
+                      Status
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel active={sortBy === 'ward_number'} direction={sortOrder} onClick={() => handleSort('ward_number')}>
+                      STS
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>Edit/Delete</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredVehicles.map((vehicle) => (
+                  <TableRow key={vehicle.vehicle_reg_number}>
+                    <TableCell>{vehicle.vehicle_reg_number}</TableCell>
+                    <TableCell>{vehicle.vehicle_type?.replace(/([A-Z])/g, ' $1').toUpperCase()}</TableCell>
+                    <TableCell>{vehicle.sts_id ? 'Assigned' : 'Available'}</TableCell>
+                    <TableCell>
+                      {
+                        editingVehicle && editingVehicle.vehicle_id === vehicle.vehicle_id ? (
+                          <TextField
+                            value={editingVehicle.sts_id}
+                            select
+                            onChange={(e) => setEditingVehicle({ ...editingVehicle, sts_id: e.target.value })}
+                            variant="outlined"
+                          >
+                            <MenuItem value={0}>None</MenuItem>
+                            {stslist.map((sts) => (
+                              <MenuItem key={sts.sts_id} value={sts.sts_id}>
+                                STS {sts.sts_id}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        ) : (
+                          vehicle.sts_id ? 'STS ' + vehicle.sts_id : 'Unassigned'
+                        )
+                      }
+                    </TableCell>
+                    <TableCell>
+                      {
+                        editingVehicle && editingVehicle.vehicle_id === vehicle.vehicle_id ? (
+                          <React.Fragment>
+                            <TableCell>
+                              <Button style={{ color: 'white', backgroundColor: EcoSyncBrand.Colors.greenDark, fontWeight: 'bold' }} variant="contained" onClick={handleSaveVehicle}>Save</Button>
+                            </TableCell>
+                            <TableCell>
+                              <Button variant="contained" color="secondary" onClick={() => setEditingVehicle(null)}>Cancel</Button>
+                            </TableCell>
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <TableCell>
+                              <Button variant='outlined' classes={classes.button} onClick={() => handleEditVehicle(vehicle)}>
+                                <Edit /> Edit
+                              </Button>
+                            </TableCell>
+                            <TableCell>
+                              <Button variant="contained" color="secondary" onClick={() => handleDeleteVehicle(vehicle.vehicle_id)}>
+                                <Delete />
+                              </Button>
+                            </TableCell>
+                          </React.Fragment>
+                        )
+                      }
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Grid>
+      <Dialog open={deleteDialogOpen} onClose={handleCancelDelete}>
+        <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <Typography>{dialogMessage}</Typography>
+          Are you sure you want to delete this vehicle?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary" autoFocus>
-            OK
-          </Button>
+          <Button onClick={handleCancelDelete} color="primary">Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="secondary">Delete</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Grid>
   );
 };
 
-export default AssignVehicle;
+export default VehicleAssignment;

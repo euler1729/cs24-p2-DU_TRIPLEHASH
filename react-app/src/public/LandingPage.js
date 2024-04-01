@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Cookies from 'universal-cookie';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LandingPage() {
     const classes = useStyles();
+    const cookies = new Cookies();
 
     // Configuration for the slider
     const settings = {
@@ -76,9 +78,9 @@ function LandingPage() {
                     <Button variant="contained" color="primary" href="/about">
                         Learn More
                     </Button>
-                    <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10, fontWeight:'bold' }}>
+                    {!cookies.get('access_token') && <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10, fontWeight:'bold' }}>
                         Login
-                    </Button>
+                    </Button>}
                 </Grid>
                 <Grid item xs={12} className={classes.sliderContainer}>
                     <div className={classes.slider}>
