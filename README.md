@@ -4,5 +4,9 @@
 ```docker compose up```
   
 ## PORTS
-- backend: 5000
+- backend: 8000
 - frontend: 3000
+
+  - username: admin
+  - password: admin
+  - change email to get email at own mail address
