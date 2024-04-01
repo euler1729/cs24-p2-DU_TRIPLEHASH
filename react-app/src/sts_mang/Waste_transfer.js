@@ -1,103 +1,124 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'universal-cookie';
-import { Typography, Button, Table, TableHead, TableBody, TableCell, TableRow, Paper, CircularProgress } from '@material-ui/core';
+import { Typography, Button, Paper, CircularProgress, TextField, makeStyles } from '@material-ui/core';
 import api from '../API';
+import Cookies from 'universal-cookie';
 
-const Fleet = () => {
-    const cookies = new Cookies();
-    const [stsId, setStsId] = useState(null);
-    const [fleetData, setFleetData] = useState(null);
+const useStyles = makeStyles((theme) => ({
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: theme.spacing(4),
+    },
+    paper: {
+        padding: theme.spacing(3),
+        marginTop: theme.spacing(2),
+        maxWidth: 400,
+    },
+    textField: {
+        marginBottom: theme.spacing(2),
+    },
+    button: {
+        marginTop: theme.spacing(2),
+    },
+}));
+
+const WasteTransfer = () => {
+    const classes = useStyles();
+    const [vehicleRegNo, setVehicleRegNo] = useState('');
+    const [load, setLoad] = useState('');
+    const [landfill, setLandfill] = useState('');
+    const [scheduleTime, setScheduleTime] = useState('');
     const [loading, setLoading] = useState(false);
+    const [makingTrip, setMakingTrip] = useState(false);
+    const [tripCost, setTripCost] = useState('');
 
-    useEffect(() => {
-        // Function to fetch STS ID
-        const fetchStsId = async () => {
-            try {
-                const response = await api.get('/sts', {
-                    headers: {
-                        "Authorization": `Bearer ${cookies.get('access_token')}`,
-                    },
-                    withCredentials: true
-                });
-                setStsId(response.data.sts_id);
-            } catch (error) {
-                console.error("Error fetching STS ID:", error);
-            }
-        };
-
-        // Fetch STS ID
-        fetchStsId();
-    }, []); // Empty dependency array ensures the effect runs only once on mount
-
-    // Function to fetch fleet data
-    const fetchFleetData = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMakingTrip(true);
         try {
-            setLoading(true);
-            const response = await api.get(`/sts/fleet?sts_id=${stsId}&total_waste=4`, {
+            const response = await api.post('/maketrip', {
+                sts_id: 1,
+                vehicle_id: 1,
+                load: load,
+                cost: tripCost,
+            }, {
                 headers: {
-                    "Authorization": `Bearer ${cookies.get('access_token')}`,
-                },
-                withCredentials: true
+                    'Authorization': `Bearer ${Cookies.get('access_token')}`,
+                    'Content-Type': 'application/json'
+                }
             });
-            setFleetData(response.data.trips);
-        } catch (error) {
-            console.error("Error fetching fleet data:", error);
-        } finally {
-            setLoading(false);
+            setTripCost(response.data.cost);
         }
-    };
-
-    // Function to handle making a trip
-    const makeTrip = async (tripId) => {
-        try {
-            // Implement the logic to make a trip using the tripId
-            console.log("Making trip with ID:", tripId);
-        } catch (error) {
+        catch (error) {
+            
             console.error("Error making trip:", error);
         }
+        finally {
+            setMakingTrip(false);
+        }
+
     };
 
     return (
-        <div>
+        <div className={classes.container}>
             <Typography variant="h4" gutterBottom>
                 Fleet Information
             </Typography>
-            {stsId && <Typography>STS ID: {stsId}</Typography>}
-            <Button variant="contained" color="primary" onClick={fetchFleetData} disabled={!stsId || loading}>
-                {loading ? 'Loading...' : 'Fetch Fleet Data'}
+            <Paper className={classes.paper}>
+                <TextField
+                    className={classes.textField}
+                    label="Vehicle Registration Number"
+                    variant="outlined"
+                    value={vehicleRegNo}
+                    onChange={(e) => setVehicleRegNo(e.target.value)}
+                />
+                <TextField
+                    className={classes.textField}
+                    label="Load"
+                    variant="outlined"
+                    value={load}
+                    onChange={(e) => setLoad(e.target.value)}
+                />
+                <TextField
+                    className={classes.textField}
+                    label="Landfill"
+                    variant="outlined"
+                    value={landfill}
+                    onChange={(e) => setLandfill(e.target.value)}
+                />
+                <TextField
+                    className={classes.textField}
+                    label="Schedule Time"
+                    variant="outlined"
+                    type="datetime-local"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={scheduleTime}
+                    onChange={(e) => setScheduleTime(e.target.value)}
+                />
+            </Paper>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                disabled={makingTrip}
+                className={classes.button}
+            >
+                {makingTrip ? 'Making Trip...' : 'Make Trip'}
             </Button>
-            {fleetData ? (
-                <Paper style={{ marginTop: '20px' }}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Vehicle ID</TableCell>
-                                <TableCell>Cost</TableCell>
-                                <TableCell>Load</TableCell>
-                                <TableCell>Action</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {fleetData.map((trip, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{trip.vehicle_id}</TableCell>
-                                    <TableCell>{trip.cost}</TableCell>
-                                    <TableCell>{trip.load}</TableCell>
-                                    <TableCell>
-                                        <Button variant="contained" color="primary" onClick={() => makeTrip(trip.trip_id)}>
-                                            Make Trip
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+            {makingTrip && <CircularProgress className={classes.textField} />}
+            {tripCost !== '' && (
+                <Paper className={classes.paper}>
+                    <Typography variant="h6" gutterBottom>
+                        Trip Cost
+                    </Typography>
+                    <Typography><strong>Cost:</strong> {tripCost}</Typography>
                 </Paper>
-            ) : (
-                <Typography>No fleet data available.</Typography>
             )}
         </div>
     );
 };
 
-export default Fleet;
+export default WasteTransfer;

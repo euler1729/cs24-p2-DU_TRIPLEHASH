@@ -74,6 +74,7 @@ const ActiveTrips = () => {
                         vehicle_id: vehicleId,
                         start_date: startDate,
                         end_date: endDate,
+                        filter: filterStatus,
                     },
                     headers: {
                         "Authorization": `Bearer ${cookies.get('access_token')}`,
@@ -92,7 +93,7 @@ const ActiveTrips = () => {
         if (stsId) {
             fetchActiveTrips();
         }
-    }, [stsId, vehicleId, startDate, endDate]);
+    }, [stsId, vehicleId, startDate, endDate, filterStatus]);
 
     // Function to get the status based on trip properties
     const getStatus = (trip) => {
@@ -107,7 +108,9 @@ const ActiveTrips = () => {
 
     // Function to handle filter change
     const handleFilterChange = (event) => {
+        console.log(event.target.value);
         setFilterStatus(event.target.value);
+        console.log(filterStatus);
     };
 
     // Function to handle start date change
@@ -126,15 +129,15 @@ const ActiveTrips = () => {
     };
 
     // Function to filter trips based on status and date range
-    const filterTrips = (trips) => {
-        return trips.filter(trip => {
-            const status = getStatus(trip);
-            const startDateMatch = !startDate || new Date(trip.start_time) >= new Date(startDate);
-            const endDateMatch = !endDate || new Date(trip.start_time) <= new Date(endDate);
-            const statusMatch = filterStatus === 'all' || status === filterStatus;
-            return startDateMatch && endDateMatch && statusMatch;
-        });
-    };
+    // const filterTrips = (trips) => {
+    //     return trips.filter(trip => {
+    //         const status = getStatus(trip);
+    //         const startDateMatch = !startDate || new Date(trip.start_time) >= new Date(startDate);
+    //         const endDateMatch = !endDate || new Date(trip.start_time) <= new Date(endDate);
+    //         const statusMatch = filterStatus === 'all' || status === filterStatus;
+    //         return startDateMatch && endDateMatch && statusMatch;
+    //     });
+    // };
 
     // Check if all STS IDs are the same
     const isSameStsId = activeTrips.every(trip => trip.sts_id === activeTrips[0].sts_id);
@@ -150,7 +153,7 @@ const ActiveTrips = () => {
                         value={filterStatus}
                         onChange={handleFilterChange}
                     >
-                        <MenuItem value="all">All</MenuItem>
+                        <MenuItem value="All">All</MenuItem>
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Completed">Completed</MenuItem>
                     </Select>
@@ -210,7 +213,7 @@ const ActiveTrips = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filterTrips(activeTrips).map((trip, index) => (
+                            {activeTrips.map((trip, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{trip.trip_id}</TableCell>
                                     <TableCell>{trip.vehicle_id}</TableCell>

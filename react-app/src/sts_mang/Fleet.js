@@ -40,6 +40,7 @@ const Fleet = () => {
             const response = await api.get(`/sts/fleet?sts_id=${stsId}&total_waste=${stsWaste}`, {
                 headers: {
                     "Authorization": `Bearer ${cookies.get('access_token')}`,
+                    'Content-Type': 'application/json'
                 },
                 withCredentials: true
             });
