@@ -31,6 +31,7 @@ import VechicleEntry from './VechicleEntry';
 // import CreateLandfill from './CreateLandfill';
 // import AssignManager from './AssignManager';
 // import AssignVehicle from './AssignVehicle';
+import LandfillStatisticsPage from './Statistics';
 
 const drawerWidth = 260;
 
@@ -108,7 +109,7 @@ function LandfillManagerDashboard() {
   const renderComponent = () => {
     switch (selectedOption) {
       case 'dashboard':
-        return <Typography variant="h4">Welcome to Admin Dashboard</Typography>;
+        return <LandfillStatisticsPage />;
       // case 'users':
       //   return <UserManagement />;
       // case 'createUser':
@@ -165,13 +166,6 @@ function LandfillManagerDashboard() {
                     </ListItemIcon>
                     <ListItemText primary="Vechicle Entry" />
                   </ListItem>
-
-                  {/* <ListItem button onClick={() => handleOptionClick('routes')}>
-                    <ListItemIcon>
-                      <img src={routes} alt="Routes" style={{ width: '24px' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Routes" />
-                  </ListItem> */}
                 </List>
               </div>
 

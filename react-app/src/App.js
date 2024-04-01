@@ -9,7 +9,7 @@ import ForgotPasswordPage from './auth/ForgotPassword';
 import ResetPasswordPage from './auth/ResetPassword';
 import AdminDashboard from './admin/AdminDash';
 import STSManagerDashboard from './sts_mang/StsDash';
-import LandfillManagerDashboard from './landfil_mang/LangfilDash';
+import LandfillManagerDashboard from './landfil_mang/LandfillDash';
 
 
 function App() {
