@@ -30,10 +30,10 @@ class AssignSTSVehicles(Resource):
                     cursor.execute("UPDATE vehicle SET sts_id=NULL WHERE vehicle_id=?", (vehicle_id,))
                 else:
                     # Check if vehicle exists and is not assigned to another STS
-                    cursor.execute("SELECT * FROM vehicle WHERE vehicle_id=? AND (sts_id IS NULL OR sts_id=?)", (vehicle_id, sts_id))
+                    cursor.execute("SELECT * FROM vehicle WHERE vehicle_id=?", (vehicle_id,))
                     vehicle = cursor.fetchone()
                     if not vehicle:
-                        return make_response(jsonify({'error': 'Vehicle not found or already assigned to another STS'}), 404)
+                        return make_response(jsonify({'error': 'Vehicle not found'}), 404)
 
                     # Update STS ID for the vehicle
                     cursor.execute("UPDATE vehicle SET sts_id=? WHERE vehicle_id=?", (sts_id, vehicle_id))
