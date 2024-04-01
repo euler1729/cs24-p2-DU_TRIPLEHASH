@@ -198,6 +198,8 @@ const CreateLandfill = () => {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                error={!!errors.startDate}
+                                helperText={errors.startDate}
                             />
                             {/* </Grid> */}
                             {/* <Grid item xs={5}> */}
@@ -209,6 +211,8 @@ const CreateLandfill = () => {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                error={!!errors.endDate}
+                                helperText={errors.endDate}
                             />
                             {/* </Grid> */}
                             {/* </Grid> */}
