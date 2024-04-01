@@ -63,7 +63,7 @@ const WasteTransfer = () => {
     return (
         <div className={classes.container}>
             <Typography variant="h4" gutterBottom>
-                Fleet Information
+                Waste Transfer
             </Typography>
             <Paper className={classes.paper}>
                 <TextField
