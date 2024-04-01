@@ -110,7 +110,7 @@ function AdminDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    cookies.remove('access_token');
+    cookies.remove('access_token', { path: '/' });
     navigate('/');
   }
 
