@@ -25,13 +25,13 @@ class ActiveTrip(Resource):
                 role_id = info['sub']['role_id']
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
-
+                print(request.get_json())
                 # Extract query 
                 data = request.get_json()
-                vehicle_id_filter = data.get('vehicle_id')
-                start_date = data.get('start_date')
-                end_date = data.get('end_date')
-                sts_id = data.get('sts_id')
+                vehicle_id_filter = request.args.get('vehicle_id')
+                start_date = request.args.get('start_date')
+                end_date = request.args.get('end_date')
+                sts_id = request.args.get('sts_id')
 
                 # Initialize query and parameters
                 query = "SELECT * FROM active_trip JOIN trips ON active_trip.trip_id = trips.trip_id"
@@ -77,4 +77,5 @@ class ActiveTrip(Resource):
 
                 return make_response(jsonify({'active_trips': trips}), 200)
         except Exception as e:
+            print(e)
             return make_response(jsonify({'msg': str(e)}), 500)

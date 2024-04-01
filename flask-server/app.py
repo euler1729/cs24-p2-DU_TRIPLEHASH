@@ -15,6 +15,7 @@ from manageUser.Roles import Roles
 from manageUser.UpdateRole import UpdateRole
 from manageUser.Profile import Profile
 from manageUser.getSTS import getSTS
+from trip.MakeTrip import MakeTrip
 
 #Trip
 
@@ -87,6 +88,7 @@ api.add_resource(Fleet, '/sts/fleet')
 #Trip
 api.add_resource(Trip, '/trip')
 api.add_resource(ActiveTrip, '/activetrip')
+api.add_resource(MakeTrip, '/maketrip')
 
 
 
