@@ -20,7 +20,7 @@ class getSTS(Resource):
                 cursor = conn.cursor()
                 cursor.execute('SELECT sts_id FROM sts_managers WHERE user_id = ?', (user_id,))
                 sts = cursor.fetchone()
-                cursor.execute('SELECT waste FROM sts WHERE sts_id = ?', (sts[0],))
+                cursor.execute('SELECT capacity_tonnes FROM sts WHERE sts_id = ?', (sts[0],))
                 waste = cursor.fetchone()
                 conn.commit()
                 return make_response(jsonify({"sts_id": sts[0], "waste" : waste[0], }), 201)
