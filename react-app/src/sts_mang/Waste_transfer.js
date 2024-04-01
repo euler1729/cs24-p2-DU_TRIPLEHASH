@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Typography, Button, Paper, CircularProgress, TextField, makeStyles } from '@material-ui/core';
 import api from '../API';
 import Cookies from 'universal-cookie';
@@ -29,13 +29,13 @@ const WasteTransfer = () => {
     const [load, setLoad] = useState('');
     const [landfill, setLandfill] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
-    const [loading, setLoading] = useState(false);
     const [makingTrip, setMakingTrip] = useState(false);
     const [tripCost, setTripCost] = useState('');
+    const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMakingTrip(true);
+        e.preventDefault(); // Prevent default form submission behavior
+        setMakingTrip(true); // Set makingTrip state to true while processing the submission
         try {
             const response = await api.post('/maketrip', {
                 sts_id: 1,
@@ -49,15 +49,13 @@ const WasteTransfer = () => {
                 }
             });
             setTripCost(response.data.cost);
-        }
-        catch (error) {
-            
+            setError(null); // Reset error state if request is successful
+        } catch (error) {
             console.error("Error making trip:", error);
+            setError("Error making trip. Please try again."); // Set error message
+        } finally {
+            setMakingTrip(false); // Reset makingTrip state after processing
         }
-        finally {
-            setMakingTrip(false);
-        }
-
     };
 
     return (
@@ -109,6 +107,13 @@ const WasteTransfer = () => {
                 {makingTrip ? 'Making Trip...' : 'Make Trip'}
             </Button>
             {makingTrip && <CircularProgress className={classes.textField} />}
+            {error && (
+                <Paper className={classes.paper}>
+                    <Typography color="error" gutterBottom>
+                        {error}
+                    </Typography>
+                </Paper>
+            )}
             {tripCost !== '' && (
                 <Paper className={classes.paper}>
                     <Typography variant="h6" gutterBottom>
