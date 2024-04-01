@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { Typography, Button, Table, TableHead, TableBody, TableCell, TableRow, Paper, CircularProgress, FormControl, Select, MenuItem, TextField, makeStyles } from '@material-ui/core';
 import api from '../API';
+import EcoSyncBrand from '../EcoSyncBrand/EcoSyncBrand.json';
 
 const useStyles = makeStyles((theme) => ({
     filterContainer: {
@@ -16,6 +17,19 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         width: 200,
         marginRight: theme.spacing(2),
+    },
+    root: {
+        height: '90vh',
+        width: '75vw',
+        margin: 'auto',
+    },
+    title: {
+        color: EcoSyncBrand.Colors.green,
+        fontWeight: 'bold',
+        marginBottom: theme.spacing(2),
+    },
+    paper: {
+        width: '100%',
     },
 }));
 
@@ -126,7 +140,7 @@ const ActiveTrips = () => {
     const isSameStsId = activeTrips.every(trip => trip.sts_id === activeTrips[0].sts_id);
 
     return (
-        <div>
+        <div className={classes.root}>
             <Typography variant="h4" gutterBottom>
                 Active Trips Information
             </Typography>
@@ -183,7 +197,7 @@ const ActiveTrips = () => {
             {loading ? (
                 <CircularProgress />
             ) : (
-                <Paper style={{ marginTop: '20px' }}>
+                <Paper className={classes.paper}>
                     <Table>
                         <TableHead>
                             <TableRow>

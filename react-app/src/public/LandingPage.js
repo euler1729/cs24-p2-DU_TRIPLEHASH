@@ -78,7 +78,7 @@ function LandingPage() {
                     <Button variant="contained" color="primary" href="/about">
                         Learn More
                     </Button>
-                    {!cookies.get('access_token') && <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10, fontWeight:'bold' }}>
+                    {(!cookies.get('access_token')) && <Button variant="contained" color="secondary" href="/login" style={{ marginLeft: 10, fontWeight:'bold' }}>
                         Login
                     </Button>}
                 </Grid>

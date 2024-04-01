@@ -101,7 +101,7 @@ function STSManagerDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    cookies.remove('access_token ');
+    cookies.remove('access_token');
     navigate('/');
   }
 
@@ -176,13 +176,17 @@ function STSManagerDashboard() {
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('Active Trips')}>
-                    <img src={waste_transfer} alt="active_trips" style={{ width: '24px',  }} />
-                    <ListItemText primary="active_trips" />
+                    <ListItemIcon>
+                      <img src={waste_transfer} alt="active_trips" style={{ width: '24px',  }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Trips" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('Waste Transfer')}>
-                    <img src={waste_transfer} alt="waste_transfer" style={{ width: '24px',  }} />
-                    <ListItemText primary="waste_transfer" />
+                    <ListItemIcon>
+                      <img src={waste_transfer} alt="waste_transfer" style={{ width: '24px',  }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Waste Transfer" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('fleet')}>
