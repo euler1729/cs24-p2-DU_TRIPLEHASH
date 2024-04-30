@@ -71,7 +71,7 @@ const ProfileView = () => {
   const [passwordData, setPasswordData] = useState({
     old_password: '',
     new_password: '',
-    confirmPassword: '',
+    confirm_password: '',
   });
 
   useEffect(() => {
@@ -113,8 +113,8 @@ const ProfileView = () => {
       setErrors({ ...errors, old_password: 'Please fill all fields' });
       return;
     }
-    if (passwordData.new_password !== passwordData.confirmPassword) {
-      setErrors({ ...errors, confirmPassword: 'Passwords do not match' });
+    if (passwordData.new_password !== passwordData.confirm_password) {
+      setErrors({ ...errors, confirm_password: 'Passwords do not match' });
       return;
     }
     if (passwordData.new_password.length < 6) {
@@ -122,7 +122,7 @@ const ProfileView = () => {
       return;
     }
     // Save changes to the backend
-    api.put('/profile', passwordData, {
+    api.post('/auth/change-password', passwordData, {
       headers: {
         "Authorization": `Bearer ${cookies.get('access_token')}`,
       },
@@ -228,15 +228,15 @@ const ProfileView = () => {
               />
               <TextField
                 className={classes.textField}
-                name='confirmPassword'
+                name='confirm_password'
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 label="Confirm New Password"
                 type={showPassword ? 'text' : 'password'}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword}
-                value={passwordData.confirmPassword}
+                error={!!errors.confirm_password}
+                helperText={errors.confirm_password}
+                value={passwordData.confirm_password}
                 onChange={handlePasswordInputChange}
                 InputProps={{
                   endAdornment: (
