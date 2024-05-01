@@ -33,8 +33,8 @@ class ChangePassword(Resource):
                 if new_password != confirm_password:
                     return make_response(jsonify({'msg':'Password does not match!'}), 401)
 
-                self.database.execute('SELECT * FROM user WHERE user_id=?', (user_id,))
-                user = self.database.fetchone()
+                user = self.database.execute('SELECT * FROM user WHERE user_id=?', (user_id,)).fetchone()
+                self.database.commit()
                 if user:
                     hash = user[3]
                     if not check_password_hash(hash, old_password):

@@ -100,7 +100,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const cookies = new Cookies();
 
-  const [selectedOption, setSelectedOption] = useState('dashboard');
+  const [selectedOption, setSelectedOption] = useState(null);
   const [open, setOpen] = useState(false);
   const [truckOpen, setTruckOpen] = useState(false);
 
@@ -122,6 +122,16 @@ function AdminDashboard() {
   };
 
   const renderComponent = () => {
+    if(selectedOption === null) {
+      if(localStorage.getItem('adminPage') === null) {
+        localStorage.setItem('adminPage', 'dashboard');
+        setSelectedOption('dashboard');
+      }else{
+        setSelectedOption(localStorage.getItem('adminPage'));
+      }
+    }else{
+      localStorage.setItem('adminPage', selectedOption);
+    }
     switch (selectedOption) {
       case 'dashboard':
         return <StatisticsPage />;
@@ -145,7 +155,7 @@ function AdminDashboard() {
 
       // Add cases for other options
       default:
-        return null;
+        return <StatisticsPage />;
     }
   };
 

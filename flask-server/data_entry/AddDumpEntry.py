@@ -3,18 +3,21 @@ from flask_restful import Resource
 from flask import jsonify, request, make_response
 from TokenManager import decode_token
 
+# Own defined modules
+from database import Database
+from utils import Utils
 
 class AddDumpEntry(Resource):
-    def post(self):
-        token = request.headers['Authorization'].split(' ')[1]
-        info = decode_token(token)
+    def __init__(self):
+        self.database = Database()
+        self.utils = Utils()
 
-        # print(info)
+    def post(self):
+        info = self.utils.getInfoFromToken(request)
+
         if info and info['sub']['role_id'] == 3:
 
             data = request.get_json()
-
-            # print(data)
 
             landfill_id = data.get('landfill_id')
             vehicle_id = data.get('vehicle_id')
