@@ -131,7 +131,8 @@ const ProfileView = ({ props }) => {
             setDialogMessage('Profile Updated Successfully');
             setDialogOpen(true);
             setEditMode(false);
-            localStorage.setItem('user', JSON.stringify(user));
+            getUser(props.user_id);
+            // localStorage.setItem('user', JSON.stringify(user));
         }).catch((error) => {
             setDialogType('error');
             setDialogMessage('Failed to update profile');
