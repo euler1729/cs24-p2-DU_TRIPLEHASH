@@ -77,7 +77,16 @@ class Users(Resource):
                 if exist_user:
                     return make_response(jsonify({'msg':'User Already Exists!'}), 409)
                 else:
-                    cursor.execute('INSERT INTO user (user_name, password, email, role_id, name, age, phone_number) VALUES (?,?,?,?,?,?,?)', (data['user_name'], generate_password_hash(data['password']), data['email'], data['role_id'], data['name'], data['age'], data['phone_number']))
+                    cursor.execute('INSERT INTO user (user_name, password, email, role_id, name, age, phone_number) VALUES (?,?,?,?,?,?,?)', 
+                    (
+                        data['user_name'], 
+                        generate_password_hash(data['password']), 
+                        data['email'], 
+                        data['role_id'], 
+                        data['name'], 
+                        data['age'], 
+                        data['phone_number']
+                    ))
                     conn.commit()
                 return make_response(jsonify({'msg':'User Created!'}), 201)
             return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)

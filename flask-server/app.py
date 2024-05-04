@@ -88,8 +88,6 @@ api.add_resource(Roles, '/users/roles')
 api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 api.add_resource(Profile, '/profile')
 
-api.add_resource(GetSTS, '/sts')
-
 # Route
 api.add_resource(GetRoute, '/route')
 api.add_resource(Fleet, '/sts/fleet')
@@ -112,6 +110,8 @@ api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
 # api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 
+# Get STS, Vehicle List, STS Vehicle List, STS List
+api.add_resource(GetSTS, '/sts')
 api.add_resource(GetAllData, '/data-entry/get-user-list')
 api.add_resource(GetAllVehicles, '/data-entry/get-vehicle-list')
 api.add_resource(GetSTSVehicleList, '/data-entry/get-sts-vehicle-list')
