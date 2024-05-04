@@ -45,10 +45,13 @@ class Profile(Resource):
         try:
             # get the user info from the token
             info = self.utils.getInfoFromToken(request)
+
+            # TODO: NEED TO IMPLEMENT DYNAMIC ROLE BASED ACCESS CONTROL
             if info:
-                user_id = info['sub']['user_id']
-                data = request.get_json()
+                # user_id = info['sub']['user_id']
                 role_id = info['sub']['role_id']
+                data = request.get_json()
+                user_id = data.get('user_id')
 
                 self.database.execute('SELECT * FROM user WHERE user_id = ?', (user_id, ))
                 exist_user = self.database.fetchone()
