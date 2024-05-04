@@ -15,6 +15,7 @@ class AddDumpEntry(Resource):
     def post(self):
         info = self.utils.getInfoFromToken(request)
 
+        # TODO: NEED TO IMPLEMENT DYNAMIC ROLE BASED ACCESS CONTROL
         if info and info['sub']['role_id'] == 3:
 
             data = request.get_json()

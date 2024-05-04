@@ -3,12 +3,20 @@ from flask_restful import Resource
 from flask import jsonify, request, make_response
 from TokenManager import decode_token
 
+# Own defined modules
+from database import Database
+from utils import Utils
+
 class AssignManager(Resource):
+    def __init__(self):
+        self.database = Database()
+        self.utils = Utils()
+    
     def put(self):
         try:
-            token = request.headers['Authorization'].split(' ')[1]
-            info = decode_token(token)
-
+            info = self.utils.getInfoFromToken(request)
+            
+            # TODO: NEED TO IMPLEMENT DYNAMIC ROLE BASED ACCESS CONTROL
             if info and info['sub']['role_id'] == 1:
                 data = request.get_json()
 

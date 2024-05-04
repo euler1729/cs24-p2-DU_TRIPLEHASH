@@ -4,7 +4,7 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 from TokenManager import decode_token
 
-class getSTS(Resource):
+class GetSTS(Resource):
     def get(self):
         try:
             
