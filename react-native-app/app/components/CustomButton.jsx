@@ -24,6 +24,7 @@ const CustomButton = ({
         >
             <Text
                 className={`
+                    justify-center
                     text-white 
                     font-psemibold 
                     text-sm
@@ -32,6 +33,7 @@ const CustomButton = ({
             >
                 {title}
             </Text>
+
         </TouchableOpacity>
     )
 }

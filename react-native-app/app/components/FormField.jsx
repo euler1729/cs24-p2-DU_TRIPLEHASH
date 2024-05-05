@@ -16,7 +16,7 @@ const FormField = ({
     return (
         <View
             className={`
-                space-y-2
+                space-y-0
                 ${otherStyles}
             `}
         >
@@ -36,7 +36,7 @@ const FormField = ({
                     border-greenAsh
                     w-full
                     rounded-2xl
-                    h-12
+                    h-10
                     px-4
                     bg-white
                     items-center
@@ -54,6 +54,7 @@ const FormField = ({
                         font-psemibold
                     `}
                     secureTextEntry={title === 'Password' && !showPassword}
+                    {...props}
                 />
                 {
                     title === 'Password' && (

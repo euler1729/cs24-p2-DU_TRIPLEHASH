@@ -32,9 +32,9 @@ const Login = () => {
         <View
           className={`
             justify-center
-            min-h-[85vh]
+            min-h-[80vh]
             w-full
-            px-4
+            px-6
             my-0
           `}
         >
@@ -54,79 +54,79 @@ const Login = () => {
           >
             Login to EcoSync
           </Text>
+          <View
+            className={`
+              border-2
+              p-4
+              rounded-2xl
+              border-greenTea
+            `}
+          >
+            <FormField
+              title='Email or Username'
+              value={form.user_name}
+              handleChangeText={(value) => setForm({ ...form, user_name: value })}
+              placeholder='Enter your email or username'
+              otherStyles='mt-6'
+              keyboardType='email-address'
+            />
+            <FormField
+              title='Password'
+              value={form.password}
+              handleChangeText={(value) => setForm({ ...form, password: value })}
+              placeholder='Enter at least 8 characters'
+              otherStyles='mt-6'
+            />
+            <CustomButton
+              title='Sign In'
+              handlePress={submitForm}
+              containerStyle='bg-greenTea mt-4'
+              textStyle=''
+              isLoading={isLoading}
+            />
 
-          <FormField
-            title='Email/Username'
-            value={form.user_name}
-            handleChangeText={(value) => setForm({ ...form, user_name: value })}
-            placeholder='Enter your email or username'
-            otherStyles='mt-6'
-            keyboardType='email-address'
-          />
-          <FormField
-            title='Password'
-            value={form.password}
-            handleChangeText={(value) => setForm({ ...form, password: value })}
-            placeholder='Enter at least 8 characters'
-            otherStyles='mt-6'
-          />
-          <CustomButton
-            title='Sign In'
-            handlePress={submitForm}
-            containerStyle='bg-greenTea mt-4'
-            textStyle='px-4 py-2'
-            isLoading={isLoading}
-          />
-
-          <View>
-            <Text
-              className={`
-                text-center
-                text-greenAsh
-                font-pmedium
-                mt-4
-              `}
-            >
-              Don't have an account?
-              <Link
-                href='/register'
+            <View>
+              <Text
                 className={`
-                  text-greenTea
-                  font-psemibold
+                  text-center
+                  text-greenAsh
+                  font-pmedium
+                  mt-4
                 `}
               >
-                {' '}Sign Up
-              </Link>
-            </Text>
-            <Text
-              className={`
-                text-center
-                text-greenAsh
-                font-pmedium
-                mt-0
-              `}
-            >
-              or
-            </Text>
-            <Text
-              className={`
-                text-center
-                text-greenAsh
-                font-pmedium
-                mt-0
-              `}
-            >
-              Forgot your password?
-              <Link
-                href='/reset-password'
+                Don't have an account?
+                <Link
+                  href='/register'
+                  className={`
+                    text-greenTea
+                    font-psemibold
+                    underline
+                  `}
+                >
+                  {' '}Sign Up
+                </Link>
+              </Text>
+              <Text
                 className={`
-                  text-greenTea
-                  font-psemibold
+                  text-center
+                  text-greenAsh
+                  font-pmedium
+                  mt-0
                 `}
               >
-                {' '}Reset Password
-              </Link>
-            </Text>
+                Forgot your password?
+                <Link
+                  href='/reset-password'
+                  className={`
+                    text-greenTea
+                    font-psemibold
+                    underline
+                  `}
+                >
+                  {' '}Reset Password
+                </Link>
+              </Text>
+            </View>
           </View>
 
         </View>

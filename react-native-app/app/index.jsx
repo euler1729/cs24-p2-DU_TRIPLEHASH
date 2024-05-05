@@ -10,9 +10,15 @@ import { Name, Colors } from '../assets/configs.json';
 
 // Components
 import CustomButton from './components/CustomButton';
+import { useEffect } from 'react';
 
 
 export default function App() {
+
+  useEffect(() => {
+  }, [])
+
+
   return (
     <SafeAreaView className="bg-greenWhite h-full">
       <ScrollView
