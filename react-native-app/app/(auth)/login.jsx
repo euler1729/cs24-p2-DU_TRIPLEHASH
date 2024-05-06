@@ -1,11 +1,14 @@
-import { View, Text, ScrollView, Image } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, ScrollView, Image } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link, Redirect, router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
 import { images } from '../../constants'
 import FormField from '../components/FormField'
 import CustomButton from '../components/CustomButton'
-import { Link } from 'expo-router'
+import {api, saveKey, getValueFor} from '../../constants/utils'
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const Login = () => {
 
@@ -15,9 +18,26 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState(false)
 
-  const submitForm = () => {
-    console.log('Form submitted')
+  const submitForm = async() => {
+    console.log(form)
     setIsLoading(true)
+    try {
+      const response = await api.post('/auth/login', form)
+      if(response){
+        if(response.status === 200){
+          await saveKey('access_token', response.data.access_token)
+          await saveKey('user', JSON.stringify(response.data.user))
+          router.push('/home')
+        }else{
+          alert('Invalid credentials')
+        }
+        setIsLoading(false)
+      }
+    } catch (error) {
+      alert('Invalid credentials')
+      console.log(error)
+      setIsLoading(false)
+    }
   }
 
 
