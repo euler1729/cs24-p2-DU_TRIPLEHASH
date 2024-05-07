@@ -6,9 +6,26 @@ import { icons, images } from '../../constants'
 
 const WorkerLayout = () => {
   return (
-    <View>
-      <Text>WorkerLayout</Text>
-    </View>
+   <>
+
+   {/* Worker Routes */}
+    <Stack>
+
+      <Stack.Screen
+        name='worker-dashboard'
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name='worker-profile'
+        options={{
+          headerShown: false
+        }}
+      />
+
+    </Stack>
+   </>
   )
 }
 

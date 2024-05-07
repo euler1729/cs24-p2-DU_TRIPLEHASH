@@ -6,9 +6,26 @@ import { icons, images } from '../../constants'
 
 const UserLayout = () => {
   return (
-    <View>
-      <Text>UserLayout</Text>
-    </View>
+   <>
+
+   {/* User Routes */}
+    <Stack>
+
+      <Stack.Screen
+        name='user-dashboard'
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name='user-profile'
+        options={{
+          headerShown: false
+        }}
+      />
+
+    </Stack>
+   </>
   )
 }
 

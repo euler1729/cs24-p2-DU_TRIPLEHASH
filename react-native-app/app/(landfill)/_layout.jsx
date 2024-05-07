@@ -6,9 +6,26 @@ import { icons, images } from '../../constants'
 
 const LandfillLayout = () => {
   return (
-    <View>
-      <Text>LandfillLayout</Text>
-    </View>
+   <>
+
+   {/* Admin Routes */}
+    <Stack>
+
+      <Stack.Screen
+        name='landfill-dashboard'
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name='landfill-profile'
+        options={{
+          headerShown: false
+        }}
+      />
+
+    </Stack>
+   </>
   )
 }
 

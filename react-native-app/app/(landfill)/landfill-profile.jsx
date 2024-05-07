@@ -15,7 +15,7 @@ const Profile = () => {
   return (
     <SafeAreaView>
         <View>
-            <Text>Profile</Text>
+            <Text>Lanfill Profile</Text>
             <CustomButton
               title='Logout'
               handlePress={async () => {
