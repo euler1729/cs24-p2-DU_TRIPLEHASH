@@ -1,11 +1,11 @@
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store'
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useState } from "react";
 
 const api = axios.create({
     // baseURL: "http://localhost:8000",
-    baseURL: 'http://192.168.0.103:8000'
+    baseURL: 'http://192.168.0.108:8000'
 });
 
 const saveKey = async (key, value) => {
@@ -35,7 +35,49 @@ const checkUser = async () => {
         }
     }
 }
-
+async function resetNavigation(role_id){
+    const navigation = useNavigation();
+    switch (role[role_id]) {
+        case 'admin':
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'admin-dashboard' }],
+            });
+            break;
+        case 'sts':
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'sts-dashboard' }],
+            });
+            break;
+        case 'landfill':
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'landfill-dashboard' }],
+            });
+            break;
+        case 'unassigned':
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'index' }],
+            });
+            break;
+        case 'user':
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'user-dashboard' }],
+            });
+            break;
+        case 'worker':
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'worker-dashboard' }],
+            });
+            break;
+        default:
+            break;
+    }
+}
 // Change route based on role_id
 async function changeRoute(role_id) {
     console.log('role_id, role: ', role_id, role[role_id]);
@@ -68,5 +110,6 @@ export {
     saveKey,
     getValueFor,
     checkUser,
-    changeRoute
+    changeRoute,
+    resetNavigation
 }

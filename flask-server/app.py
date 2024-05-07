@@ -9,6 +9,9 @@ import json
 from auth.Login import Login, Logout
 from auth.ChangePassword import ChangePassword
 from auth.ResetPassword import ResetPasswordInit, ResetPasswordConfirm
+from auth.Registration import Registration
+
+# User Management
 from manage_user_info.Users import Users
 from manage_user_info.UserDetails import UserDetails
 from manage_user_info.Roles import Roles
@@ -84,6 +87,7 @@ JWT = JWTManager(app)
 # auth
 api.add_resource(Login, '/auth/login')
 api.add_resource(Logout, '/auth/logout')
+api.add_resource(Registration, '/auth/register')
 api.add_resource(ChangePassword, '/auth/change-password')
 api.add_resource(ResetPasswordInit, '/auth/reset-password/init')
 api.add_resource(ResetPasswordConfirm, '/auth/reset-password/confirm')
