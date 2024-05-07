@@ -146,13 +146,13 @@ DROP TABLE IF EXISTS roles;
 CREATE TABLE roles(
     role_id INTEGER PRIMARY KEY,
     role_name TEXT,
-    role_description TEXT
+    role_desc TEXT
 );
-DROP TABLE if EXISTS permissions;
-CREATE TABLE permissions(
+DROP TABLE if EXISTS permission;
+CREATE TABLE permission(
     permission_id INTEGER PRIMARY KEY,
     permission_name TEXT,
-    permission_description TEXT
+    permission_desc TEXT
 );
 
 DROP TABLE if EXISTS roles_permissions;

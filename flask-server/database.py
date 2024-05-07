@@ -8,8 +8,11 @@ class Database():
     def close(self):
         self.conn.close()
 
-    def execute(self, query, params):
-        return self.cursor.execute(query, params)
+    def execute(self, query, params=None):
+        if params:
+            return self.cursor.execute(query, params)
+        else:
+            return self.cursor.execute(query)
 
     def fetchone(self):
         return self.cursor.fetchone()
