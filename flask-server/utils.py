@@ -11,13 +11,16 @@ class Utils():
             @return: info
         '''
         token = request.headers['Authorization'].split(' ')[1]
+        # print(token)
         try:
             with open('config.json', 'r') as f:
                 config = json.load(f)
                 key = config['KEY']
                 info = jwt.decode(token, key, algorithms=["HS256"])
+                print(info)
                 return info
         except Exception as e:
+            print(e)
             return None
     @staticmethod
     def hash_password(password):
