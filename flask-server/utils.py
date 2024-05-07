@@ -1,5 +1,6 @@
 import jwt
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Utils():
     @staticmethod
@@ -18,3 +19,20 @@ class Utils():
                 return info
         except Exception as e:
             return None
+    @staticmethod
+    def hash_password(password):
+        '''
+            Hash the password
+            @param: password
+            @return: hash
+        '''
+        return generate_password_hash(password)
+            
+    @staticmethod
+    def check_password_hash(hash, password):
+        '''
+            Check the password hash
+            @param: hash, password
+            @return: boolean
+        '''
+        return check_password_hash(hash, password)

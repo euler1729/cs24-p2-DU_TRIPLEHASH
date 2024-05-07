@@ -1,25 +1,39 @@
-import { View, Text, ScrollView, Image } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, ScrollView, Image } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link, router } from 'expo-router';
 
-import { images } from '../../constants'
-import FormField from '../components/FormField'
-import CustomButton from '../components/CustomButton'
-import { Link } from 'expo-router'
+import { images } from '../../constants';
+import FormField from '../components/FormField';
+import CustomButton from '../components/CustomButton';
+import { api } from '../../constants/utils';
 
 const Resigter = () => {
   const [form, setForm] = useState({
     name: '',
     email: '',
-    ward_number: '',
+    ward_number: 1,
     user_name: '',
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false)
 
   const submitForm = () => {
-    console.log('Form submitted')
     setIsLoading(true)
+    api.post('/auth/register', form)
+      .then((response) => {
+        setIsLoading(false)
+        if(response.status === 201) {
+          alert('Registration successful. Please login to continue.')
+          router.replace('/login')
+        }else {
+          alert('An error occurred. Please try again.')
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        console.log(error)
+      })
   }
 
 

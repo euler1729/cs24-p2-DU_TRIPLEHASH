@@ -10,6 +10,11 @@ CREATE TABLE user(
     phone_number TEXT
 );
 
+DROP TABLE IF EXISTS user_ward;
+CREATE TABLE user_ward(
+    user_id INTEGER,
+    ward_number INTEGER
+);
 
 DROP TABLE IF EXISTS role;
 CREATE TABLE role(
