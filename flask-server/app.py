@@ -9,12 +9,11 @@ import json
 from auth.Login import Login, Logout
 from auth.ChangePassword import ChangePassword
 from auth.ResetPassword import ResetPasswordInit, ResetPasswordConfirm
-from manageUser.Users import Users
-from manageUser.UserDetails import UserDetails
-from manageUser.Roles import Roles
-#from manageUser.UpdateRole import UpdateRole
-from manageUser.Profile import Profile
-from manageUser.getSTS import getSTS
+from manage_user_info.Users import Users
+from manage_user_info.UserDetails import UserDetails
+from manage_user_info.Roles import Roles
+#from manage_user_info.UpdateRole import UpdateRole
+from manage_user_info.Profile import Profile
 from trip.MakeTrip import MakeTrip
 
 #Trip

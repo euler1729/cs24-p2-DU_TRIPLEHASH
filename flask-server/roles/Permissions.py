@@ -5,7 +5,7 @@ from database import Database
 from utils import Utils
 
 
-class Permissions(Resource):
+class Permission(Resource):
 
     def __init__(self):
         self.database = Database()
