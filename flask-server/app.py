@@ -9,13 +9,13 @@ import json
 from auth.Login import Login, Logout
 from auth.ChangePassword import ChangePassword
 from auth.ResetPassword import ResetPasswordInit, ResetPasswordConfirm
-
-# User Info Management[Profile, Users, UserDetails, Roles, UpdateRole, getSTS]
-from manage_user_info.Users import Users
-from manage_user_info.UserDetails import UserDetails
-from manage_user_info.Roles import Roles
-from manage_user_info.UpdateRole import UpdateRole
-from manage_user_info.Profile import Profile
+from manageUser.Users import Users
+from manageUser.UserDetails import UserDetails
+from manageUser.Roles import Roles
+#from manageUser.UpdateRole import UpdateRole
+from manageUser.Profile import Profile
+from manageUser.getSTS import getSTS
+from trip.MakeTrip import MakeTrip
 
 #Trip
 from trip.MakeTrip import MakeTrip
@@ -47,6 +47,14 @@ from data_entry.STS import (
     GetAllSTS
 )
 from data_entry.GetUserList import GetAllData
+
+# Roles and permission
+from roles.Roles import Roles
+from roles.Permissions import Permission
+from roles.UserPermission import UserPermission
+from roles.RolePermission import RolePermission
+
+
 
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -84,8 +92,8 @@ api.add_resource(ResetPasswordConfirm, '/auth/reset-password/confirm')
 
 api.add_resource(Users, '/users')
 api.add_resource(UserDetails, '/users/<int:userId>')
-api.add_resource(Roles, '/users/roles')
-api.add_resource(UpdateRole, '/users/<int:userId>/roles')
+#api.add_resource(Roles, '/users/roles')
+#api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 api.add_resource(Profile, '/profile')
 
 # Route
@@ -97,6 +105,13 @@ api.add_resource(Trip, '/trip')
 api.add_resource(ActiveTrip, '/activetrip')
 api.add_resource(MakeTrip, '/maketrip')
 api.add_resource(STSVehicle, '/sts/vehicle')
+
+
+# Roles and permission
+api.add_resource(Roles, '/roles')
+api.add_resource(Permission, '/roles/permission')
+api.add_resource(UserPermission, '/permission/user/<int:userId>')
+api.add_resource(RolePermission, '/permission/role/<int:roleId>')
 
 
 

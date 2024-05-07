@@ -141,3 +141,33 @@ CREATE TABLE active_trip(
     FOREIGN KEY(trip_id) REFERENCES trips(trip_id),
     FOREIGN KEY(vehicle_id) REFERENCES vehicle(vehicle_id)
 );
+
+DROP TABLE IF EXISTS roles;
+CREATE TABLE roles(
+    role_id INTEGER PRIMARY KEY,
+    role_name TEXT,
+    role_description TEXT
+);
+DROP TABLE if EXISTS permissions;
+CREATE TABLE permissions(
+    permission_id INTEGER PRIMARY KEY,
+    permission_name TEXT,
+    permission_description TEXT
+);
+
+DROP TABLE if EXISTS roles_permissions;
+CREATE TABLE roles_permissions(
+    role_id INTEGER,
+    permission_id INTEGER,
+    FOREIGN KEY(role_id) REFERENCES roles(role_id),
+    FOREIGN KEY(permission_id) REFERENCES permissions(permission_id)
+);
+DROP TABLE IF EXISTS user_permissions;
+CREATE TABLE user_permissions(
+    user_id INTEGER,
+    permission_id INTEGER,
+    FOREIGN KEY(user_id) REFERENCES user(user_id),
+    FOREIGN KEY(permission_id) REFERENCES permissions(permission_id)
+);
+
+
