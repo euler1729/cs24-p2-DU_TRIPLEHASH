@@ -6,7 +6,7 @@ import { Link, Redirect, router } from 'expo-router';
 import { images } from '../../constants'
 import FormField from '../components/FormField'
 import CustomButton from '../components/CustomButton'
-import { api, saveKey, getValueFor, role } from '../../constants/utils'
+import { api, saveKey, getValueFor, role, changeRoute } from '../../constants/utils'
 
 const Login = () => {
 
@@ -23,9 +23,10 @@ const Login = () => {
       const response = await api.post('/auth/login', form)
       if (response) {
         if (response.status === 200) {
+          // console.log(response.data)
           await saveKey('access_token', response.data.access_token)
           await saveKey('user', JSON.stringify(response.data.user))
-          router.replace(`/${role[JSON.stringify(response.data.user.role_id)]}-dashboard`)
+          changeRoute(response.data.user.role_id);
         } else {
           alert('Invalid credentials')
         }

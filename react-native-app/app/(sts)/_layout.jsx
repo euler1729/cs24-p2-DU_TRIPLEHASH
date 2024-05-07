@@ -6,9 +6,22 @@ import { icons, images } from '../../constants'
 
 const STSLayout = () => {
   return (
-    <View>
-      <Text>STSLayout</Text>
-    </View>
+    <>
+      <Stack>
+        <Stack.Screen
+          name='sts-dashboard'
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen
+          name='sts-profile'
+          options={{
+            headerShown: false
+          }}
+        />
+      </Stack>
+    </>
   )
 }
 
