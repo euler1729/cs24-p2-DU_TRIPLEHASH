@@ -7,6 +7,7 @@ import { icons, images } from '../../constants'
 const AuthLayout = () => {
   return (
     <>
+      {/* Header */}
       <View
         className={`
           absolute
@@ -16,6 +17,7 @@ const AuthLayout = () => {
           w-full
         `}
       >
+        {/* Back Button */}
         <Link href='/'>
           <Image
             source={icons.leftArrow}
@@ -25,6 +27,8 @@ const AuthLayout = () => {
           {' '}
         </Link>
       </View>
+
+      {/* Auth Routes */}
       <Stack>
         <Stack.Screen
           name='login'
