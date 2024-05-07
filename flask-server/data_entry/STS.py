@@ -3,14 +3,45 @@ from flask_restful import Resource
 from flask import jsonify, request, make_response
 from TokenManager import decode_token
 
+# Own defined modules
+from database import Database
+from utils import Utils
+
 
 # For STS
 class CreateSTS(Resource):
-    def post(self):
-        token = request.headers['Authorization'].split(' ')[1]
-        info = decode_token(token)
+    def __init__(self):
+        self.database = Database()
+        self.utils = Utils()
 
-        # print(info)
+    def get(self):
+        try:
+            info = self.utils.getInfoFromToken(request)
+
+            # TODO: NEED TO IMPLEMENT DYNAMIC ROLE BASED ACCESS CONTROL
+            if info:
+                role_id = info['sub']['role_id']
+                user_id = info['sub']['user_id']
+                
+                if(role_id != 2):
+                    return make_response(jsonify({'msg':'You are not an sts Manager'}), 401)
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
+                cursor.execute('SELECT sts_id FROM sts_managers WHERE user_id = ?', (user_id,))
+                sts = cursor.fetchone()
+                cursor.execute('SELECT capacity_tonnes FROM sts WHERE sts_id = ?', (sts[0],))
+                waste = cursor.fetchone()
+                conn.commit()
+                return make_response(jsonify({"sts_id": sts[0], "waste" : waste[0], }), 201)
+            return make_response(jsonify({'msg':'Wrong Credentials!'}), 401)
+        except Exception as e:
+            return make_response(jsonify({'msg': e}), 401)
+    
+    # Creates a new STS site
+    def post(self):
+        info = self.utils.getInfoFromToken(request)
+
+        # @TODO: NEED TO IMPLEMENT DYNAMIC ROLE BASED ACCESS CONTROL
         if info and (info['sub']['role_id'] == 1 or info['sub']['role_id'] == 2):
             
             data = request.get_json()
@@ -48,8 +79,51 @@ class CreateSTS(Resource):
                 return make_response(jsonify({'error': 'Database error', 'details': str(e)}), 500)
         
         return make_response(jsonify({'msg':'Unauthorized access'}), 401)
+    
+    # Updates an existing STS site
+    def put(self, sts_id):
+        try:
+            info = self.utils.getInfoFromToken(request)
+
+            # @TODO: NEED TO IMPLEMENT DYNAMIC ROLE BASED ACCESS CONTROL
+            if info and (info['sub']['role_id'] == 1 or info['sub']['role_id'] == 2):
+                data = request.get_json()
+
+                # Check if STS exists
+                conn = sqlite3.connect('sqlite.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM sts WHERE sts_id = ?", (sts_id,))
+                existing_sts = cursor.fetchone()
+                
+                if not existing_sts:
+                    conn.close()
+                    return make_response(jsonify({'error': 'STS not found'}), 404)
+
+                # Check if ward number is being updated
+                if 'ward_number' in data:
+                    conn.close()
+                    return make_response(jsonify({'error': 'Ward number cannot be updated'}), 400)
+
+                # Update STS information
+                capacity_tonnes = data.get('capacity_tonnes', existing_sts[2])
+                gps_longitude = data.get('gps_longitude', existing_sts[3])
+                gps_latitude = data.get('gps_latitude', existing_sts[4])
+
+                cursor.execute("""UPDATE sts SET capacity_tonnes=?, 
+                                gps_longitude=?, gps_latitude=? WHERE sts_id=?""",
+                                (capacity_tonnes, gps_longitude, gps_latitude, sts_id))
+                conn.commit()
+                conn.close()
+
+                return make_response(jsonify({'msg': 'STS updated successfully'}), 200)
+
+            return make_response(jsonify({'msg': 'Unauthorized access'}), 401)
+
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 500)
 
 
+# @TODO: NEED Erase this class
 class UpdateSTS(Resource):
     def put(self, sts_id):
         try:

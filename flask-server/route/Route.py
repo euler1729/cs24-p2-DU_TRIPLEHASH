@@ -14,7 +14,7 @@ class Route():
         self.steps = None
         self.status_code = None
     def getRoute(self, origin, destination):
-        print(origin, destination)
+        # print(origin, destination)
         params = {
             'origin': origin,
             'destination': destination,

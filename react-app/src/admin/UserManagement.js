@@ -409,7 +409,11 @@ const UserComponent = () => {
                                     className={classes.textField}
                                   />
                                 ) : (
-                                  <span style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'blue', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => switchPage(user.user_id)}>{user.user_name}</span>
+                                  <span
+                                    style={{ color: self?.user_id === user.user_id ? EcoSyncBrand.Colors.green : 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                                    onClick={() => switchPage(user.user_id)}>
+                                    {user.user_name}
+                                  </span>
                                 )}
                               </TableCell>
                               <TableCell>
