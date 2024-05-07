@@ -31,6 +31,7 @@ const checkUser = async () => {
         if (userInfo) {
             const user = JSON.parse(userInfo);
             await changeRoute(user.role_id);
+            return user;
         }
     }
 }
