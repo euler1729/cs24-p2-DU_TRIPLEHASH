@@ -11,7 +11,7 @@ import { Name, Colors } from '../assets/configs.json';
 // Components
 import CustomButton from './components/CustomButton';
 import { useEffect, useState } from 'react';
-import { getValueFor } from '../constants/utils';
+import { getValueFor, checkUser } from '../constants/utils';
 
 
 export default function App() {
@@ -29,45 +29,45 @@ export default function App() {
     if (!user) checkUser();
   }, [user]);
 
-  // Check if user is logged in
-  const checkUser = async () => {
-    const access_token = await getValueFor('access_token');
-    if (access_token) {
-      const userInfo = await getValueFor('user');
-      if(userInfo) {
-        const user = JSON.parse(userInfo);
-        setUser(userInfo);
-        await changeRoute(user.role_id);
-      }
-    }
-  }
+  // // Check if user is logged in
+  // const checkUser = async () => {
+  //   const access_token = await getValueFor('access_token');
+  //   if (access_token) {
+  //     const userInfo = await getValueFor('user');
+  //     if(userInfo) {
+  //       const user = JSON.parse(userInfo);
+  //       setUser(userInfo);
+  //       await changeRoute(user.role_id);
+  //     }
+  //   }
+  // }
 
-  // Change route based on role_id
-  async function changeRoute(role_id) {
-    console.log('role_id', role_id); 
-    switch (role[role_id]) {
-      case 'admin':
-        router.replace('/admin-dashboard');
-        break;
-      case 'sts':
-        router.replace('/sts-dashboard');
-        break;
-      case 'landfill':
-        router.replace('/landfill-dashboard');
-        break;
-      case 'unassigned':
-        router.replace('/');
-        break;
-      case 'user':
-        router.replace('/user-dashboard');
-        break;
-      case 'worker':
-        router.replace('/worker-dashboard');
-        break;
-      default:
-        break;
-    }
-  }
+  // // Change route based on role_id
+  // async function changeRoute(role_id) {
+  //   console.log('role_id, role: ', role_id, role[role_id]); 
+  //   switch (role[role_id]) {
+  //     case 'admin':
+  //       router.replace('/admin-dashboard');
+  //       break;
+  //     case 'sts':
+  //       router.replace('/sts-dashboard');
+  //       break;
+  //     case 'landfill':
+  //       router.replace('/landfill-dashboard');
+  //       break;
+  //     case 'unassigned':
+  //       router.replace('/');
+  //       break;
+  //     case 'user':
+  //       router.replace('/user-dashboard');
+  //       break;
+  //     case 'worker':
+  //       router.replace('/worker-dashboard');
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
 
 
   return (
