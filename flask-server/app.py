@@ -111,9 +111,9 @@ api.add_resource(STSVehicle, '/sts/vehicle')
 
 
 # Roles and permission
-api.add_resource(Roles, '/roles')
-api.add_resource(Permission, '/roles/permission')
-api.add_resource(UserPermission, '/permission/user/<int:userId>')
+api.add_resource(Roles, '/roles', '/roles/<int:role_id>')
+api.add_resource(Permission, '/permission', '/permission/<int:permission_id>','/roles/permission')
+api.add_resource(UserPermission, '/permission', '/permission/user/<int:userId>')
 api.add_resource(RolePermission, '/permission/role/<int:roleId>')
 
 
