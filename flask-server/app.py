@@ -18,24 +18,34 @@ from manageUser.getSTS import getSTS
 from trip.MakeTrip import MakeTrip
 
 #Trip
-
+from trip.MakeTrip import MakeTrip
 from trip.Trip import Trip
 from trip.ActiveTrip import ActiveTrip
 
 # Route
-from route.getRoute import GetRoute
+from route.GetRoute import GetRoute
 from route.Fleet import Fleet
 from route.STSVehicle import STSVehicle
 
 # Data entry
 from data_entry.AddDumpEntry import AddDumpEntry
 from data_entry.AddSTSVehicleEntry import AddSTSVehicleEntry
-from data_entry.Vehicle import *
+from data_entry.Vehicle import (
+    AddVehicle,
+    UpdateVehicle,
+    DeleteVehicle,
+    GetAllVehicles
+)
 from data_entry.AssignManager import AssignManager
 from data_entry.AssignSTSVehicles import AssignSTSVehicles
+from data_entry.GetSTS import GetSTS
 from data_entry.LandfillSite import CreateLandfillSite
-from data_entry.STS import *
-
+from data_entry.STS import (
+    CreateSTS,
+    UpdateSTS,
+    GetSTSVehicleList,
+    GetAllSTS
+)
 from data_entry.GetUserList import GetAllData
 
 # Roles and permission
@@ -86,8 +96,6 @@ api.add_resource(UserDetails, '/users/<int:userId>')
 #api.add_resource(UpdateRole, '/users/<int:userId>/roles')
 api.add_resource(Profile, '/profile')
 
-api.add_resource(getSTS, '/sts')
-
 # Route
 api.add_resource(GetRoute, '/route')
 api.add_resource(Fleet, '/sts/fleet')
@@ -117,6 +125,8 @@ api.add_resource(CreateLandfillSite, '/data-entry/create-landfill-site')
 # api.add_resource(AssignLandfillManagers, '/data-entry/assign-landfill-managers')
 api.add_resource(AddDumpEntry, '/data-entry/add-dump-entry')
 
+# Get STS, Vehicle List, STS Vehicle List, STS List
+api.add_resource(GetSTS, '/sts')
 api.add_resource(GetAllData, '/data-entry/get-user-list')
 api.add_resource(GetAllVehicles, '/data-entry/get-vehicle-list')
 api.add_resource(GetSTSVehicleList, '/data-entry/get-sts-vehicle-list')

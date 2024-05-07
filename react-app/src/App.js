@@ -7,9 +7,11 @@ import LandingPage from './public/LandingPage';
 import LoginPage from './auth/Login';
 import ForgotPasswordPage from './auth/ForgotPassword';
 import ResetPasswordPage from './auth/ResetPassword';
-import AdminDashboard from './admin/AdminDash';
-import STSManagerDashboard from './sts_mang/StsDash';
-import LandfillManagerDashboard from './landfil_mang/LandfillDash';
+
+// Dashboards
+import AdminDashboard from './admin/AdminDashboard';
+import STSManagerDashboard from './sts_manager/STSDashboard';
+import LandfillManagerDashboard from './landfill_manager/LandfillDashboard';
 
 
 function App() {
