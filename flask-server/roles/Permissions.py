@@ -53,8 +53,8 @@ class Permission(Resource):
                 for r in permission:
                     permission = {
                         "permission_id": permission_id,
-                        "permission_name": permission[1],
-                        "permission_desc": permission[2],
+                        "permission_name": r[1],
+                        "permission_desc": r[2],
                     }
                     res.append(permission)
                 return make_response(jsonify({"permission": res}), 200)
