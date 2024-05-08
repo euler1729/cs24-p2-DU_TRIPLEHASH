@@ -151,28 +151,28 @@ DROP TABLE IF EXISTS roles;
 CREATE TABLE roles(
     role_id INTEGER PRIMARY KEY,
     role_name TEXT,
-    role_description TEXT
+    role_desc TEXT
 );
-DROP TABLE if EXISTS permissions;
-CREATE TABLE permissions(
+DROP TABLE if EXISTS permission;
+CREATE TABLE permission(
     permission_id INTEGER PRIMARY KEY,
     permission_name TEXT,
-    permission_description TEXT
+    permission_desc TEXT
 );
 
-DROP TABLE if EXISTS roles_permissions;
-CREATE TABLE roles_permissions(
+DROP TABLE if EXISTS roles_permission;
+CREATE TABLE role_permission(
     role_id INTEGER,
     permission_id INTEGER,
     FOREIGN KEY(role_id) REFERENCES roles(role_id),
-    FOREIGN KEY(permission_id) REFERENCES permissions(permission_id)
+    FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
-DROP TABLE IF EXISTS user_permissions;
-CREATE TABLE user_permissions(
+DROP TABLE IF EXISTS user_permission;
+CREATE TABLE user_permission(
     user_id INTEGER,
     permission_id INTEGER,
     FOREIGN KEY(user_id) REFERENCES user(user_id),
-    FOREIGN KEY(permission_id) REFERENCES permissions(permission_id)
+    FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
 
 
