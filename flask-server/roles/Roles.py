@@ -17,14 +17,13 @@ class Roles(Resource):
             if info:
                 data = request.get_json()
                 role_name = data['role_name']
-                role_desc = data['role_desc']
                 self.database.execute(
-                    'SELECT role_name from roles where role_name = ? ', (role_name,))
+                    'SELECT role_name from role where role_name = ? ', (role_name,))
                 role = self.database.fetchone()
                 if role:
                     return make_response(jsonify({'msg': 'This role already exists'}))
                 self.database.execute(
-                    'INSERT INTO roles (role_name, role_desc) VALUES (?, ?)', (role_name, role_desc))
+                    'INSERT INTO role (role_name) VALUES (?)', (role_name, ))
                 self.database.commit()
                 self.database.close()
                 return make_response(jsonify({'msg': 'Role Created!'}), 201)
@@ -38,23 +37,22 @@ class Roles(Resource):
             if info:
                 if role_id:
                     self.database.execute(
-                        'SELECT * from roles WHERE role_id = ? ', (role_id, ))
+                        'SELECT * from role WHERE role_id = ? ', (role_id, ))
                     role = self.database.fetchone()
                     role = {
                         "role_id": role_id,
                         "role_name": role[1],
-                        "role_desc": role[2],
                     }
                     return make_response(jsonify({"role": role}), 200)
 
-                self.database.execute('SELECT * FROM roles ')
+                self.database.execute('SELECT * FROM role ')
                 roles = self.database.fetchall()
                 res = []
+                print(roles)
                 for r in roles:
                     role = {
-                        "role_id": role_id,
-                        "role_name": role[1],
-                        "role_desc": role[2],
+                        "role_id": r[0],
+                        "role_name": r[1],
                     }
                     res.append(role)
                 return make_response(jsonify({"roles": res}), 200)
@@ -70,9 +68,8 @@ class Roles(Resource):
                     return make_response(jsonify({'msg': 'No role id is given'}))
                 data = request.get_json()
                 role_name = data['role_name']
-                role_desc = data['role_desc']
                 self.database.execute(
-                    'UPDATE roles SET role_name = ?, role_desc = ? WHERE role_id = ? ', (role_name, role_desc, role_id))
+                    'UPDATE role SET role_name = ? WHERE role_id = ? ', (role_name, role_id))
                 self.database.commit()
                 self.database.close()
                 return make_response(jsonify({'msg': 'Role is updated sucessfully'}), 200)
@@ -86,7 +83,7 @@ class Roles(Resource):
         try:
             if info:
                 self.database.execute(
-                    'DELETE FROM roles where role_id = ?', (role_id,))
+                    'DELETE FROM role where role_id = ?', (role_id,))
                 self.database.commit()
                 self.database.close()
                 return make_response(jsonify({'msg': 'Role is deleted successfully'}))
