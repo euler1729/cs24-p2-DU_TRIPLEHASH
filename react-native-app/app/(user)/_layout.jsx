@@ -47,6 +47,8 @@ const CustomDrawerComponent = (...props) => {
           />
 
         </View>
+
+
         <DrawerItem
           label={'Community'}
           labelStyle={{
@@ -65,6 +67,7 @@ const CustomDrawerComponent = (...props) => {
             <MaterialIcons name="handshake" size={24} color={Colors.greenLight} />
           )}
         />
+
         <DrawerItem
           label={'Nearby Facilities'}
           onPress={() =>
@@ -78,6 +81,39 @@ const CustomDrawerComponent = (...props) => {
           }}
           icon={() => (
             <MaterialIcons name="near-me" size={24} color={Colors.greenLight} />
+          )}
+        />
+
+        <DrawerItem
+          label={'Task'}
+          onPress={() =>
+            router.push('user-task')
+          }
+          labelStyle={{
+            color: pathname === '/user-task' ? Colors.greenLight : Colors.black,
+            fontWeight: 'bold',
+            fontSize: 16,
+            marginLeft: -16
+          }}
+          icon={() => (
+            <MaterialIcons name="task" size={24} color={Colors.greenLight} />
+          )}
+        />
+
+
+        <DrawerItem
+          label={'Reward'}
+          onPress={() =>
+            router.push('user-reward')
+          }
+          labelStyle={{
+            color: pathname === '/user-reward' ? Colors.greenLight : Colors.black,
+            fontWeight: 'bold',
+            fontSize: 16,
+            marginLeft: -16
+          }}
+          icon={() => (
+            <MaterialIcons name="card-giftcard" size={24} color={Colors.greenLight} />
           )}
         />
 
@@ -96,6 +132,7 @@ const CustomDrawerComponent = (...props) => {
             <MaterialIcons name="report" size={24} color={Colors.greenLight} />
           )}
         />
+
         <DrawerItem
           label={'Volunteer'}
           onPress={() =>
@@ -111,7 +148,9 @@ const CustomDrawerComponent = (...props) => {
             <MaterialIcons name="volunteer-activism" size={24} color={Colors.greenLight} />
           )}
         />
-          <DrawerItem
+
+        
+        <DrawerItem
           label={'Profile'}
           onPress={() =>
             router.push('user-profile')
