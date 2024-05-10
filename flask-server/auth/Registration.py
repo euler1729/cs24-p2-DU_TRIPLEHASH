@@ -56,4 +56,5 @@ class Registration(Resource):
                 self.database.commit()
                 return make_response(jsonify({'msg':'registered successfully'}), 201)
         except Exception as e:
+            print(e)
             return make_response(jsonify({'msg': e}), 401)
