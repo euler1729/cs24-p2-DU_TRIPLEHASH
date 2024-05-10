@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker, Callout, Polyline, Circle } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, View, TextInput, Button, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, View, TextInput, Button, Text, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '../../assets/configs.json';
 import { useNavigation } from 'expo-router';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 
 const Nearby = () => {
     const navigation = useNavigation();
@@ -50,6 +52,16 @@ const Nearby = () => {
     };
 
     const getCurrentLocation = async () => {
+        // Check if location permission is granted
+        // const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        const { status } = await Location.requestForegroundPermissionsAsync();
+
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'Location permission is required to access your current location.');
+            return;
+        }
+
+        // Get current location
         try {
             const { coords } = await Location.getCurrentPositionAsync({});
             setCurrentLocation(coords);
@@ -93,10 +105,9 @@ const Nearby = () => {
                             title={index === 0 ? 'Start' : 'End'}
                         >
                             <Callout>
-                                <View>
-                                    <Text>## Markdown Content</Text>
-                                    <Text>**Title**: Your Title</Text>
-                                    <Text>**Description**: Your Description</Text>
+                                <View className='flex-col'>
+                                    <Text className='font-pmedium'>Dust Bean</Text>
+                                    <Text>Description: Bean for collecting dry waste</Text>
                                     <Text>[Link](https://example.com)</Text>
                                 </View>
                             </Callout>
