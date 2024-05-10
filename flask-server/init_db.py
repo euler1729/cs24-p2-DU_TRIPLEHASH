@@ -17,5 +17,9 @@ if __name__ == "__main__":
     cursor.execute("INSERT INTO role (role_name) VALUES ('user')")
     cursor.execute("INSERT INTO user (user_name, email, password, role_id, name) VALUES (?, ?, ?, ?, ?)",
         ('admin', '2019-917-803@student.cse.du.ac.bd', hash, 1, 'Mahmudul Hasan'))
+    cursor.execute("INSERT INTO user (user_name, email, password, role_id, name) VALUES (?, ?, ?, ?, ?)",
+        ('cm', 'cm@gmail.com', hash, 7, 'Mahmudul Hasan'))
+    cursor.execute("INSERT INTO user (user_name, email, password, role_id, name) VALUES (?, ?, ?, ?, ?)",
+        ('sts', '2019-917-803@student.cse.du.ac.bd', hash, 2, 'Mahmudul Hasan'))
     conn.commit()
     conn.close()

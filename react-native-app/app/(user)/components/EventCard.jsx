@@ -5,10 +5,9 @@ import { Colors } from '../../../assets/configs.json';
 
 const EventCard = ({ event }) => {
     const { title, image, date } = event;
-
     useEffect(() => {
         // console.log(title, image, date);
-    }, []);
+    }, [title, image, date]);
 
     return (
         <TouchableOpacity style={styles.card}>

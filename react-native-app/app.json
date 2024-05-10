@@ -37,7 +37,8 @@
       "expo-router",
       "expo-secure-store",
       "expo-image-picker",
-      "expo-location"
+      "expo-location",
+      "expo-notifications"
     ],
     "extra": {
       "router": {

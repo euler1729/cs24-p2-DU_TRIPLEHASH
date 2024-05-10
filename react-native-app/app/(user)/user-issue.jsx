@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButton';
 import { Colors } from '../../assets/configs.json'
 import FormField from '../components/FormField';
+import { grantGalleryPermission } from './components/CameraPermission';
 
 const ReportIssue = () => {
     const navigation = useNavigation();
@@ -22,16 +23,7 @@ const ReportIssue = () => {
         });
     }, []);
 
-    const grantGalleryPermission = async () => {
-        if (Platform.OS === 'ios') return true;
-        const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-        const hasPermission = await PermissionsAndroid.check(permission);
-        if (hasPermission) {
-            return true;
-        }
-        const status = await PermissionsAndroid.request(permission);
-        return status === 'granted';
-    }
+    
 
     const pickImage = async () => {
         try {

@@ -1,61 +1,113 @@
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker, Callout, Polyline, Circle } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, View, TextInput, Button, Text, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Text, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '../../assets/configs.json';
 import { useNavigation } from 'expo-router';
 import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
+const apiKey = 'AIzaSyB1HyhM-zUAmxq3USoPS-qb2MmJu1pUu70';
+
+const fetchRouteCoordinates = async (source, target) => {
+    try {
+        console.log(source, target)
+        const response = await fetch(
+            `https://maps.googleapis.com/maps/api/directions/json?origin=${source.latitude},${source.longitude}&destination=${target.latitude},${target.longitude}&key=${apiKey}`
+        );
+        const data = await response.json();
+        if (data.status === 'OK') {
+            // Extract route coordinates from the response
+            const routeCoordinates = decodePolyline(data.routes[0].overview_polyline.points);
+            // console.log(routeCoordinates)
+            return routeCoordinates;
+        } else {
+            console.error('Error fetching route:', data.status);
+        }
+    } catch (error) {
+        console.error('Error fetching route coordinates:', error);
+    }
+};
+
+const decodePolyline = (encoded) => {
+    let index = 0;
+    const len = encoded.length;
+    const coordinates = [];
+    let lat = 0;
+    let lng = 0;
+
+    while (index < len) {
+        let b;
+        let shift = 0;
+        let result = 0;
+        do {
+            b = encoded.charCodeAt(index++) - 63;
+            result |= (b & 0x1f) << shift;
+            shift += 5;
+        } while (b >= 0x20);
+        const dlat = (result & 1) !== 0 ? ~(result >> 1) : result >> 1;
+        lat += dlat;
+
+        shift = 0;
+        result = 0;
+        do {
+            b = encoded.charCodeAt(index++) - 63;
+            result |= (b & 0x1f) << shift;
+            shift += 5;
+        } while (b >= 0x20);
+        const dlng = (result & 1) !== 0 ? ~(result >> 1) : result >> 1;
+        lng += dlng;
+
+        coordinates.push({ latitude: lat / 1e5, longitude: lng / 1e5 });
+    }
+
+    return coordinates;
+};
+
+const generateRandomCoordinates = (count, center, radius) => {
+    const coordinates = [];
+    for (let i = 0; i < count; i++) {
+        const y0 = center.latitude;
+        const x0 = center.longitude;
+        const u = Math.random();
+        const v = Math.random();
+        const w = radius * Math.sqrt(u);
+        const t = 2 * Math.PI * v;
+        const x = w * Math.cos(t);
+        const y = w * Math.sin(t);
+        const xp = x / Math.cos(y0);
+        const newlat = y + y0;
+        const newlon = x + x0;
+        coordinates.push({ latitude: newlat, longitude: newlon });
+    }
+    return coordinates;
+};
+
+
 
 const Nearby = () => {
     const navigation = useNavigation();
     const [coordinates, setCoordinates] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResult, setSearchResult] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState(null);
+    const [currentLocation, setCurrentLocation] = useState({
+        latitude: 23.8103,
+        longitude: 90.4125,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    });
+    const [markers, setMarkers] = useState(generateRandomCoordinates(10, currentLocation, 0.1));
+
+    const [destination, setDestination] = useState(null);
 
     useEffect(() => {
         navigation.setOptions({
             title: 'Nearby Facilities'
         });
-
-        // Fetch route coordinates here
-        fetchRouteCoordinates();
-
-        // Generate random nearby markers
-        generateRandomMarkers();
-
-        // Fetch current location
         getCurrentLocation();
-    }, []);
+    }, [coordinates]);
 
-    const fetchRouteCoordinates = () => {
-        // Make API call to get route coordinates
-        // Replace these mock coordinates with actual API call
-        const routeCoordinates = [
-            { latitude: 23.8103, longitude: 90.4125 },
-            { latitude: 23.8107, longitude: 90.4115 }, // Sample destination coordinates
-        ];
-
-        setCoordinates(routeCoordinates);
-    };
-
-    const generateRandomMarkers = () => {
-        // Generate random markers near the initial location
-        const randomMarkers = Array.from({ length: 5 }, () => ({
-            latitude: 23.8103 + (Math.random() - 0.5) * 0.1,
-            longitude: 90.4125 + (Math.random() - 0.5) * 0.1,
-        }));
-
-        // Update the state with the random markers
-        setCoordinates((prevCoordinates) => [...prevCoordinates, ...randomMarkers]);
-    };
 
     const getCurrentLocation = async () => {
-        // Check if location permission is granted
-        // const { status } = await Permissions.askAsync(Permissions.LOCATION);
         const { status } = await Location.requestForegroundPermissionsAsync();
-
         if (status !== 'granted') {
             Alert.alert('Permission Denied', 'Location permission is required to access your current location.');
             return;
@@ -69,6 +121,11 @@ const Nearby = () => {
             console.error('Error getting current location:', error);
         }
     };
+
+    const showRoute = async(destination)=>{
+        setCoordinates(await fetchRouteCoordinates(currentLocation, destination));
+    }
+
 
     const handleSearch = async () => {
         try {
@@ -89,37 +146,38 @@ const Nearby = () => {
             <View style={styles.container}>
                 <MapView
                     style={styles.map}
-                    initialRegion={{
-                        latitude: 23.8103,
-                        longitude: 90.4125,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
+                    initialRegion={
+                        currentLocation
+                    }
                     showsUserLocation={true}
                 >
                     {/* Render markers for start and end points */}
-                    {coordinates.map((coord, index) => (
+                    {markers.map((coord, index) => (
                         <Marker
                             key={index}
                             coordinate={coord}
                             title={index === 0 ? 'Start' : 'End'}
+                            onPress={()=>{
+                                showRoute(coord)
+                            }}  
                         >
                             <Callout>
                                 <View className='flex-col'>
                                     <Text className='font-pmedium'>Dust Bean</Text>
                                     <Text>Description: Bean for collecting dry waste</Text>
-                                    <Text>[Link](https://example.com)</Text>
                                 </View>
                             </Callout>
                         </Marker>
                     ))}
 
                     {/* Render polyline for route */}
-                    {/* <Polyline
-                        coordinates={coordinates}
-                        strokeColor="#000"
-                        strokeWidth={4}
-                    /> */}
+                    {coordinates &&
+                        <Polyline
+                            coordinates={coordinates}
+                            strokeColor='green'
+                            strokeWidth={4}
+                        />
+                    }
 
                     {/* Render circle for current location */}
                     {currentLocation && (
@@ -136,7 +194,7 @@ const Nearby = () => {
                         style={styles.input}
                         value={searchQuery}
                         onChangeText={setSearchQuery}
-                        placeholder="Search location"
+                        placeholder="Search Location"
                     />
                     <Button title="Search" onPress={handleSearch} />
                 </View>
@@ -160,7 +218,7 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         position: 'absolute',
-        top: 20,
+        top: '80%',
         left: 20,
         right: 20,
         flexDirection: 'row',
@@ -169,6 +227,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 8,
         elevation: 3,
+
     },
     input: {
         flex: 1,

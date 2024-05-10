@@ -59,12 +59,7 @@ from roles.RolePermission import RolePermission
 # CM and employee
 
 from contractor.Employee import Employee
-
-# Third party contractor
-from domestic_waste.ThirdPartyContractor import ThirdPartyContractor
-
-# Contractor manager
-from domestic_waste.ContractorManager import ContractorManager
+from contractor.Collection import Collection
 
 
 # Community Posts
