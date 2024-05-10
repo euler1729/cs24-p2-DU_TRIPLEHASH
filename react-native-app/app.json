@@ -5,12 +5,14 @@
     "scheme": "ecosync",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/brand/logo.png",
+    "icon": "./assets/brand/logo_gif.gif",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/brand/logo_gif.gif",
+      "image": "./assets/brand/logo_with_name.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ddebe7",
+      "imageBackgroundTransparent": true,
+      "title": "EcoSync"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -23,9 +25,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/brand/logo.png",
+        "foregroundImage": "./assets/brand/logo_gif.gif",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.dncc.ecosync"
     },
     "web": {
       "favicon": "./assets/brand/logogif.ico"
@@ -33,6 +36,14 @@
     "plugins": [
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d7822320-c5bf-46a5-8865-05e768bc3285"
+      }
+    }
   }
 }

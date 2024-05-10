@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, Image } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Link, router } from 'expo-router'
 
 
 import { images } from '../../constants'
 import FormField from '../components/FormField'
 import CustomButton from '../components/CustomButton'
-import { Link, router } from 'expo-router'
-
+import { api } from '../../constants/utils'
 
 const ResetPassword = () => {
   const [form, setForm] = useState({
@@ -16,10 +16,26 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const submitForm = () => {
-    console.log('Form submitted')
-    setIsLoading(true)
-    if (true) {
-      router.push('reset-password-confirm')
+    if (!form.user_name) {
+      alert('Field is required')
+      return
+    }
+    try {
+      setIsLoading(true)
+      api.post('/auth/reset-password/init', form)
+        .then(response => {
+          if (response.status === 200) {
+            alert('Password reset link sent to your email')
+            router.push('/reset-password-confirm')
+          } else {
+            alert('Invalid credentials')
+          }
+          setIsLoading(false)
+        })
+    }catch(error){
+      alert('Invalid credentials')
+      console.log(error)
+      setIsLoading(false)
     }
   }
 

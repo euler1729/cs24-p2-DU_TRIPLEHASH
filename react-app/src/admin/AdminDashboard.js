@@ -33,6 +33,8 @@ import CreateLandfill from './CreateLandfill';
 import AssignManager from './AssignManager';
 import AssignVehicle from './AssignVehicle';
 import StatisticsPage from './Stats';
+import CreateCompany from './CreateCompany';
+import ContractorManagerCreation from './ContractorManagerCreation';
 
 const drawerWidth = 260;
 
@@ -151,6 +153,10 @@ function AdminDashboard() {
         return <AssignManager />;
       case 'assignVehicle':
         return <AssignVehicle />;
+      case 'createCompany':
+        return <CreateCompany/>
+      case 'ContractorManagerCreation':
+        return <ContractorManagerCreation/>
 
 
       // Add cases for other options
@@ -199,6 +205,14 @@ function AdminDashboard() {
                     <ListItem className={classes.nested} button onClick={() => handleOptionClick('createUser')}>
                       <ListItemIcon><PersonAdd /></ListItemIcon>
                       <ListItemText primary="Create New User" />
+                    </ListItem>
+                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('createCompany')}>
+                      <ListItemIcon><PersonAdd /></ListItemIcon>
+                      <ListItemText primary="Create Company" />
+                    </ListItem>
+                    <ListItem className={classes.nested} button onClick={() => handleOptionClick('ContractorManagerCreation')}>
+                      <ListItemIcon><PersonAdd /></ListItemIcon>
+                      <ListItemText primary="Create Contractor Manager" />
                     </ListItem>
                     <ListItem className={classes.nested} button onClick={() => handleOptionClick('createLandfill')}>
                       <ListItemIcon>

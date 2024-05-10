@@ -1,27 +1,55 @@
 import { View, Text, ScrollView, Image } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Link, router } from 'expo-router'
 
 
 import { images } from '../../constants'
 import FormField from '../components/FormField'
 import CustomButton from '../components/CustomButton'
-import { Link, router } from 'expo-router'
+import { api } from '../../constants/utils'
+
 
 const ResetPasswordConfirm = () => {
   const [form, setForm] = useState({
     user_name: '',
-    password: '',
+    new_password: '',
     confirm_password: '',
     otp: ''
   });
   const [isLoading, setIsLoading] = useState(false)
 
+  const validateForm = () => {
+    if (!form.user_name || !form.new_password || !form.confirm_password || !form.otp) {
+      alert('All fields are required')
+      return false
+    }
+    if (form.new_password !== form.confirm_password) {
+      alert('Passwords do not match')
+      return false
+    }
+    return true
+  }
+  
+
   const submitForm = () => {
-    console.log('Form submitted')
-    setIsLoading(true)
-    if (true) {
-      router.push('/')
+    if (!validateForm()) return;
+    try {
+      setIsLoading(true)
+      api.post('/auth/reset-password/confirm', form)
+        .then(response => {
+          if (response.status === 200) {
+            alert('Password reset successful')
+            router.replace('/login')
+          } else {
+            alert('OTP may be invalid or expired')
+          }
+          setIsLoading(false)
+        })
+    } catch (error) {
+      alert('Invalid credentials')
+      console.log(error)
+      setIsLoading(false)
     }
   }
 
@@ -77,8 +105,8 @@ const ResetPasswordConfirm = () => {
             />
             <FormField
               title='Password'
-              value={form.password}
-              handleChangeText={(value) => setForm({ ...form, password: value })}
+              value={form.new_password}
+              handleChangeText={(value) => setForm({ ...form, new_password: value })}
               placeholder='Enter at least 8 characters'
               otherStyles='mt-3'
             />
