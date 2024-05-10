@@ -53,11 +53,11 @@ const FormField = ({
                         text-base
                         font-psemibold
                     `}
-                    secureTextEntry={title === 'Password' && !showPassword}
+                    secureTextEntry={(title === 'Password' || title==='Confirm Password')  && !showPassword}
                     {...props}
                 />
                 {
-                    title === 'Password' && (
+                    (title === 'Password' || title==='Confirm Password') && (
                         <TouchableOpacity
                             onPress={() => setShowPassword(!showPassword)}
                         >

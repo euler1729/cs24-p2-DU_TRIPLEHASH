@@ -1,27 +1,9 @@
-import { View, Text, Image } from 'react-native';
 import React from 'react';
-import { Tabs, Redirect } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { icons } from '../../constants';
 import { Colors } from '../../assets/configs.json'
+import TabIcon from '../components/TabIcon';
 
-const TabIcon = ({ icon, color, name, focused }) => {
-    return (
-        <View className='items-center justify-center'>
-            <Image
-                source={icon}
-                resizeMode='contain'
-                tintColor={color}
-                className={`w-6 h-6 ${focused ? 'tint-primary' : 'tint-secondary'}`}
-            />
-            <Text
-                className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`}
-                style={{ color: focused ? Colors.greenLight : Colors.greenAshLight }}
-            >
-                {name}
-            </Text>
-        </View>
-    )
-}
 
 const TabsLayout = () => {
     return (
@@ -39,7 +21,7 @@ const TabsLayout = () => {
                 }}
             >
                 <Tabs.Screen
-                    name='home'
+                    name='admin-dashboard'
                     options={{
                         title: 'Home',
                         headerShown: false,
@@ -49,17 +31,7 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                    name='navigate'
-                    options={{
-                        title: 'Navigate',
-                        headerShown: false,
-                        tabBarIcon: ({ color, focused }) => (
-                            <TabIcon icon={icons.search} color={color} name="Navigate" focused={focused} />
-                        )
-                    }}
-                />
-                <Tabs.Screen
-                    name='profile'
+                    name='admin-profile'
                     options={{
                         title: 'Profile',
                         headerShown: false,

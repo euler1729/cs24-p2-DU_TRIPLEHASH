@@ -99,7 +99,7 @@ const Resigter = () => {
             />
             <FormField
               title='Ward Number'
-              value={form.ward_number}
+              value={String(form.ward_number)}
               handleChangeText={(value) => setForm({ ...form, ward_number: value })}
               placeholder='Enter your ward number'
               otherStyles='mt-3'
