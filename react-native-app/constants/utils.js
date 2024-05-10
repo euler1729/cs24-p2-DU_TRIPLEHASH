@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const api = axios.create({
     // baseURL: "http://localhost:8000",
-    baseURL: 'http://10.1.10.5:8081'
+    baseURL: 'http://10.33.3.6:8000'
 });
 
 const saveKey = async (key, value) => {

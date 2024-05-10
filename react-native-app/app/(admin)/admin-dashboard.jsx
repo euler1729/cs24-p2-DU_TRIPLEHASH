@@ -11,6 +11,7 @@ const Dashboard = () => {
 
         <Link href='admin-profile'>
           <Text>Go to Profile</Text>
+          <Text>Hello</Text>
         </Link>
       </View>
     </SafeAreaView>
