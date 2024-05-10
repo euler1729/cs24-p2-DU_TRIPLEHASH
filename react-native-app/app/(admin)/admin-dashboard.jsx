@@ -17,10 +17,6 @@ const Dashboard = () => {
     <SafeAreaView>
       <View>
         <Text>Dashboard</Text>
-
-        <Link href='admin-profile'>
-          <Text>Go to Profile</Text>
-        </Link>
       </View>
     </SafeAreaView>
   )

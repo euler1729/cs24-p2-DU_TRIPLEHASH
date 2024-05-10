@@ -178,6 +178,7 @@ CREATE TABLE user_permission(
 );
 
 
+<<<<<<< HEAD
 DROP TABLE IF EXISTS employee;
 CREATE TABLE employee(
     employee_id INTEGER PRIMARY KEY,
@@ -212,3 +213,42 @@ CREATE TABLE collection(
     area TEXT
 
 );
+=======
+
+
+
+-- __________________________________________Extension________________________________________
+
+
+
+-- essentials for 3rd-party contractor 
+DROP TABLE IF EXISTS third_party_contractor;
+CREATE TABLE third_party_contractor(
+    contract_id INTEGER PRIMARY KEY,
+    reg_id TEXT,
+    company_name TEXT,
+    tin TEXT,
+    contact_num TEXT,
+    workforce_size INTEGER,
+    payment_per_ton REAL,
+    waste_amount_per_day REAL,
+    contract_duration REAL,
+    collection_area TEXT,
+    designated_sts INTEGER, 
+    FOREIGN KEY (designated_sts) REFERENCES sts(sts_id)
+);
+
+DROP TABLE IF EXISTS contractor_manager;
+CREATE TABLE contractor_manager (
+    user_id INTEGER PRIMARY KEY,
+    full_name TEXT,
+    email TEXT,
+    date_of_creation TEXT,
+    contact_number TEXT,
+    assigned_contractor_company INTEGER,
+    access_level INTEGER,
+    username TEXT,
+    password TEXT,
+    FOREIGN KEY (assigned_contractor_company) REFERENCES third_party_contractor(contract_id)
+);
+>>>>>>> main
