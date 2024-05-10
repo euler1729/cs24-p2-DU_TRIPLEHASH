@@ -67,6 +67,10 @@ from domestic_waste.ThirdPartyContractor import ThirdPartyContractor
 from domestic_waste.ContractorManager import ContractorManager
 
 
+# Community Posts
+from community_users.CommunityPost import Posts, UserPosts, AdminPostApproval
+from community_users.PostInteraction import PostInteraction
+
 
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -165,6 +169,17 @@ api.add_resource(ThirdPartyContractor, '/contractor/register', '/contractor/all'
 api.add_resource(ContractorManager, '/contractor_manager/register', '/contractor_manager/all', '/contractor_manager/<int:user_id>')
 
 
+# Community posts
+api.add_resource(Posts, '/create_post', '/get_all_posts')
+
+# Get/Update/Delete specific post
+api.add_resource(UserPosts, '/post/<int:id>')
+
+# Get admin approval
+api.add_resource(AdminPostApproval, '/admin_approval/<int:post_id>')
+
+# Post interaction
+api.add_resource(PostInteraction, '/post/<int:post_id>/like', '/post/<int:post_id>/comment')
 
 
 if __name__ == "__main__":

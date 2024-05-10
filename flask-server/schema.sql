@@ -215,3 +215,43 @@ CREATE TABLE contractor_manager (
     password TEXT,
     FOREIGN KEY (assigned_contractor_company) REFERENCES third_party_contractor(contract_id)
 );
+
+
+
+-- Community Users
+DROP TABLE IF EXISTS user_posts;
+CREATE TABLE user_posts (
+    post_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    title TEXT,
+    post_content TEXT,
+    creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    likes_count INTEGER DEFAULT 0,
+    image BLOB,
+    approved BOOLEAN DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+
+DROP TABLE IF EXISTS post_comments;
+CREATE TABLE post_comments (
+    comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id INTEGER,
+    user_id INTEGER,
+    comment_text TEXT,
+    creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES user_posts(post_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+DROP TABLE IF EXISTS post_likes;
+CREATE TABLE post_likes (
+    like_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    post_id INTEGER,
+    UNIQUE(user_id, post_id),  -- Ensure each user can like a post only once
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (post_id) REFERENCES user_posts(post_id)
+);
+
+
