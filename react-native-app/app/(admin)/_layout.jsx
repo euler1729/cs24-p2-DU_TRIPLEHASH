@@ -3,7 +3,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { Image, Text, View } from 'react-native';
 import { Drawer } from 'expo-router/drawer';
-import { DrawerContentScrollView, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { MaterialIcons } from '@expo/vector-icons';
 import { usePathname } from 'expo-router';
 import { Link, Stack, router, Tabs } from 'expo-router'
@@ -14,14 +14,6 @@ import { useNavigation } from '@react-navigation/native';
 import { icons, images } from '../../constants'
 import { Colors } from '../../assets/configs.json'
 import { logout } from '../../constants/utils';
-import { TabIcon } from '../components/TabIcon'
-
-import Dashboard from './admin-dashboard';
-import Profile from './admin-profile';
-import { NativeScreenNavigationContainer } from 'react-native-screens';
-
-
-const Drawer2 = createDrawerNavigator();
 
 const CustomDrawerComponent = (...props) => {
   const navigation = useNavigation();

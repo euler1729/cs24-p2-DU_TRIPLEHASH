@@ -16,14 +16,6 @@ const Dashboard = () => {
     <SafeAreaView>
       <View>
         <Text>Dashboard</Text>
-<<<<<<< HEAD
-=======
-
-        <Link href='admin-profile'>
-          <Text>Go to Profile</Text>
-          <Text>Hello</Text>
-        </Link>
->>>>>>> arif
       </View>
     </SafeAreaView>
   )
