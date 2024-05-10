@@ -44,8 +44,8 @@ function App() {
           <Route path='/contractor/dashboard' element={<Protected />} >
             <Route path='/contractor/dashboard' element={<ContractorManagerDashboard />} />
           </Route>
-          <Route path='/contractor/dashboard' element={<Protected />} >
-            <Route path='/contractor/dashboard' element={<EmployeeProfile />} />
+          <Route path='/contractor/employee/:id' element={<Protected />} >
+            <Route path='/contractor/employee/:id' element={<EmployeeProfile />} />
           </Route>
 
         </Routes>

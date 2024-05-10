@@ -59,6 +59,7 @@ from roles.RolePermission import RolePermission
 # CM and employee
 
 from contractor.Employee import Employee
+from contractor.Collection import Collection
 
 
 
@@ -149,6 +150,6 @@ api.add_resource(UpdateSTS, '/data-entry/update-sts/<int:sts_id>')
 #CM and employee
 
 api.add_resource(Employee, '/contractor/employee', '/contractor/employee/<int:employee_id>')
-
+api.add_resource(Collection, '/collection', '/collection/<string:collection_id>')
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, use_reloader=True, host='0.0.0.0', port=8000)

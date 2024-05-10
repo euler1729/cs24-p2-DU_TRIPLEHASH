@@ -24,6 +24,7 @@ import routes from './res/routes.png'
 import waste_transfer from './res/waste_transfer.png'
 import ActiveTrips from './ActiveTrip';
 
+
 // Component for Admin Dashboard
 // import UserManagement from './UserManagement';
 // import CreateUser from './CreateUser';
@@ -36,7 +37,8 @@ import ProfileView from '../general/ProfileView';
 import Route from './Route';
 import Fleet from './Fleet';
 import STSManagerStatisticsPage from './STSstats';
-import WasteTransfer from './Waste_transfer';
+import AddWasteEntry from './AddWasteEntry';
+import ContractorBilling from './ContractorBilling'
 
 
 const drawerWidth = 260;
@@ -137,9 +139,11 @@ function STSManagerDashboard() {
       case 'fleet' : 
         return <Fleet/>
       case 'Waste Transfer':
-        return <WasteTransfer />;
+        return <AddWasteEntry />;
       case 'Active Trips':
         return <ActiveTrips />;
+      case 'contract billing':
+        return <ContractorBilling />
         
 
 
@@ -187,6 +191,12 @@ function STSManagerDashboard() {
                       <img src={waste_transfer} alt="waste_transfer" style={{ width: '24px',  }} />
                     </ListItemIcon>
                     <ListItemText primary="Waste Transfer" />
+                  </ListItem>
+                  <ListItem button onClick={() => handleOptionClick('contract billing')}>
+                    <ListItemIcon>
+                      <img src={waste_transfer} alt="contract billing" style={{ width: '24px',  }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Contract Billing" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('fleet')}>
