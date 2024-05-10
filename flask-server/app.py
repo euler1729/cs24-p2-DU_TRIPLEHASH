@@ -56,6 +56,10 @@ from roles.Permissions import Permission
 from roles.UserPermission import UserPermission
 from roles.RolePermission import RolePermission
 
+# CM and employee
+
+from contractor.Employee import Employee
+
 
 
 with open('config.json', 'r') as f:
@@ -140,6 +144,11 @@ api.add_resource(DeleteVehicle, '/data-entry/delete-vehicle/<int:vehicle_id>')
 api.add_resource(UpdateVehicle, '/data-entry/update-vehicle/<int:vehicle_id>')
 
 api.add_resource(UpdateSTS, '/data-entry/update-sts/<int:sts_id>')
+
+
+#CM and employee
+
+api.add_resource(Employee, '/contractor/employee', '/contractor/employee/<int:employee_id>')
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, use_reloader=True, host='0.0.0.0', port=8000)
