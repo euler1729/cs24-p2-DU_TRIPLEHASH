@@ -11,24 +11,10 @@ import Cookies from 'universal-cookie';
 import LogGif from '../EcoSyncBrand/logogif.gif'
 import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 
-// PNG ICONS
-import stsicon from './res/sts.png'
-import landfillicon from './res/landfill.png'
-import stsman from './res/stsman.png'
-import managers from './res/managers.png'
-import assignmanager from './res/assignmanager.png'
-import addtruck from './res/addtruck.png'
-import choosecar from './res/choosecar.png'
-import fleet from './res/fleet.png'
-import routes from './res/routes.png'
-import waste_transfer from './res/waste_transfer.png'
-
-
-import ProfileView from '../general/ProfileView';
-
 import EmployeeRegistration from './EmployeeRegistration';
 import EmployeeList from './EmployeeList';
-
+import Monitor from './Monitor'
+import CollectionPlanManager from './CollectionPlanManager'
 
 const drawerWidth = 260;
 
@@ -111,6 +97,8 @@ function STSManagerDashboard() {
         return <EmployeeRegistration />;
       case 'employee list':
         return <EmployeeList />;
+      case 'create collection':
+        return <CollectionPlanManager />
         
 
 
@@ -154,6 +142,11 @@ function STSManagerDashboard() {
                   <ListItem button onClick={() => handleOptionClick('employee registration')}>
                     <ListItemIcon><Dashboard /></ListItemIcon>
                     <ListItemText primary="Employee Registration" />
+                  </ListItem>
+
+                  <ListItem button onClick={() => handleOptionClick('create collection')}>
+                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemText primary="Create collection" />
                   </ListItem>
 
                  

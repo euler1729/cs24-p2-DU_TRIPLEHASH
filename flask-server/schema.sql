@@ -178,6 +178,42 @@ CREATE TABLE user_permission(
 );
 
 
+<<<<<<< HEAD
+DROP TABLE IF EXISTS employee;
+CREATE TABLE employee(
+    employee_id INTEGER PRIMARY KEY,
+    full_name TEXT,
+    job_title TEXT,
+    payment_rate_per_hour  TEXT,
+    assigned_collection_route  TEXT,
+    dob TEXT,
+    date_of_hire TEXT,
+    contact TEXT
+);
+
+DROP TABLE IF EXISTS work_log;
+CREATE TABLE work_log(
+    log_id INT PRIMARY KEY,
+    emp_id INT,
+    log_in TIMESTAMP,
+    log_out TIMESTAMP,
+    total_hrs HOURS,
+    overtime_hrs HOURS,
+    is_present int
+);
+
+DROP TABLE IF EXISTS collection;
+CREATE TABLE collection(
+    collection_id INTEGER PRIMARY KEY,
+    start_time TEXT,
+    duration HOURS,
+    no_labour INT,
+    no_vans INT,
+    exp_wt INT,
+    area TEXT
+
+);
+=======
 
 
 
@@ -215,3 +251,4 @@ CREATE TABLE contractor_manager (
     password TEXT,
     FOREIGN KEY (assigned_contractor_company) REFERENCES third_party_contractor(contract_id)
 );
+>>>>>>> main
