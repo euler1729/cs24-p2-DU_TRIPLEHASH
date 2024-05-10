@@ -16,6 +16,13 @@ CREATE TABLE user_ward(
     ward_number INTEGER
 );
 
+-- DROP TABLE IF EXISTS role;
+-- CREATE TABLE roles(
+--     role_id INTEGER PRIMARY KEY,
+--     role_name TEXT,
+--     role_desc TEXT
+-- );
+
 DROP TABLE IF EXISTS role;
 CREATE TABLE role(
     role_id INTEGER PRIMARY KEY,
@@ -147,12 +154,7 @@ CREATE TABLE active_trip(
     FOREIGN KEY(vehicle_id) REFERENCES vehicle(vehicle_id)
 );
 
-DROP TABLE IF EXISTS roles;
-CREATE TABLE roles(
-    role_id INTEGER PRIMARY KEY,
-    role_name TEXT,
-    role_desc TEXT
-);
+
 DROP TABLE if EXISTS permission;
 CREATE TABLE permission(
     permission_id INTEGER PRIMARY KEY,
@@ -160,11 +162,11 @@ CREATE TABLE permission(
     permission_desc TEXT
 );
 
-DROP TABLE if EXISTS roles_permission;
+DROP TABLE IF EXISTS role_permission;
 CREATE TABLE role_permission(
     role_id INTEGER,
     permission_id INTEGER,
-    FOREIGN KEY(role_id) REFERENCES roles(role_id),
+    FOREIGN KEY(role_id) REFERENCES role(role_id),
     FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
 DROP TABLE IF EXISTS user_permission;

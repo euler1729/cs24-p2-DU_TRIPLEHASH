@@ -40,6 +40,8 @@ class Permission(Resource):
                     self.database.execute(
                         'SELECT * from permission WHERE permission_id = ? ', (permission_id, ))
                     permission = self.database.fetchone()
+                    if permission is None:
+                        return make_response(jsonify({"msg" : f"No permission with id: {permission_id}"}))
                     permission = {
                         "permission_id": permission_id,
                         "permission_name": permission[1],
@@ -52,7 +54,7 @@ class Permission(Resource):
                 res = []
                 for r in permission:
                     permission = {
-                        "permission_id": permission_id,
+                        "permission_id": r[0],
                         "permission_name": r[1],
                         "permission_desc": r[2],
                     }

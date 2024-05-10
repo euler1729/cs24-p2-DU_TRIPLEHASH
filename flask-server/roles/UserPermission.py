@@ -42,7 +42,7 @@ class UserPermission(Resource):
             info = self.utils.getInfoFromToken(request)
             if info:
                 data = request.get_json()
-                user_id = data['role_id']
+                user_id = data['user_id']
                 permission_id = data['permission_id']
                 self.database.execute(
                     'INSERT INTO user_permission (user_id, permission_id) VALUES (?, ?)', (user_id, permission_id))
