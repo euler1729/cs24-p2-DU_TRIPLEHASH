@@ -12,6 +12,8 @@ import ResetPasswordPage from './auth/ResetPassword';
 import AdminDashboard from './admin/AdminDashboard';
 import STSManagerDashboard from './sts_manager/STSDashboard';
 import LandfillManagerDashboard from './landfill_manager/LandfillDashboard';
+import ContractorManagerDashboard from './contractor_manager/ContractorManagerDashboard';
+import EmployeeProfile from './contractor_manager/EmployeeProfile';
 
 
 function App() {
@@ -31,11 +33,19 @@ function App() {
           <Route path='/admin/dashboard' element={<Protected />} >
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
           </Route>
+
           <Route path='/sts/dashboard' element={<Protected />} >
             <Route path='/sts/dashboard' element={<STSManagerDashboard />} />
           </Route>
-          <Route path='/landfill/dashboard' element={<Protected />} >
-            <Route path='/landfill/dashboard' element={<LandfillManagerDashboard />} />
+          <Route path='/contractor/dashboard' element={<Protected />} >
+            <Route path='/contractor/dashboard' element={<ContractorManagerDashboard />} />
+          </Route>
+
+          <Route path='/contractor/dashboard' element={<Protected />} >
+            <Route path='/contractor/dashboard' element={<ContractorManagerDashboard />} />
+          </Route>
+          <Route path='/contractor/dashboard' element={<Protected />} >
+            <Route path='/contractor/dashboard' element={<EmployeeProfile />} />
           </Route>
 
         </Routes>
@@ -49,7 +59,7 @@ const Protected = () => {
   if(!user){
     return <Navigate to="/login" />;
   }
-  if(user.role_id===1 || user.role_id===2 || user.role_id===3){
+  if(user.role_id===1 || user.role_id===2 || user.role_id===3 || user.role_id===7){
     return <Outlet />;
   }
   return <Navigate to="/login" />;
@@ -66,6 +76,8 @@ const HomeX = ()=>{
     return <Navigate to="/sts/dashboard" />;
   }else if (user.role_id===3){
     return <Navigate to="/landfill/dashboard" />;
+  } else if (user.role_id===7) {
+    return <Navigate to="/contractor/dashboard" />
   }
   return <Outlet />;
 }

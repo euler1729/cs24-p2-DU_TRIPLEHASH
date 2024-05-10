@@ -6,7 +6,7 @@ const Profile = () => {
   return (
     <SafeAreaView>
       <View>
-        <Text>Profile</Text>
+        <Text>Root Profile</Text>
       </View>
     </SafeAreaView>
   )

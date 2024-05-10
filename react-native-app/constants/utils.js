@@ -35,7 +35,7 @@ const checkUser = async () => {
         }
     }
 }
-async function resetNavigation(role_id){
+async function resetNavigation(role_id) {
     const navigation = useNavigation();
     switch (role[role_id]) {
         case 'admin':
@@ -104,6 +104,13 @@ async function changeRoute(role_id) {
             break;
     }
 }
+const logout = async () => {
+    await saveKey('access_token', '').then(async () => {
+        await saveKey('user', '');
+    }).then(() => {
+        router.replace('/');
+    });
+}
 export {
     api,
     role,
@@ -111,5 +118,6 @@ export {
     getValueFor,
     checkUser,
     changeRoute,
-    resetNavigation
+    resetNavigation,
+    logout
 }

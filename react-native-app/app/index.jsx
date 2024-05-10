@@ -2,16 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
 
 // Constants UI Elements
 import { images } from '../constants'
-import { Name, Colors } from '../assets/configs.json';
 
 // Components
 import CustomButton from './components/CustomButton';
 import { useEffect, useState } from 'react';
-import { getValueFor, checkUser } from '../constants/utils';
+import { checkUser } from '../constants/utils';
 
 
 export default function App() {
