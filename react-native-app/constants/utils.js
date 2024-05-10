@@ -5,15 +5,7 @@ import { useState } from "react";
 
 const api = axios.create({
     // baseURL: "http://localhost:8000",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    baseURL: 'http://192.168.0.102:8000'
-=======
-    baseURL: 'http://10.1.10.5:8081'
->>>>>>> 7a3c03da5140331f19392fa811339987b311efb2
-=======
     baseURL: 'http://172.20.10.2:8000'
->>>>>>> arif
 });
 
 const saveKey = async (key, value) => {

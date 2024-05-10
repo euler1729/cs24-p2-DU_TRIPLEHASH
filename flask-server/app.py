@@ -56,6 +56,10 @@ from roles.Permissions import Permission
 from roles.UserPermission import UserPermission
 from roles.RolePermission import RolePermission
 
+# CM and employee
+
+from contractor.Employee import Employee
+
 # Third party contractor
 from domestic_waste.ThirdPartyContractor import ThirdPartyContractor
 
@@ -146,6 +150,11 @@ api.add_resource(DeleteVehicle, '/data-entry/delete-vehicle/<int:vehicle_id>')
 api.add_resource(UpdateVehicle, '/data-entry/update-vehicle/<int:vehicle_id>')
 
 api.add_resource(UpdateSTS, '/data-entry/update-sts/<int:sts_id>')
+
+
+#CM and employee
+
+api.add_resource(Employee, '/contractor/employee', '/contractor/employee/<int:employee_id>')
 
 
 
