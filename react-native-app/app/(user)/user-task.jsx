@@ -9,7 +9,7 @@ const apiKey = 'AIzaSyB1HyhM-zUAmxq3USoPS-qb2MmJu1pUu70';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import * as ImagePicker from 'expo-image-picker';
-
+import CustomButton from '../components/CustomButton';
 
 function sleep(ms) {
   return new Promise(resolve => {
@@ -156,7 +156,7 @@ const Task = () => {
     //   registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
     // }
     // asnk();
-    nearestBin();
+    // nearestBin();
     getCurrentLocation();
   }, [coordinates]);
 
@@ -267,6 +267,12 @@ const nearestBin = async () => {
                 <View className='flex-col'>
                   <Text className='font-pmedium'>Dust Bean</Text>
                   <Text>Description: Bean for collecting dry waste</Text>
+                  <CustomButton
+                    title='Capture Location'
+                    handlePress={pickImage}
+                    containerStyle='mt-4 bg-greenTea rounded-xl'
+                    textStyle='px-4 py-2'
+                  />
                 </View>
               </Callout>
             </Marker>
