@@ -54,4 +54,3 @@ class Route():
         if data['status'] == 'OK':
             return data['results'][0]['geometry']['location']
 
-print(Route.getGeoLocation('Dhaka University'))
