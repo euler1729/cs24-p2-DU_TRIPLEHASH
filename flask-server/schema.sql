@@ -177,7 +177,14 @@ CREATE TABLE user_permission(
     FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
 
-
+DROP TABLE if EXISTS issue;
+CREATE TABLE issue(
+    id INTEGER PRIMARY KEY,
+    location TEXT,
+    issue_type TEXT,
+    description TEXT,
+    image TEXT
+);
 
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Platform, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { PermissionsAndroid } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Make sure to import Picker
@@ -7,7 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButton';
 import { Colors } from '../../assets/configs.json'
 import FormField from '../components/FormField';
-import { grantGalleryPermission } from './components/CameraPermission';
+import { saveKey, getValueFor } from '../../constants/utils';
+import { api } from '../../constants/utils'
 
 const ReportIssue = () => {
     const navigation = useNavigation();
@@ -16,6 +17,7 @@ const ReportIssue = () => {
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [issues, setIssues] = useState([]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -23,7 +25,17 @@ const ReportIssue = () => {
         });
     }, []);
 
-    
+    const grantGalleryPermission = async () => {
+        if (Platform.OS === 'ios') return true;
+        const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+        const hasPermission = await PermissionsAndroid.check(permission);
+        if (hasPermission) {
+            return true;
+        }
+        const status = await PermissionsAndroid.request(permission);
+        return status === 'granted';
+    }
+
 
     const pickImage = async () => {
         try {
@@ -49,8 +61,42 @@ const ReportIssue = () => {
         }
     };
 
-    const submitReport = () => {
+    const submitReport = async () => {
         // Handle submitting report
+        setIssues([...issues, {
+            location: location,
+            issue_type: issueType,
+            description: description,
+            photo: photo
+        }]);
+        await saveKey('issues', JSON.stringify(issues));
+        const token = await getValueFor('access_token');
+        try {
+            api.post('/issue', {
+                location: location,
+                issue_type: issueType,
+                description: description,
+                image: photo
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(response => {
+                if (response.status === 200 || response.status === 201) {
+                    setLocation('');
+                    setIssueType('');
+                    setDescription('');
+                    setPhoto(null);
+                    Alert.alert('Report submitted successfully');
+                }
+            }).catch(error => {
+                console.error('Error submitting report:', error);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+
     };
 
     return (
@@ -78,7 +124,7 @@ const ReportIssue = () => {
                         selectedValue={issueType}
                         onValueChange={(itemValue, itemIndex) => setIssueType(itemValue)}
                     >
-                        <Picker.Item label="Select Type of Issue" value=""/>
+                        <Picker.Item label="Select Type of Issue" value="" />
                         <Picker.Item label="Overflowing Bins" value="Overflowing Bins" />
                         <Picker.Item label="Littering" value="Littering" />
                         <Picker.Item label="Illegal Dumping" value="Illegal Dumping" />
