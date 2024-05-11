@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore, Create, Looks } from '@material-ui/icons';
+import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore, Create, Looks} from '@material-ui/icons';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -13,10 +13,11 @@ import EcoBrand from '../EcoSyncBrand/EcoSyncBrand.json'
 
 import EmployeeRegistration from './EmployeeRegistration';
 import EmployeeList from './EmployeeList';
-import Monitor from './Monitor'
 import CollectionPlanManager from './CollectionPlanManager'
 import Profile from '../general/ProfileView'
 import Tracker from './Tracker';
+import WasteMonitoring from './WasteMonitoring.js';
+import ScheduleCollection from './ScheduleCollection.js';
 
 const drawerWidth = 260;
 
@@ -97,6 +98,8 @@ function STSManagerDashboard() {
         return <Tracker />;
       case 'contractor dashboard':
         return <EmployeeRegistration />;
+      case 'ScheduleCollection':
+        return < ScheduleCollection/>
       case 'employee registration':
         return <EmployeeRegistration />;
       case 'employee list':
@@ -105,6 +108,8 @@ function STSManagerDashboard() {
         return <CollectionPlanManager />
       case 'profile':
         return <Profile />;
+      case 'incoming request':
+        return <WasteMonitoring/>
         
 
 
@@ -137,7 +142,18 @@ function STSManagerDashboard() {
                 <List>
                   <ListItem button onClick={() => handleOptionClick('dashboard')}>
                     <ListItemIcon><Looks /></ListItemIcon>
-                    <ListItemText primary="Dashboard" />
+                    <ListItemText primary="Tracker" />
+                  </ListItem>
+
+                  <ListItem button onClick={() => handleOptionClick('incoming request')}>
+                    <ListItemIcon><Looks/></ListItemIcon>
+                    <ListItemText primary="Incoming Request" />
+                  </ListItem>
+
+
+                  <ListItem button onClick={() => handleOptionClick('ScheduleCollection')}>
+                    <ListItemIcon><Looks/></ListItemIcon>
+                    <ListItemText primary="Schedule Collection" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('employee list')}>

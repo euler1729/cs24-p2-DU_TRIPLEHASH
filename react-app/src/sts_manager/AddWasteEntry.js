@@ -8,6 +8,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import EcoBrand from "../EcoSyncBrand/EcoSyncBrand.json";
+import api from "../API";
+import Cookies from 'universal-cookie';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,7 +40,7 @@ const wasteTypes = [
 
 const AddWasteEntry = () => {
   const classes = useStyles();
-
+  const cookies = new Cookies();
   const [formData, setFormData] = useState({
     date: "",
     amount: "",
@@ -51,10 +54,25 @@ const AddWasteEntry = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    // Here you can handle the form submission, e.g., send the data to the server
+
+    console.log(formData)
+    
+    try  {
+      await api.post(
+        "/contractor",
+        { formData },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("access_token")}`,
+          },
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Adding Waste Error:", error);
+    }
   };
 
   return (

@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS user;
-CREATE TABLE user(
+CREATE TABLE user
+(
     user_id INTEGER PRIMARY KEY,
     user_name TEXT,
     email TEXT,
@@ -11,7 +12,8 @@ CREATE TABLE user(
 );
 
 DROP TABLE IF EXISTS user_ward;
-CREATE TABLE user_ward(
+CREATE TABLE user_ward
+(
     user_id INTEGER,
     ward_number INTEGER
 );
@@ -24,14 +26,16 @@ CREATE TABLE user_ward(
 -- );
 
 DROP TABLE IF EXISTS role;
-CREATE TABLE role(
+CREATE TABLE role
+(
     role_id INTEGER PRIMARY KEY,
     role_name TEXT
 );
 
 
 DROP TABLE IF EXISTS otp;
-CREATE TABLE otp(
+CREATE TABLE otp
+(
     user_id INTEGER,
     otp TEXT,
     exp INTEGER
@@ -40,21 +44,24 @@ CREATE TABLE otp(
 
 
 DROP TABLE IF EXISTS vehicle;
-CREATE TABLE vehicle (
+CREATE TABLE vehicle
+(
     vehicle_id INTEGER PRIMARY KEY,
     vehicle_reg_number TEXT,
     vehicle_type TEXT,
     vehicle_capacity_in_ton INTEGER,
     fuel_cost_per_km_loaded INTEGER,
     fuel_cost_per_km_unloaded INTEGER,
-    sts_id INTEGER,  
-    FOREIGN KEY (sts_id) REFERENCES STS(STS_ID) -- id of the Station of the Vehicle
+    sts_id INTEGER,
+    FOREIGN KEY (sts_id) REFERENCES STS(STS_ID)
+    -- id of the Station of the Vehicle
 );
 
 
 
 DROP TABLE IF EXISTS sts;
-CREATE TABLE sts (
+CREATE TABLE sts
+(
     sts_id INTEGER PRIMARY KEY,
     ward_number INTEGER,
     capacity_tonnes INTEGER,
@@ -66,19 +73,24 @@ CREATE TABLE sts (
 
 
 DROP TABLE IF EXISTS sts_managers;
-CREATE TABLE sts_managers (
+CREATE TABLE sts_managers
+(
     manager_id INTEGER PRIMARY KEY,
-    user_id INTEGER UNIQUE,  -- Link STS manager to user
-    sts_id INTEGER,  -- Link manager to sts
+    user_id INTEGER UNIQUE,
+    -- Link STS manager to user
+    sts_id INTEGER,
+    -- Link manager to sts
 
-    FOREIGN KEY (user_id) REFERENCES user(user_id),  
-    FOREIGN KEY (sts_id) REFERENCES sts(sts_id)  -- id for station of the manager
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (sts_id) REFERENCES sts(sts_id)
+    -- id for station of the manager
 );
 
 
 
 DROP TABLE IF EXISTS vehicle_entries;
-CREATE TABLE vehicle_entries (
+CREATE TABLE vehicle_entries
+(
     entry_id INTEGER PRIMARY KEY,
     sts_id INTEGER,
     vehicle_number TEXT,
@@ -91,7 +103,8 @@ CREATE TABLE vehicle_entries (
 
 
 DROP TABLE IF EXISTS landfill_sites;
-CREATE TABLE landfill_sites (
+CREATE TABLE landfill_sites
+(
     landfill_id INTEGER PRIMARY KEY,
     site_name TEXT,
     capacity INTEGER,
@@ -103,9 +116,11 @@ CREATE TABLE landfill_sites (
 
 
 DROP TABLE IF EXISTS landfill_managers;
-CREATE TABLE landfill_managers (
+CREATE TABLE landfill_managers
+(
     manager_id INTEGER PRIMARY KEY,
-    user_id INTEGER UNIQUE,  -- Link Landfill manager to user
+    user_id INTEGER UNIQUE,
+    -- Link Landfill manager to user
     landfill_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES user(user_id),
     FOREIGN KEY (landfill_id) REFERENCES landfill_sites(landfill_id)
@@ -114,21 +129,24 @@ CREATE TABLE landfill_managers (
 
 
 DROP TABLE IF EXISTS dump_entries;
-CREATE TABLE dump_entries (
+CREATE TABLE dump_entries
+(
     entry_id INTEGER PRIMARY KEY,
     landfill_id INTEGER,
-    manager_id INTEGER,  -- Id of landfill manager
+    manager_id INTEGER,
+    -- Id of landfill manager
     vehicle_id INTEGER,
     weight_of_waste INTEGER,
     time_of_arrival TEXT,
     time_of_departure TEXT,
-    
+
     FOREIGN KEY (landfill_id) REFERENCES landfill_sites(landfill_id),
     FOREIGN KEY (manager_id) REFERENCES sts_managers(manager_id)
 );
 
 DROP TABLE IF EXISTS trips;
-CREATE TABLE trips(
+CREATE TABLE trips
+(
     trip_id INTEGER PRIMARY KEY,
     vehicle_id INTEGER,
     sts_id INTEGER,
@@ -146,7 +164,8 @@ CREATE TABLE trips(
 
 
 DROP TABLE IF EXISTS active_trip;
-CREATE TABLE active_trip(
+CREATE TABLE active_trip
+(
     trip_id INTEGER PRIMARY KEY,
     vehicle_id INTEGER,
     to_landfill INTEGER,
@@ -156,27 +175,31 @@ CREATE TABLE active_trip(
 
 
 DROP TABLE if EXISTS permission;
-CREATE TABLE permission(
+CREATE TABLE permission
+(
     permission_id INTEGER PRIMARY KEY,
     permission_name TEXT,
     permission_desc TEXT
 );
 
 DROP TABLE IF EXISTS role_permission;
-CREATE TABLE role_permission(
+CREATE TABLE role_permission
+(
     role_id INTEGER,
     permission_id INTEGER,
     FOREIGN KEY(role_id) REFERENCES role(role_id),
     FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
 DROP TABLE IF EXISTS user_permission;
-CREATE TABLE user_permission(
+CREATE TABLE user_permission
+(
     user_id INTEGER,
     permission_id INTEGER,
     FOREIGN KEY(user_id) REFERENCES user(user_id),
     FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
 
+<<<<<<< HEAD
 DROP TABLE if EXISTS issue;
 CREATE TABLE issue(
     id INTEGER PRIMARY KEY,
@@ -184,17 +207,50 @@ CREATE TABLE issue(
     issue_type TEXT,
     description TEXT,
     image TEXT
+=======
+
+DROP TABLE IF EXISTS employee;
+CREATE TABLE employee
+(
+    employee_id INTEGER PRIMARY KEY,
+    full_name TEXT,
+    job_title TEXT,
+    payment_rate_per_hour TEXT,
+    assigned_collection_route TEXT,
+    dob TEXT,
+    date_of_hire TEXT,
+    contact TEXT
+>>>>>>> 1267f14c93f8f707a5f436b2065b1cdd2a6ab8e7
 );
 
+DROP TABLE IF EXISTS work_log;
+CREATE TABLE work_log
+(
+    log_id INT PRIMARY KEY,
+    emp_id INT,
+    log_in TIMESTAMP,
+    log_out TIMESTAMP,
+    total_hrs HOURS,
+    overtime_hrs HOURS,
+    is_present int
+);
 
+DROP TABLE IF EXISTS collection;
+CREATE TABLE collection
+(
+    collection_id INTEGER PRIMARY KEY,
+    start_time TEXT,
+    duration HOURS,
+    no_labour INT,
+    no_vans INT,
+    exp_wt INT,
+    area TEXT
 
--- __________________________________________Extension________________________________________
+);
 
-
-
--- essentials for 3rd-party contractor 
 DROP TABLE IF EXISTS third_party_contractor;
-CREATE TABLE third_party_contractor(
+CREATE TABLE third_party_contractor
+(
     contract_id INTEGER PRIMARY KEY,
     reg_id TEXT,
     company_name TEXT,
@@ -205,12 +261,12 @@ CREATE TABLE third_party_contractor(
     waste_amount_per_day REAL,
     contract_duration REAL,
     collection_area TEXT,
-    designated_sts INTEGER, 
+    designated_sts INTEGER,
     FOREIGN KEY (designated_sts) REFERENCES sts(sts_id)
 );
-
 DROP TABLE IF EXISTS contractor_manager;
-CREATE TABLE contractor_manager (
+CREATE TABLE contractor_manager
+(
     user_id INTEGER PRIMARY KEY,
     full_name TEXT,
     email TEXT,

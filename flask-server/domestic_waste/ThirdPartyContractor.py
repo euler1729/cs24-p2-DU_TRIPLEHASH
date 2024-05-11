@@ -113,17 +113,14 @@ class ThirdPartyContractor(Resource):
                 if 'tin' not in data:
                     data['tin'] = ''
 
-
                 # Mandatory data
                 if 'reg_id' not in data:
                     return make_response(jsonify({'msg':'Registration ID is required!'}), 400)
                 if 'designated_sts' not in data:
                     return make_response(jsonify({'msg':'Designated STS ID is required!'}), 400)     
 
-                
                 conn = sqlite3.connect('sqlite.db')
                 cursor = conn.cursor()
-
 
                 # Check whether the contractor already exists
                 # Addition check to see if the tin number matches

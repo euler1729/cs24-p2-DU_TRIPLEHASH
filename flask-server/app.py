@@ -65,6 +65,12 @@ from CEA.Issue import Issue
 
 
 
+
+
+from domestic_waste.ThirdPartyContractor import ThirdPartyContractor
+from domestic_waste.ContractorManager import ContractorManager
+
+
 with open('config.json', 'r') as f:
     config = json.load(f)
     key = config['KEY']
@@ -154,6 +160,11 @@ api.add_resource(Issue, '/issue')
 #CM and employee
 
 api.add_resource(Employee, '/contractor/employee', '/contractor/employee/<int:employee_id>')
+
+
+
+api.add_resource(ThirdPartyContractor, '/contractor/register')
+api.add_resource(ContractorManager, '/manager/register')
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, use_reloader=True, host='0.0.0.0', port=8000)

@@ -113,7 +113,7 @@ const EmployeeRegistration = () => {
     setLoading(true);
     try {
       api
-        .post("/employees/register", employee, {
+        .post("/contractor/employee", employee, {
           headers: {
             Authorization: `Bearer ${cookies.get("access_token")}`,
           },
@@ -137,6 +137,7 @@ const EmployeeRegistration = () => {
           });
         })
         .catch((err) => {
+          console.log(employee)
           console.log(err);
           setLoading(false);
           setDialogType("error");

@@ -65,7 +65,7 @@ const ContractorRegistration = () => {
     const [contractor, setContractor] = useState({
         company_name: '',
         contract_id: '',
-        registration_id: '',
+        reg_id: '',
         registration_date: '',
         tin: '',
         contact_number: '',
@@ -86,7 +86,7 @@ const ContractorRegistration = () => {
         const newErrors = {};
         if (!contractor.company_name) newErrors.company_name = 'Company Name is required';
         if (!contractor.contract_id) newErrors.contract_id = 'Contract ID is required';
-        if (!contractor.registration_id) newErrors.registration_id = 'Registration ID is required';
+        if (!contractor.reg_id) newErrors.reg_id = 'Registration ID is required';
         if (!contractor.registration_date) newErrors.registration_date = 'Registration Date is required';
         if (!contractor.tin) newErrors.tin = 'TIN is required';
         if (!contractor.contact_number) newErrors.contact_number = 'Contact Number is required';
@@ -118,7 +118,7 @@ const ContractorRegistration = () => {
                     setContractor({
                         company_name: '',
                         contract_id: '',
-                        registration_id: '',
+                        reg_id: '',
                         registration_date: '',
                         tin: '',
                         contact_number: '',
@@ -176,14 +176,14 @@ const ContractorRegistration = () => {
                                 helperText={errors.contract_id}
                             />
                             <TextField
-                                name="registration_id"
+                                name="reg_id"
                                 className={classes.textField}
                                 label="Registration ID"
                                 variant="outlined"
-                                value={contractor.registration_id}
-                                onChange={(e) => setContractor({ ...contractor, registration_id: e.target.value })}
-                                error={!!errors.registration_id}
-                                helperText={errors.registration_id}
+                                value={contractor.reg_id}
+                                onChange={(e) => setContractor({ ...contractor, reg_id: e.target.value })}
+                                error={!!errors.reg_id}
+                                helperText={errors.reg_id}
                             />
                             <TextField
                                 name="registration_date"
