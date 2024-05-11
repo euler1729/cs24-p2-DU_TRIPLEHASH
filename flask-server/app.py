@@ -61,6 +61,8 @@ from roles.RolePermission import RolePermission
 from contractor.Employee import Employee
 from contractor.Collection import Collection
 
+from CEA.Issue import Issue
+
 
 
 
@@ -152,6 +154,8 @@ api.add_resource(UpdateVehicle, '/data-entry/update-vehicle/<int:vehicle_id>')
 
 api.add_resource(UpdateSTS, '/data-entry/update-sts/<int:sts_id>')
 
+
+api.add_resource(Issue, '/issue')
 
 #CM and employee
 

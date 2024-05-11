@@ -7,6 +7,7 @@ import { PermissionsAndroid } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { Colors } from '../../assets/configs.json'
 import Card from './components/Card';
+import { saveKey, getValueFor } from '../../constants/utils';
 
 /*
 1. Timeline - MyPosts  and Notifications
@@ -85,14 +86,43 @@ const Forum = () => {
 };
 
 const MyPosts = () => {
+  const [issues, setIssues] = useState([]);
+  useEffect(() => {
+    const fetchIssues = async () => {
+      const issues = await getValueFor('issues');
+      if (issues) {
+        setIssues(JSON.parse(issues));
+        // console.log(issues);
+      }
+    }
+    fetchIssues();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.postsContainer}>
-        {cardData.map((post, index) => {
-          return (
-            <Card key={index} post={post} />
-          )
-        })}
+        {
+          issues.map((issue, index) => {
+            return (
+              <View key={index} style={styles.card}>
+                <View className='flex-row justify-between'>
+                  <Text style={styles.location}>{issue.location}</Text>
+                  <Text style={styles.issueType}>{issue.issue_type}</Text>
+                </View>
+                <Text style={styles.description}>{issue.description}</Text>
+                <Image source={{ uri: issue.photo }} style={styles.photo} />
+              </View>
+            )
+          })
+        }
+        {
+          cardData.reverse().map((post, index) => {
+            return (
+              <Card key={index} post={post} />
+            )
+          })
+        }
+
       </ScrollView>
     </View>
   );
@@ -211,6 +241,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     fontWeight: 'bold',
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  location: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  issueType: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: 'blue', // or any color you prefer
+  },
+  description: {
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  photo: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
   },
 });
 

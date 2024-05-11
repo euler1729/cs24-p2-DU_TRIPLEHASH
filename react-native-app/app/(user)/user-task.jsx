@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker, Callout, Polyline, Circle } from 'react-native-maps';
-import { StyleSheet, View, TextInput, Button, Text, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Text, Alert, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '../../assets/configs.json';
 import { useNavigation } from 'expo-router';
@@ -10,10 +10,12 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import * as ImagePicker from 'expo-image-picker';
 import CustomButton from '../components/CustomButton';
+import { PermissionsAndroid } from 'react-native';
+
 
 function sleep(ms) {
   return new Promise(resolve => {
-      setTimeout(resolve, ms);
+    setTimeout(resolve, ms);
   });
 }
 
@@ -29,23 +31,23 @@ async function registerForPushNotificationsAsync() {
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
   if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
   }
   if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
+    alert('Failed to get push token for push notification!');
+    return;
   }
 }
 async function scheduleNotification() {
   await Notifications.scheduleNotificationAsync({
-      content: {
-          title: 'Import Task Near the Location',
-          body: 'You have a task near the location. Capture the location and complete the task.',
-      },
-      trigger: {
-          seconds: 5, // Time in seconds after which the notification will be shown
-      },
+    content: {
+      title: 'Import Task Near the Location',
+      body: 'You have a task near the location. Capture the location and complete the task.',
+    },
+    trigger: {
+      seconds: 5, // Time in seconds after which the notification will be shown
+    },
   });
 }
 const fetchRouteCoordinates = async (source, target) => {
@@ -160,13 +162,13 @@ const Task = () => {
     getCurrentLocation();
   }, [coordinates]);
 
-const nearestBin = async () => {
+  const nearestBin = async () => {
     const coord = await getCurrentLocation();
     let mn = 999999;
     let index = 0;
     for (let i = 0; i < markers.length; i++) {
       const distance = Math.sqrt((markers[i].latitude - coord.latitude) ** 2 + (markers[i].longitude - coord.longitude) ** 2);
-      if(distance < mn){
+      if (distance < mn) {
         mn = distance;
         index = i;
       }
@@ -216,29 +218,40 @@ const nearestBin = async () => {
     }
   };
 
+  const grantGalleryPermission = async () => {
+    if (Platform.OS === 'ios') return true;
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
   const pickImage = async () => {
     try {
-        if (Platform.OS === 'android') {
-            const hasPermission = await grantGalleryPermission();
-            if (!hasPermission) {
-                console.log('Permission denied');
-                return;
-            }
+      console.log('pick image')
+      if (Platform.OS === 'android') {
+        const hasPermission = await grantGalleryPermission();
+        if (!hasPermission) {
+          console.log('Permission denied');
+          return;
         }
+      }
 
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            quality: 1,
-        });
-        if (!result.cancelled && result.assets[0].uri) {
-            setPhoto(result.assets[0].uri);
-        } else {
-            console.log("Image picker was cancelled or returned null URI");
-        }
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+      if (!result.cancelled && result.assets[0].uri) {
+        setPhoto(result.assets[0].uri);
+      } else {
+        console.log("Image picker was cancelled or returned null URI");
+      }
     } catch (error) {
-        console.error("Error picking image:", error);
+      console.error("Error picking image:", error);
     }
-};
+  };
 
   return (
     <>
@@ -251,7 +264,7 @@ const nearestBin = async () => {
           showsUserLocation={true}
           showsCompass={true}
           showsMyLocationButton={true}
-          
+
         >
           {/* Render markers for start and end points */}
           {markers.map((coord, index) => (
@@ -272,6 +285,7 @@ const nearestBin = async () => {
                     handlePress={pickImage}
                     containerStyle='mt-4 bg-greenTea rounded-xl'
                     textStyle='px-4 py-2'
+                    isLoading={false}
                   />
                 </View>
               </Callout>

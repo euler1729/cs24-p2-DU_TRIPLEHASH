@@ -199,6 +199,15 @@ CREATE TABLE user_permission
     FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 );
 
+<<<<<<< HEAD
+DROP TABLE if EXISTS issue;
+CREATE TABLE issue(
+    id INTEGER PRIMARY KEY,
+    location TEXT,
+    issue_type TEXT,
+    description TEXT,
+    image TEXT
+=======
 
 DROP TABLE IF EXISTS employee;
 CREATE TABLE employee
@@ -211,6 +220,7 @@ CREATE TABLE employee
     dob TEXT,
     date_of_hire TEXT,
     contact TEXT
+>>>>>>> 1267f14c93f8f707a5f436b2065b1cdd2a6ab8e7
 );
 
 DROP TABLE IF EXISTS work_log;
