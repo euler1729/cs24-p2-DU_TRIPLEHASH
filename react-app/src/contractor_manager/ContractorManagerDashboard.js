@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore } from '@material-ui/icons';
+import { Dashboard, People, ExitToApp, PersonAdd, AccountBox, ExpandLess, ExpandMore, Create, Looks } from '@material-ui/icons';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,8 @@ import EmployeeRegistration from './EmployeeRegistration';
 import EmployeeList from './EmployeeList';
 import Monitor from './Monitor'
 import CollectionPlanManager from './CollectionPlanManager'
+import Profile from '../general/ProfileView'
+import Tracker from './Tracker';
 
 const drawerWidth = 260;
 
@@ -91,6 +93,8 @@ function STSManagerDashboard() {
 
   const renderComponent = () => {
     switch (selectedOption) {
+      case 'dashboard':
+        return <Tracker />;
       case 'contractor dashboard':
         return <EmployeeRegistration />;
       case 'employee registration':
@@ -99,6 +103,8 @@ function STSManagerDashboard() {
         return <EmployeeList />;
       case 'create collection':
         return <CollectionPlanManager />
+      case 'profile':
+        return <Profile />;
         
 
 
@@ -130,22 +136,22 @@ function STSManagerDashboard() {
               <div className={classes.list1}>
                 <List>
                   <ListItem button onClick={() => handleOptionClick('dashboard')}>
-                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemIcon><Looks /></ListItemIcon>
                     <ListItemText primary="Dashboard" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('employee list')}>
-                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemIcon><People /></ListItemIcon>
                     <ListItemText primary="Employee List" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('employee registration')}>
-                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemIcon><PersonAdd /></ListItemIcon>
                     <ListItemText primary="Employee Registration" />
                   </ListItem>
 
                   <ListItem button onClick={() => handleOptionClick('create collection')}>
-                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemIcon><Create /></ListItemIcon>
                     <ListItemText primary="Create collection" />
                   </ListItem>
 
