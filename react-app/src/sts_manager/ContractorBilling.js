@@ -33,20 +33,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const contractors = [
   {
     id: 1,
     company_name: "ABC Ltd",
     contractor_id: "C001",
-    manager_name: "John Doe",
-    area: "Area 1",
+    manager_name: "Mahmudul Hasan",
+    area: "Banasree",
   },
   {
     id: 2,
     company_name: "XYZ Ltd",
     contractor_id: "C002",
-    manager_name: "Jane Smith",
-    area: "Area 2",
+    manager_name: "Nafiul Hasan",
+    area: "Gabtoli",
   },
   // Add more contractors as needed
 ];
@@ -74,6 +76,8 @@ const ContractorBilling = () => {
   const handleGenerateBill = () => {
     const { company_name, contractor_id, manager_name, area } =
       selectedContractor;
+
+    
 
     // Sample values for calculation
     const Wc = 10; // Weight of waste collected by the contractor in tons

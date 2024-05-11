@@ -151,7 +151,6 @@ const CollectionPlanManager = () => {
       console.log(id)
       console.error("Failed to fetch collection plans:", error);
     }
-    console.log(id)
   };
 
   const handleDialogClose = () => {
