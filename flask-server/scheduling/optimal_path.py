@@ -1,5 +1,10 @@
 
-data = {
+n = 4  # Number of nodes(1-based)
+
+# infinity as a large value
+INF = 10**9
+
+data = [
     {
         "u": "place1",
         "v": "place2",
@@ -30,7 +35,7 @@ data = {
         "v": "place4",
         "w": 50
     },
-}
+]
 
 # Convert the JSON data into a 2D list format suitable for the tsp function
 def convert_to_graph(data):
@@ -50,10 +55,7 @@ def convert_to_graph(data):
 graph = convert_to_graph(data)
 
 
-n = 4  # Number of nodes(1-based)
 
-# infinity as a large value
-INF = 10**9
 
 # dist[][] will contain the distances between every pair of vertices 
 def floydWarshall(graph):
