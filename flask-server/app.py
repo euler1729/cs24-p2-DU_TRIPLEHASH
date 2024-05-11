@@ -65,6 +65,10 @@ from contractor.Collection import Collection
 # Community Posts
 from community_users.CommunityPost import Posts, UserPosts, AdminPostApproval
 from community_users.PostInteraction import PostInteraction
+from community_users.TicketSystem import *
+
+from domestic_waste.ContractorManager import *
+from domestic_waste.ThirdPartyContractor import *
 
 
 with open('config.json', 'r') as f:
@@ -176,6 +180,8 @@ api.add_resource(AdminPostApproval, '/admin_approval/<int:post_id>')
 # Post interaction
 api.add_resource(PostInteraction, '/post/<int:post_id>/like', '/post/<int:post_id>/comment')
 
+api.add_resource(TicketSystem, '/ticket')
+api.add_resource(UserTickets, '/ticket/<int:user_id>')
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, use_reloader=True, host='0.0.0.0', port=8000)
