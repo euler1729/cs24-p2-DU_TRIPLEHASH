@@ -178,7 +178,7 @@ CREATE TABLE user_permission(
 );
 
 
-<<<<<<< HEAD
+-- <<<<<<< HEAD
 DROP TABLE IF EXISTS employee;
 CREATE TABLE employee(
     employee_id INTEGER PRIMARY KEY,
@@ -213,7 +213,7 @@ CREATE TABLE collection(
     area TEXT
 
 );
-=======
+-- =======
 
 
 
@@ -251,7 +251,7 @@ CREATE TABLE contractor_manager (
     password TEXT,
     FOREIGN KEY (assigned_contractor_company) REFERENCES third_party_contractor(contract_id)
 );
-<<<<<<< HEAD
+-- <<<<<<< HEAD
 
 
 
@@ -291,7 +291,20 @@ CREATE TABLE post_likes (
     FOREIGN KEY (post_id) REFERENCES user_posts(post_id)
 );
 
+DROP TABLE IF EXISTS tickets;
+CREATE TABLE tickets (
+    ticket_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    problem_type TEXT,
+    problem_description TEXT,
+    posted_anonymously BOOLEAN DEFAULT 0,
+    location TEXT,
+    image BLOB,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
 
-=======
->>>>>>> main
->>>>>>> 95195d72ed6511598d610a584e0cd2a5fa771925
+
+
+-- =======
+-- >>>>>>> main
+-- >>>>>>> 95195d72ed6511598d610a584e0cd2a5fa771925
