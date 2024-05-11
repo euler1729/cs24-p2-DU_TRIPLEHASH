@@ -57,18 +57,19 @@ class Employee(Resource):
         try:
             info = self.utils.getInfoFromToken(request)
             if info:
-                print('here')
                 data = request.get_json()
+                print(data)
                 self.database.execute(
-                    'INSERT INTO employee (full_name, job_title, payment_rate_per_hour, assigned_collection_route, dob, date_of_hire, contact) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO employee (employee_id, full_name, job_title, payment_rate_per_hour, assigned_collection_route, dob, date_of_hire, contact) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                     (
+                        data['employee_id'],
                         data['full_name'],
                         data['job_title'],
                         data['payment_rate_per_hour'],
                         data['assigned_collection_route'],
-                        data['dob'],
+                        data['date_of_birth'],
                         data['date_of_hire'],
-                        data['contact']
+                        data['contact_information'],
                     )
                 )
                 self.database.commit()

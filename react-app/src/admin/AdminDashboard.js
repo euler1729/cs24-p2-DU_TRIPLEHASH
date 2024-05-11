@@ -35,6 +35,7 @@ import AssignVehicle from './AssignVehicle';
 import StatisticsPage from './Stats';
 import CreateCompany from './CreateCompany';
 import ContractorManagerCreation from './ContractorManagerCreation';
+import ContractorList from './ContractorList';
 
 const drawerWidth = 260;
 
@@ -157,6 +158,8 @@ function AdminDashboard() {
         return <CreateCompany/>
       case 'ContractorManagerCreation':
         return <ContractorManagerCreation/>
+      case 'ContractorList':
+        return <ContractorList/>
 
 
       // Add cases for other options
@@ -193,6 +196,10 @@ function AdminDashboard() {
                   <ListItem button onClick={() => handleOptionClick('users')}>
                     <ListItemIcon><People /></ListItemIcon>
                     <ListItemText primary="Users" />
+                  </ListItem>
+                  <ListItem button onClick={() => handleOptionClick('ContractorList')}>
+                    <ListItemIcon><People /></ListItemIcon>
+                    <ListItemText primary="Contractor List" />
                   </ListItem>
                   <ListItem button onClick={handleSubOptionClick}>
                     <ListItemIcon>

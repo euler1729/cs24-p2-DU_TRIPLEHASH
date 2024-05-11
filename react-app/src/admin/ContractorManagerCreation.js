@@ -97,7 +97,7 @@ const ContractorManagerCreation = () => {
         }
         setLoading(true);
         try {
-            api.post('/contractor-managers/create', manager, {
+            api.post('/manager/register', manager, {
                 headers: {
                     "Authorization": `Bearer ${cookies.get('access_token')}`,
                 },

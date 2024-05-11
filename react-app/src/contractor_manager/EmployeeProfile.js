@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: EcoSyncBrand.Colors.lightBackground,
     borderRadius: theme.spacing(2),
     boxShadow: theme.shadows[1],
-
   },
   profileInfo: {
     marginTop: theme.spacing(2),
@@ -86,7 +85,6 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 300,
     marginBottom: theme.spacing(2),
-    
   },
   smallTable: {
     height: "50px",
@@ -94,7 +92,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '20px',
     border: '20px opacity',
     alignContent: 'center',
-    
   },
   infoCell: {
     fontSize: '0.9rem',
@@ -102,11 +99,134 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const demoData = [
+  {
+    date: '2023-05-01',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 1', start_time: '08:00 AM', end_time: '09:00 AM' },
+      { task_name: 'Task 2', start_time: '09:30 AM', end_time: '11:00 AM' },
+    ],
+  },
+  {
+    date: '2023-05-02',
+    log_in_time: '08:15 AM',
+    log_out_time: '05:15 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 3', start_time: '08:15 AM', end_time: '09:45 AM' },
+      { task_name: 'Task 4', start_time: '10:00 AM', end_time: '12:00 PM' },
+    ],
+  },
+  {
+    date: '2023-05-03',
+    log_in_time: '08:30 AM',
+    log_out_time: '05:30 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 5', start_time: '08:30 AM', end_time: '10:00 AM' },
+      { task_name: 'Task 6', start_time: '10:30 AM', end_time: '12:30 PM' },
+    ],
+  },
+  {
+    date: '2023-05-04',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 7', start_time: '08:00 AM', end_time: '09:30 AM' },
+      { task_name: 'Task 8', start_time: '10:00 AM', end_time: '11:30 AM' },
+    ],
+  },
+  {
+    date: '2023-05-05',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 9', start_time: '08:00 AM', end_time: '09:30 AM' },
+      { task_name: 'Task 10', start_time: '10:00 AM', end_time: '11:30 AM' },
+    ],
+  },
+  {
+    date: '2023-05-06',
+    log_in_time: '09:00 AM',
+    log_out_time: '06:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 11', start_time: '09:00 AM', end_time: '10:30 AM' },
+      { task_name: 'Task 12', start_time: '11:00 AM', end_time: '12:30 PM' },
+    ],
+  },
+  {
+    date: '2023-05-07',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 13', start_time: '08:00 AM', end_time: '09:30 AM' },
+      { task_name: 'Task 14', start_time: '10:00 AM', end_time: '11:30 AM' },
+    ],
+  },
+  {
+    date: '2023-05-08',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 15', start_time: '08:00 AM', end_time: '09:30 AM' },
+      { task_name: 'Task 16', start_time: '10:00 AM', end_time: '11:30 AM' },
+    ],
+  },
+  {
+    date: '2023-05-09',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 17', start_time: '08:00 AM', end_time: '09:30 AM' },
+      { task_name: 'Task 18', start_time: '10:00 AM', end_time: '11:30 AM' },
+    ],
+  },
+  {
+    date: '2023-05-10',
+    log_in_time: '08:00 AM',
+    log_out_time: '05:00 PM',
+    total_hours_worked: '9',
+    overtime_hours: '1',
+    absences_and_leaves: 'None',
+    tasks: [
+      { task_name: 'Task 19', start_time: '08:00 AM', end_time: '09:30 AM' },
+      { task_name: 'Task 20', start_time: '10:00 AM', end_time: '11:30 AM' },
+    ],
+  },
+];
+
 const EmployeeProfile = ({ employee, setSelectedEmployee }) => {
   const classes = useStyles();
   const cookies = new Cookies();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState(demoData); // Initialize with demoData
   const [loading, setLoading] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
 
@@ -154,8 +274,8 @@ const EmployeeProfile = ({ employee, setSelectedEmployee }) => {
         <Avatar className={classes.avatar}>{employee.full_name.charAt(0)}</Avatar>
         <div className={classes.profileInfo}>
           <TableContainer component={Paper}>
-            <Table style={{color: 'blue', height: '200px'}}>
-              <TableBody style={{height: 50, color: 'white'}}>
+            <Table style={{ color: 'blue', height: '200px' }}>
+              <TableBody style={{ height: 50, color: 'white' }}>
                 {[
                   ["ID", employee.employee_id],
                   ["Name", employee.full_name],
