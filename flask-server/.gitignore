@@ -1,3 +1,4 @@
 sqlite.db
 *.pyc
 */__pycache__/*
+config.json

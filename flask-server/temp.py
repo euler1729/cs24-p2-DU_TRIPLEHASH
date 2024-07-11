@@ -164,9 +164,10 @@ wards = {
     "ward_20": [
         "Mohakhali, Dhaka, Bangladesh",
         "Mohakhali-Gulshan 1 Link Road, Dhaka, Bangladesh",
-        "Public Health InstituteTo get the coordinates for each ward area using the Google Maps Geocoding API, follow the code below. This will help you fetch and print the latitude and longitude for each area in the provided wards dictionary.
+        "Public Health InstituteTo get the coordinates for each ward area using the Google Maps Geocoding API, follow the code below. This will help you fetch and print the latitude and longitude for each area in the provided wards dictionary."
+    ]
+}
 
-```python
 import requests
 
 # Replace with your Google Maps API key
