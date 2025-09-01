@@ -1,5 +1,7 @@
 # cs24-p2-DU_TRIPLEHASH
 
+## EcoSync
+
 ## COMMAND
 ```docker compose up```
   
